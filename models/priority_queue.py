@@ -1,11 +1,11 @@
-import collections
+import heapq
 
-class Queue:
+class PriorityQueue:
     def __init__(self):
-        self.elements = collections.deque()
+        self.elements = []
     def empty(self):
         return len(self.elements) == 0
-    def put(self, x):
-        self.elements.append(x)
+    def put(self, item, priority):
+        heapq.heappush(self.elements, (priority, item))
     def get(self):
-        return self.elements.popleft()
+        return heapq.heappop(self.elements)[1]

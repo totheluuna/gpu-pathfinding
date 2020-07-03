@@ -61,3 +61,7 @@ def reconstructPath(cameFrom, start, goal):
     path.append(start)
     path.reverse()
     return path
+
+# TO DO: IMPLEMENT FUNCTION TO CONVERT IMAGE TO GRID OBJECT
+# def imageToGrid():
+#     pass

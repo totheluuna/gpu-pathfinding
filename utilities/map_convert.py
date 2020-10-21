@@ -1,0 +1,1 @@
+# TO DO: Implement a function to convert a 2D Image into a Weighted Grid object

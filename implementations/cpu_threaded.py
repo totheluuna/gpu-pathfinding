@@ -6,6 +6,7 @@ def CPUThreaded(algorithm='a_star', graph=None, start=None, goal=None):
     costSoFar = {}
     if (algorithm == 'a_star'):
         cameFrom, costSoFar = a_star.search(graph, start, goal)
+        # print(cameFrom)
         path = helper.reconstructPath(cameFrom, start, goal) 
     else:
         print("No implementation of search algorithm")

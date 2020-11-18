@@ -1,26 +1,42 @@
-import pycuda.driver as drv
-import pycuda.tools
-import pycuda.autoinit
-import numpy
-import numpy.linalg as la
-from pycuda.compiler import SourceModule
+from numba import cuda, float32
 
-mod = SourceModule("""
-__global__ void multiply_them(float *dest, float *a, float *b)
-{
-  const int i = threadIdx.x;
-  dest[i] = a[i] * b[i];
-}
-""")
+# Controls threads per block and shared memory usage.
+# The computation will be done on blocks of TPBxTPB elements.
+TPB = 16
 
-multiply_them = mod.get_function("multiply_them")
+@cuda.jit
+def fast_matmul(A, B, C):
+    # Define an array in the shared memory
+    # The size and type of the arrays must be known at compile time
+    sA = cuda.shared.array(shape=(TPB, TPB), dtype=float32)
+    sB = cuda.shared.array(shape=(TPB, TPB), dtype=float32)
 
-a = numpy.random.randn(400).astype(numpy.float32)
-b = numpy.random.randn(400).astype(numpy.float32)
+    x, y = cuda.grid(2)
 
-dest = numpy.zeros_like(a)
-multiply_them(
-        drv.Out(dest), drv.In(a), drv.In(b),
-        block=(400,1,1))
+    tx = cuda.threadIdx.x
+    ty = cuda.threadIdx.y
+    bpg = cuda.gridDim.x    # blocks per grid
 
-print(dest-a*b)
+    if x >= C.shape[0] and y >= C.shape[1]:
+        # Quit if (x, y) is outside of valid C boundary
+        return
+
+    # Each thread computes one element in the result matrix.
+    # The dot product is chunked into dot products of TPB-long vectors.
+    tmp = 0.
+    for i in range(bpg):
+        # Preload data into shared memory
+        sA[tx, ty] = A[x, ty + i * TPB]
+        sB[tx, ty] = B[tx + i * TPB, y]
+
+        # Wait until all threads finish preloading
+        cuda.syncthreads()
+
+        # Computes partial product on the shared memory
+        for j in range(TPB):
+            tmp += sA[tx, j] * sB[j, ty]
+
+        # Wait until all threads finish computing
+        cuda.syncthreads()
+
+    C[x, y] = tmp

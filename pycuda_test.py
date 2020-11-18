@@ -40,3 +40,4 @@ def fast_matmul(A, B, C):
         cuda.syncthreads()
 
     C[x, y] = tmp
+    print(C)

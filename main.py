@@ -22,7 +22,8 @@ def main():
     algorithm = args.algorithm
     
     # initialize grid from image, selects random image from dataset
-    grid = helper.createGridFromDatasetImage('dataset/da2-png')
+    grid, gridArray = helper.createGridFromDatasetImage('dataset/da2-png')
+    print(gridArray)
 
     # generate random start and goal
     # ensure that the distance between the start and goal 
@@ -37,6 +38,7 @@ def main():
     cost, path = cpu.CPUThreaded(
                     algorithm=algorithm,
                     graph=grid,
+                    gridArray=gridArray,
                     start=start,
                     goal=goal
                 )

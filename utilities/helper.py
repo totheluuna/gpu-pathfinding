@@ -118,6 +118,16 @@ def reconstructPath(cameFrom, start, goal):
     path.reverse()
     return path
 
+def reconstructPathV2(cameFrom, start, goal):
+    currentX, currentY = goal
+    path = []
+    while (currentX, currentY) != start:
+        path.append((currentX, currentY))
+        currentX, currentY = cameFrom[currentX, currentY]
+    path.append(start)
+    path.reverse
+    return path
+
 def imageToGrid(image):
     print("----- Converting Image to Grid Object -----")
     # load image
@@ -151,13 +161,22 @@ def imageToGrid(image):
     cv.imwrite("output/threshold.png", thresh1)
     print('Threshold Dimensions : ', thresh1.shape)
 
+    # # calculate histogram
+    # hist = cv.calcHist([thresh1],[0],None,[256],[0,256])
+    # for i in range(len(hist)):
+    #     if hist[i][0] > 0:
+    #         print(i)
     # add unwalkable areas to walls list
     walls = []
+    gridArray = np.ones((thresh1.shape), dtype=np.int32)
     for i in range(thresh1.shape[0]):
         for j in range(thresh1.shape[1]):
             # if the current value = 0 (meaning black) append to list of walls
             if thresh1[i][j] == 0:
+                gridArray[i,j] = -1
                 walls.append((i,j))
+            else:
+                gridArray[i,j] = 1
     # print(walls)
 
     # check if walls < number of pixels in image
@@ -169,9 +188,8 @@ def imageToGrid(image):
     outputGrid = weighted_grid.WeightedGrid(x,y)
     outputGrid.walls = walls
 
-    return outputGrid
-
-
+    return outputGrid, gridArray
+        
 def getListOfFiles(dirName):
     # create a list of file and sub directories 
     # names in the given directory 
@@ -221,7 +239,7 @@ def createGridFromDatasetImage(dataset):
     listOfImages = getListOfFiles(dataset)
     image = listOfImages[randint(0, len(listOfImages)-1)]
     print('Random Image: ', image)
-    grid = imageToGrid(image)
+    grid, gridArray = imageToGrid(image)
 
-    return grid
+    return grid, gridArray
      

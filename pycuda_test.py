@@ -50,7 +50,7 @@ B[:] = 2
 C = np.empty((4,4))
 
 threadsperblock = (TPB, TPB)
-blockspergrid_x = math.ceil(an_array.shape[0] / threadsperblock[0])
-blockspergrid_y = math.ceil(an_array.shape[1] / threadsperblock[1])
+blockspergrid_x = math.ceil(A.shape[0] / threadsperblock[0])
+blockspergrid_y = math.ceil(A.shape[1] / threadsperblock[1])
 blockspergrid = (blockspergrid_x, blockspergrid_y)
 fast_matmul[blockspergrid, threadsperblock](A, B, C)

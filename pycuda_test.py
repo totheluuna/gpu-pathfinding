@@ -47,7 +47,7 @@ def fast_matmul(A, B, C):
 A = np.ones((4,4))
 B = np.empty((4,4))
 B[:] = 2
-C = np.empty((4,4))
+C = np.ones((4,4))
 
 threadsperblock = (TPB, TPB)
 blockspergrid_x = math.ceil(A.shape[0] / threadsperblock[0])

@@ -44,10 +44,10 @@ def fast_matmul(A, B, C):
     C[x, y] = tmp
     # print(C)
 
-A = np.ones((4,4))
-B = np.empty((4,4))
+A = np.ones((16,16))
+B = np.empty((16,16))
 B[:] = 2
-C = np.ones((4,4))
+C = np.ones((16,16))
 
 threadsperblock = (TPB, TPB)
 blockspergrid_x = math.ceil(A.shape[0] / threadsperblock[0])

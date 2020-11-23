@@ -42,7 +42,7 @@ def fast_matmul(A, B, C):
         cuda.syncthreads()
 
     C[x, y] = tmp
-    print(C)
+    # print(C)
 
 A = np.ones((4,4))
 B = np.empty((4,4))

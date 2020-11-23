@@ -1,5 +1,6 @@
 import os, math, argparse
 from implementations import cpu_threaded as cpu
+from implementations import gpu_threaded as gpu
 from models import grid
 from utilities import helper
 
@@ -35,7 +36,15 @@ def main():
     # parameters: algorithm, graph, start, end
     # returns the cost of the path
     # and a list of nodes that constitute the shortest path
-    cost, path = cpu.CPUThreaded(
+    # cost, path = cpu.CPUThreaded(
+    #                 algorithm=algorithm,
+    #                 graph=grid,
+    #                 gridArray=gridArray,
+    #                 start=start,
+    #                 goal=goal
+    #             )
+    # GPU Threaded
+    cost, path = gpu.GPUThreaded(
                     algorithm=algorithm,
                     graph=grid,
                     gridArray=gridArray,

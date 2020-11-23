@@ -1,4 +1,5 @@
 from numba import cuda, float32
+import numpy as np
 
 # Controls threads per block and shared memory usage.
 # The computation will be done on blocks of TPBxTPB elements.
@@ -41,3 +42,14 @@ def fast_matmul(A, B, C):
 
     C[x, y] = tmp
     print(C)
+
+A = np.ones((4,4))
+B = np.empty((4,4))
+B[:] = 2
+C = np.empty((4,4))
+
+threadsperblock = (TPB, TPB)
+blockspergrid_x = math.ceil(an_array.shape[0] / threadsperblock[0])
+blockspergrid_y = math.ceil(an_array.shape[1] / threadsperblock[1])
+blockspergrid = (blockspergrid_x, blockspergrid_y)
+fast_matmul[blockspergrid, threadsperblock](A, B, C)

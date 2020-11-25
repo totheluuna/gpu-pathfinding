@@ -2,6 +2,8 @@ from algorithms import a_star_v3
 from utilities import helper
 import numpy as np
 
+from models import priority_queue_v2 as pq
+
 from numba import cuda, jit, int32
 import math
 TPB = 16
@@ -31,6 +33,7 @@ def GPUPathfinder(grid, start, goal, hArray):
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         if grid[x, y] != 0:
+            openList = pq.PriorityQueue()
             hArray[x, y] = heuristic(x, y, goal_x, goal_y)
 
 

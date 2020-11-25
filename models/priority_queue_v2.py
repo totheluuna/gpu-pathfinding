@@ -1,6 +1,7 @@
 import heapq
 import itertools
-
+from numba import jitclass
+@jitclass
 class PriorityQueue:
     def __init__(self):
         self.elements = []

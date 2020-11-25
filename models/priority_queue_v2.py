@@ -1,7 +1,8 @@
 import heapq
 import itertools
 from numba import jitclass
-@jitclass
+@jitclass([('entry_finder', types.DictType(types.ListType((types.int32, types.int32, types.int32)), types.int32)),
+           ('elements', types.ListType((types.int32, types.int32, types.int32)))])
 class PriorityQueue:
     def __init__(self):
         self.elements = []

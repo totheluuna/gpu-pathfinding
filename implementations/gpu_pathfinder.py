@@ -27,6 +27,6 @@ def GPUPathfinder(grid, start, goal, hArray):
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         if grid[x, y] != 0:
-            path, cost = a_star_v3.searchV2(grid, start, goal)
+            a_star_v3.searchV2(grid, start, goal)
 
 

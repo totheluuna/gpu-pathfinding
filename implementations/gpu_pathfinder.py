@@ -23,11 +23,10 @@ def GPUPathfinder(grid, start, goal, hArray):
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid
-
+    print(bpg)
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
-        print(bpg)
         if grid[x, y] != 0:
-            hArray[x, y] = abs(x-goal_x) + abs(y-goal_y)
+            path, cost = a_star_v3.searchV2(grid, start, goal)
 
 

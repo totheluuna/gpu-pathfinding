@@ -8,6 +8,12 @@ TPB = 16
 
 @cuda.jit
 def GPUPathfinder(grid, start, goal, hArray):
+
+    def heuristic(a, b):
+    x1, y1 = a
+    x2, y2 = b
+    return abs(x1-x2) + abs(y1-y2)
+
     # path = []
     # parents = {}
     # FCost = {}
@@ -27,6 +33,6 @@ def GPUPathfinder(grid, start, goal, hArray):
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         if grid[x, y] != 0:
-            a_star_v3.searchV2(grid, start, goal)
+            hArray[x, y] = heuristic(np.asarray((x,y)), goal)
 
 

@@ -2,17 +2,20 @@ from algorithms import a_star_v3
 from utilities import helper
 import numpy as np
 
-from numba import cuda
+from numba import cuda, jit
 import math
 TPB = 16
+
+@jit
+def heuristic(a, b):
+        x1, y1 = a
+        x2, y2 = b
+        return abs(x1-x2) + abs(y1-y2)
 
 @cuda.jit
 def GPUPathfinder(grid, start, goal, hArray):
 
-    def heuristic(a, b):
-        x1, y1 = a
-        x2, y2 = b
-        return abs(x1-x2) + abs(y1-y2)
+    
 
     # path = []
     # parents = {}

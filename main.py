@@ -61,7 +61,7 @@ def main():
     blockspergrid_x = math.ceil(gridArray.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(gridArray.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
-    gpu_path.GPUPathfinder[blockspergrid, threadsperblock](gridArray, hArray)
+    gpu_path.GPUPathfinder[blockspergrid, threadsperblock](gridArray, np.asarray(start), np.asarray(goal), hArray)
     print(hArray)
 
     # Reconstruct and draw the grid and the found path

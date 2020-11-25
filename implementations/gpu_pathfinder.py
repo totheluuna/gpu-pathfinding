@@ -14,9 +14,6 @@ def heuristic(a, b):
 
 @cuda.jit
 def GPUPathfinder(grid, start, goal, hArray):
-
-    
-
     # path = []
     # parents = {}
     # FCost = {}

@@ -177,7 +177,7 @@ def imageToGrid(image):
         for j in range(thresh1.shape[1]):
             # if the current value = 0 (meaning black) append to list of walls
             if thresh1[i][j] == 0:
-                gridArray[i,j] = -1
+                gridArray[i,j] = 0
                 walls.append((i,j))
             else:
                 gridArray[i,j] = 1

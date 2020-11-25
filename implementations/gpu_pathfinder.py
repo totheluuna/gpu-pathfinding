@@ -26,6 +26,8 @@ def GPUPathfinder(grid, start, goal, hArray):
 
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
+        if np.asarray((x,y), dtype=np.int32) == start:
+            
         hArray[x, y] = abs(x-goal_x) + abs(y-goal_y)
 
 

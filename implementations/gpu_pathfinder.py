@@ -25,6 +25,6 @@ def GPUPathfinder(algorithm, grid, start, goal, hArray):
     bpg = cuda.gridDim.x    # blocks per grid
 
     if x < grid.shape[0] and y < grid.shape[1]:
-        hArray[x, y] = a_star_v3.heuristic((x,y), goal)
+        hArray[x, y] *= 10
 
 

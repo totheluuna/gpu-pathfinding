@@ -7,7 +7,7 @@ from numba import cuda
 TPB = 16
 
 @cuda.jit
-def GPUPathfinder(grid, start, goal, hArray):
+def GPUPathfinder(grid, hArray):
     # path = []
     # parents = {}
     # FCost = {}

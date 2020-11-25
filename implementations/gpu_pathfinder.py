@@ -7,9 +7,7 @@ import math
 TPB = 16
 
 @jit
-def heuristic(a, b):
-    x1, y1 = a
-    x2, y2 = b
+def heuristic(x1, y1, x2, y2):
     return np.int32(abs(x1-x2) + abs(y1-y2))
 
 @cuda.jit
@@ -33,6 +31,6 @@ def GPUPathfinder(grid, start, goal, hArray):
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         if grid[x, y] != 0:
-            hArray[x, y] = heuristic(np.asarray((x,y), dtype=np.int32), goal)
+            hArray[x, y] = heuristic(x, y, goal_x, goal_y)
 
 

@@ -3,7 +3,7 @@ from utilities import helper
 import numpy as np
 
 from numba import cuda
-
+import math
 TPB = 16
 
 @cuda.jit
@@ -25,6 +25,7 @@ def GPUPathfinder(grid, start, goal, hArray):
     bpg = cuda.gridDim.x    # blocks per grid
 
     if x < grid.shape[0] and y < grid.shape[1]:
-        hArray[x, y] = a_star_v3.heuristic(np.asarray((x, y)), goal)
+        goal_x, goal_y = goal
+        hArray[x, y] = math.fabs(x-goal_x) + math.fabs(y-goal_y)
 
 

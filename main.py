@@ -47,13 +47,13 @@ def main():
     #                 goal=goal
     #             )
     # GPU Threaded
-    cost, path = gpu.GPUThreaded(
-                    algorithm=algorithm,
-                    graph=grid,
-                    gridArray=gridArray,
-                    start=start,
-                    goal=goal
-                )
+    # cost, path = gpu.GPUThreaded(
+    #                 algorithm=algorithm,
+    #                 graph=grid,
+    #                 gridArray=gridArray,
+    #                 start=start,
+    #                 goal=goal
+    #             )
     # GPU Pathfinder
     hArray = np.zeros(grid.shape, dtype=np.int32)
     TPB = 16

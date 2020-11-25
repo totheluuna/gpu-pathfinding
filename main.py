@@ -55,7 +55,7 @@ def main():
     #                 goal=goal
     #             )
     # GPU Pathfinder
-    hArray = np.zeros(gridArray.shape)
+    hArray = np.zeros(gridArray.shape, dtype=np.int32)
     TPB = 16
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(gridArray.shape[0] / threadsperblock[0])

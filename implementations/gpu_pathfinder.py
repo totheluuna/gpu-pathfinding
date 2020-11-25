@@ -6,7 +6,7 @@ from numba import cuda, jit, int32
 import math
 TPB = 16
 
-@cuda.jit(int32(int32, int32))
+@jit(int32(int32, int32))
 def heuristic(a, b):
     x1, y1 = a
     x2, y2 = b

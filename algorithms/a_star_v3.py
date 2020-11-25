@@ -37,7 +37,6 @@ def search(graph, start, goal):
     GValue[startX, startY] = 0
     HValue[startX, startY] = heuristic(start, goal)
     FValue[startX, startY] = GValue[startX, startY] + HValue[startX, startY]
-
     while not openList.empty():
         current = openList.pop()
         currentX, currentY = current

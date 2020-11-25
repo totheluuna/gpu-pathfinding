@@ -7,7 +7,8 @@ import os
 import math
 import numpy as np
 
-seed(420696969)
+# seed(420696969)
+seed(1)
 
 def createGrid(x, y, algorithm):
     # Creates a grid object with random walls
@@ -138,9 +139,12 @@ def imageToGrid(image):
 
     # resize image
     print('Original Dimensions : ',img.shape)
-    scale_percent = 10 # percent of original size
-    width = int(img.shape[1] * scale_percent / 100)
-    height = int(img.shape[0] * scale_percent / 100)
+    # scale_percent = 10 # percent of original size
+    # width = int(img.shape[1] * scale_percent / 100)
+    # height = int(img.shape[0] * scale_percent / 100)
+    scale_power = 4 # resize to a power of 2
+    width = int(math.pow(2, scale_power))
+    height = int(math.pow(2, scale_power))
     dim = (width, height)
     resized = cv.resize(img, dim, interpolation = cv.INTER_AREA)
     cv.imwrite("output/resized.png", resized) 

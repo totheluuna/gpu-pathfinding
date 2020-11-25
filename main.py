@@ -1,14 +1,17 @@
 import os, math, argparse
 from implementations import cpu_threaded as cpu
 from implementations import gpu_threaded as gpu
+from implementations import gpu_pathfinder as gpu_path
 from models import grid
 from utilities import helper
 
 import math
 import numpy as np
+from numba import cuda
 
 from random import randint, seed
-seed(420696969)
+# seed(420696969)
+seed(42069)
 
 def main():
     ''' 
@@ -51,6 +54,22 @@ def main():
                     start=start,
                     goal=goal
                 )
+    # GPU Pathfinder
+    hArray = np.zeros(grid.shape, dtype=np.int32)
+    TPB = 16
+    threadsperblock = (TPB, TPB)
+    blockspergrid_x = math.ceil(gridArray.shape[0] / threadsperblock[0])
+    blockspergrid_y = math.ceil(gridArray.shape[1] / threadsperblock[1])
+    blockspergrid = (blockspergrid_x, blockspergrid_y)
+    gpu_path.GPUPathfinder[blockspergrid, threadsperblock](
+        algorithm=algorithm,
+        grid=gridArray,
+        start=start,
+        goal=goal,
+        hArray=hArray
+    )
+    print(hArray)
+
     # Reconstruct and draw the grid and the found path
     # Saves reconstruction on a text file
     helper.drawGrid3(grid, start, goal, path=path)

@@ -7,7 +7,7 @@ def GPUThreaded(algorithm='a_star', graph=None, gridArray=None, start=None, goal
     parents = {}
     FCost = {}
     if algorithm == 'a_star':
-        parents, FCost = a_star_v3.searchV2(gridArray, start, goal)
+        parents, FCost = a_star_v3.search(graph, start, goal)
         path = helper.reconstructPathV2(parents, start, goal)
     else:
         print("No implementation of the search algorithm")

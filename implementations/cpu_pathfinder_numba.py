@@ -136,7 +136,7 @@ def search(grid, start, goal, parentHash, FValue):
 
     openList = List()
     openList.append((9999, (-1, -1)))
-    openListEntryFinder = {(9999,9999) : (9999, (-1, -1))})
+    openListEntryFinder = {(9999,9999) : (9999, (-1, -1))}
 
     closedList = List()
     closedList.append((9999, (-1, -1)))

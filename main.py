@@ -1,13 +1,13 @@
 import os, math, argparse
 from implementations import cpu_threaded as cpu
 from implementations import gpu_threaded as gpu
-from implementations import gpu_pathfinder as gpu_path
+# from implementations import gpu_pathfinder as gpu_path
 from models import grid
 from utilities import helper
 
 import math
 import numpy as np
-from numba import cuda
+# from numba import cuda
 
 from random import randint, seed
 # seed(420696969)
@@ -39,13 +39,13 @@ def main():
     # parameters: algorithm, graph, start, end
     # returns the cost of the path
     # and a list of nodes that constitute the shortest path
-    # cost, path = cpu.CPUThreaded(
-    #                 algorithm=algorithm,
-    #                 graph=grid,
-    #                 gridArray=gridArray,
-    #                 start=start,
-    #                 goal=goal
-    #             )
+    cost, path = cpu.CPUThreaded(
+                    algorithm=algorithm,
+                    graph=grid,
+                    gridArray=gridArray,
+                    start=start,
+                    goal=goal
+                )
     # GPU Threaded
     # cost, path = gpu.GPUThreaded(
     #                 algorithm=algorithm,
@@ -54,17 +54,17 @@ def main():
     #                 start=start,
     #                 goal=goal
     #             )
-    # GPU Pathfinder
-    hArray = np.zeros(gridArray.shape, dtype=np.int32)
-    TPB = 16
-    path = []
-    # threadsperblock = (TPB, TPB)
-    # blockspergrid_x = math.ceil(gridArray.shape[0] / threadsperblock[0])
-    # blockspergrid_y = math.ceil(gridArray.shape[1] / threadsperblock[1])
-    # blockspergrid = (blockspergrid_x, blockspergrid_y)
-    # gpu_path.GPUPathfinder[blockspergrid, threadsperblock](gridArray, np.asarray(start, dtype=np.int32), np.asarray(goal, dtype=np.int32), hArray)
-    gpu_path.CPUPathfinder(gridArray, start, goal, path)
-    print(hArray)
+    # # GPU Pathfinder
+    # hArray = np.zeros(gridArray.shape, dtype=np.int32)
+    # TPB = 16
+    # path = []
+    # # threadsperblock = (TPB, TPB)
+    # # blockspergrid_x = math.ceil(gridArray.shape[0] / threadsperblock[0])
+    # # blockspergrid_y = math.ceil(gridArray.shape[1] / threadsperblock[1])
+    # # blockspergrid = (blockspergrid_x, blockspergrid_y)
+    # # gpu_path.GPUPathfinder[blockspergrid, threadsperblock](gridArray, np.asarray(start, dtype=np.int32), np.asarray(goal, dtype=np.int32), hArray)
+    # gpu_path.CPUPathfinder(gridArray, start, goal, path)
+    # print(hArray)
 
     # Reconstruct and draw the grid and the found path
     # Saves reconstruction on a text file

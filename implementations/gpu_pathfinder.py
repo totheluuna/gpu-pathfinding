@@ -2,7 +2,7 @@ from algorithms import a_star_v3
 from utilities import helper
 import numpy as np
 
-from models import priority_queue_v2 as pq
+import heapq
 
 from numba import cuda, jit, int32
 import math
@@ -26,9 +26,9 @@ def GPUPathfinder(grid, start, goal, hArray):
             openList = pq.PriorityQueue()
             hArray[x, y] = heuristic(x, y, goal_x, goal_y)
 
-@jit
-def CPUPathfinder(grid, start, goal, path):
-    print(grid, start, goal, path)
+
+
+    
 
 
 

@@ -1,11 +1,11 @@
 import heapq
 import itertools
-from numba import jitclass, types
+# from numba import jitclass, types
 class PriorityQueue:
     def __init__(self):
         self.elements = []
         self.entry_finder = {}
-        self.REMOVED = '<removed-item>'
+        self.REMOVED = (9999,9999)
         self.counter = itertools.count()
     def empty(self):
         return len(self.elements) == 0

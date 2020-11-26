@@ -9,6 +9,7 @@ import numpy as np
 import heapq
 
 from numba import jit
+from numba.typed import List
 
 seed(1)
 # functions for converting images to grids
@@ -133,10 +134,10 @@ def heuristic(a, b):
 def search(grid, start, goal, parentHash, FValue):
     width, height = grid.shape
 
-    openList = []
+    openList = List()
     openListEntryFinder = {}
 
-    closedList = []
+    closedList = List()
     closedListEntryFinder = {}
     
     GValue = np.zeros((width, height), dtype=np.int32)

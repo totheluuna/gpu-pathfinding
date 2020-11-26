@@ -154,6 +154,8 @@ def search(grid, start, goal, parentHash, FValue):
 
     print(openList)
     print(closedList)
+    print(openListEntryFinder)
+    print(closedListEntryFinder)
     
     # addToPQ(openList, openListEntryFinder, start, np.int64(0))
     # startX, startY = start

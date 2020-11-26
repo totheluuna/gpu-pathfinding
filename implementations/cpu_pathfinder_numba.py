@@ -8,8 +8,8 @@ import numpy as np
 
 import heapq
 
-# from numba import jit
-# from numba.typed import List
+from numba import jit
+from numba.typed import List
 
 seed(1)
 # functions for converting images to grids
@@ -105,15 +105,15 @@ def reconstructPathV2(cameFrom, start, goal, path):
     path.reverse
 
 # functions for pathfinding
-# @jit
+@jit
 def passable(grid, tile):
     x,y = tile
     return grid[tile] == 1
-# @jit
+@jit
 def inBounds(grid, tile):
     (x, y) = tile
     return 0 <= x < grid.shape[0] and 0 <= y < grid.shape[1]
-# @jit
+@jit
 def getNeighbors(grid, tile):
     (x, y) = tile
     results = []
@@ -124,13 +124,13 @@ def getNeighbors(grid, tile):
                 results.append(tile)
     if (x + y)%2 == 0: results.reverse()
     return results
-# @jit
+@jit
 def heuristic(a, b):
     (x1, y1) = a
     (x2, y2) = b
     return abs(x1-x2) + abs(y1-y2)
 
-# @jit(nopython=True)
+@jit(nopython=True)
 def search(grid, start, goal, parentHash, FValue):
     width, height = grid.shape
 
@@ -178,7 +178,7 @@ def search(grid, start, goal, parentHash, FValue):
         addToPQ(closedList, closedListEntryFinder, current, FValue[currentX, currentY])
 
 # functions for priority queue
-# @jit
+@jit
 def addToPQ(elements, entryFinder, item, priority=0):
     if item in entryFinder:
         removeFromPQ(item)
@@ -186,12 +186,12 @@ def addToPQ(elements, entryFinder, item, priority=0):
     entryFinder[item] = entry
     heapq.heappush(elements, entry)
     print(elements)
-# @jit
+@jit
 def removeFromPQ(entryFinder, item):
     REMOVED = (9999, 9999)
     entry = entryFinder.pop(item)
     entry[-1] = REMOVED
-# @jit
+@jit
 def popFromPQ(elements, entryFinder):
     REMOVED = (9999, 9999)
     priority, item = heapq.heappop(elements)

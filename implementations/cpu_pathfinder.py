@@ -187,7 +187,7 @@ def popFromPQ(elements, entryFinder):
         return item
     raise KeyError('pop from an empty priority queue')
 
-@jit
+@jit(nopython=True)
 def main():
     # create grid from image dataset
     scale_factor = 4 # scales to a power of 2

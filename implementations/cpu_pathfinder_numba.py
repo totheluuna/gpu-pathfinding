@@ -146,7 +146,7 @@ def search(grid, start, goal, parentHash, FValue):
     closedList.append(temp_data)
     closedListEntryFinder = {temp_data[1] : temp_data}
     closedList.remove(temp_data)
-    closedListEntryFinder.pop(temp_data[1])
+    closedListEntryFinder.pop(temp_data[1])}
     
     GValue = np.zeros((width, height), dtype=np.int32)
     HValue = np.zeros((width, height), dtype=np.int32)

@@ -55,7 +55,7 @@ def imageToGrid(image, grid, dim):
                 grid[i,j] = 0
             else:
                 grid[i,j] = 1
-@jit
+
 def createGridFromDatasetImage(dataset, grid, dim):
     print('----- Creating Grid Object from Dataset Image-----')
     listOfImages = []
@@ -64,7 +64,6 @@ def createGridFromDatasetImage(dataset, grid, dim):
     print('Random Image: ', image)
     imageToGrid(image, grid, dim)
 
-@jit
 def randomStartGoal(grid, start, goal):
     print('----- Generating Random Start and Goal -----')
     dist = 0
@@ -96,7 +95,6 @@ def randomStartGoal(grid, start, goal):
 
 
 # function for reconstructing found path
-@jit
 def reconstructPathV2(cameFrom, start, goal, path):
     currentX, currentY = goal
     while (currentX, currentY) != start:
@@ -191,7 +189,7 @@ def popFromPQ(elements, entryFinder):
         return item
     raise KeyError('pop from an empty priority queue')
 
-@jit(nopython=True)
+
 def main():
     # create grid from image dataset
     scale_factor = 4 # scales to a power of 2

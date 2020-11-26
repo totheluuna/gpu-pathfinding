@@ -158,7 +158,7 @@ def search(grid, start, goal, parentHash, FValue):
         REMOVED = (9999, 9999)
         entry = openListEntryFinder.pop(start)
         entry[-1] = REMOVED
-    entry = (priority, start)
+    entry = (0, start)
     openListEntryFinder[start] = entry
     heapq.heappush(openList, entry)
 

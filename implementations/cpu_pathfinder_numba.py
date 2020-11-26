@@ -151,6 +151,9 @@ def search(grid, start, goal, parentHash, FValue):
     GValue = np.zeros((width, height), dtype=np.int32)
     HValue = np.zeros((width, height), dtype=np.int32)
     parentHash[:] = np.array([-1,-1])
+
+    print(openList)
+    print(closedList)
     
     # addToPQ(openList, openListEntryFinder, start, np.int64(0))
     # startX, startY = start

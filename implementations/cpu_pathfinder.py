@@ -134,12 +134,12 @@ def heuristic(a, b):
 def search(grid, start, goal, parentHash, FValue):
     width, height = grid.shape
 
-    openList = List()
-    openList.append((9999, (-1, -1)))
+    openList = []
+    # openList.append([9999, (-1, -1)])
     openListEntryFinder = {}
 
-    closedList = List()
-    closedList.append([9999, (-1, -1)])
+    closedList = []
+    # openList.append([9999, (-1, -1)])
     closedListEntryFinder = {}
     
     GValue = np.zeros((width, height), dtype=np.int32)
@@ -185,7 +185,8 @@ def addToPQ(elements, entryFinder, item, priority=0):
     entry = (priority, item)
     entryFinder[item] = entry
     heapq.heappush(elements, entry)
-    print(elements)
+    # print(elements)
+    print(entryFinder)
 # @jit
 def removeFromPQ(entryFinder, item):
     REMOVED = (9999, 9999)

@@ -146,7 +146,7 @@ def search(grid, start, goal, parentHash, FValue):
     HValue = np.zeros((width, height), dtype=np.int32)
     parentHash[:] = np.array([-1,-1])
     
-    addToPQ(openList, openListEntryFinder, start, 0)
+    addToPQ(openList, openListEntryFinder, start, np.int64(0))
     startX, startY = start
     GValue[startX, startY] = 0
     HValue[startX, startY] = heuristic(start, goal)

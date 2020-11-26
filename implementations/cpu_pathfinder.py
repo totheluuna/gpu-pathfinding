@@ -12,6 +12,7 @@ from numba import jit
 
 seed(1)
 # functions for converting images to grids
+@jit
 def getListOfFiles(dirName):
     # create a list of file and sub directories 
     # names in the given directory 
@@ -28,6 +29,7 @@ def getListOfFiles(dirName):
             allFiles.append(fullPath)
                 
     return allFiles
+@jit
 def imageToGrid(image):
     print("----- Converting Image to Grid Object -----")
     # load image
@@ -74,6 +76,7 @@ def imageToGrid(image):
                 gridArray[i,j] = 1
 
     return gridArray
+@jit
 def randomStartGoal(grid):
     print('----- Generating Random Start and Goal -----')
     dist = 0
@@ -100,6 +103,7 @@ def randomStartGoal(grid):
         dist = np.linalg.norm(a-b)
 
     return start, goal
+@jit
 def createGridFromDatasetImage(dataset):
     print('----- Creating Grid Object from Dataset Image-----')
     listOfImages = getListOfFiles(dataset)
@@ -110,6 +114,7 @@ def createGridFromDatasetImage(dataset):
     return grid
 
 # function for reconstructing found path
+@jit
 def reconstructPathV2(cameFrom, start, goal):
     currentX, currentY = goal
     path = []
@@ -121,12 +126,15 @@ def reconstructPathV2(cameFrom, start, goal):
     return path
 
 # functions for pathfinding
+@jit
 def passable(grid, tile):
     x,y = tile
     return grid[tile] == 1
+@jit
 def inBounds(grid, tile):
     (x, y) = tile
     return 0 <= x < grid.shape[0] and 0 <= y < grid.shape[1]
+@jit
 def getNeighbors(grid, tile):
     (x, y) = tile
     results = []
@@ -137,10 +145,12 @@ def getNeighbors(grid, tile):
                 results.append(tile)
     if (x + y)%2 == 0: results.reverse()
     return results
+@jit
 def heuristic(a, b):
     (x1, y1) = a
     (x2, y2) = b
     return abs(x1-x2) + abs(y1-y2)
+@jit
 def search(grid, start, goal):
     width, height = grid.shape
 
@@ -190,16 +200,19 @@ def search(grid, start, goal):
     return parentHash, FValue
 
 # functions for priority queue
+@jit
 def addToPQ(elements, entryFinder, item, priority=0):
     if item in entryFinder:
         removeFromPQ(item)
     entry = [priority, item]
     entryFinder[item] = entry
     heapq.heappush(elements, entry)
+@jit
 def removeFromPQ(entryFinder, item):
     REMOVED = (9999, 9999)
     entry = entryFinder.pop(item)
     entry[-1] = REMOVED
+@jit
 def popFromPQ(elements, entryFinder):
     REMOVED = (9999, 9999)
     priority, item = heapq.heappop(elements)
@@ -208,6 +221,7 @@ def popFromPQ(elements, entryFinder):
         return item
     raise KeyError('pop from an empty priority queue')
 
+@jit
 def main():
     # create grid from image dataset
     grid = createGridFromDatasetImage('dataset/da2-png')

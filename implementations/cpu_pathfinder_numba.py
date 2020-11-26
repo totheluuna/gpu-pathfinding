@@ -137,10 +137,14 @@ def search(grid, start, goal, parentHash, FValue):
     openList = List()
     openList.append((-9999, (-1, -1)))
     openListEntryFinder = {(9999,9999) : (-9999, (-1, -1))}
+    openList.remove((-9999, (-1, -1)))
+    openListEntryFinder.pop((9999,9999))
 
     closedList = List()
     closedList.append((-9999, (-1, -1)))
     closedListEntryFinder = {(9999,9999) : (-9999, (-1, -1))}
+    closedList.remove((-9999, (-1, -1)))
+    closedListEntryFinder.pop((9999,9999))
     
     GValue = np.zeros((width, height), dtype=np.int32)
     HValue = np.zeros((width, height), dtype=np.int32)

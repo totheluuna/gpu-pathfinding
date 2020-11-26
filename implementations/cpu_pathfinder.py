@@ -55,7 +55,7 @@ def imageToGrid(image, grid, dim):
                 grid[i,j] = 0
             else:
                 grid[i,j] = 1
-
+@jit
 def createGridFromDatasetImage(dataset, grid, dim):
     print('----- Creating Grid Object from Dataset Image-----')
     listOfImages = []

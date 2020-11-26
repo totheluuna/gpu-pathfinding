@@ -96,6 +96,7 @@ def randomStartGoal(grid, start, goal):
 
 
 # function for reconstructing found path
+@jit
 def reconstructPathV2(cameFrom, start, goal, path):
     currentX, currentY = goal
     while (currentX, currentY) != start:

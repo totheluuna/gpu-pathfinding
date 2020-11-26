@@ -185,7 +185,7 @@ def addToPQ(elements, entryFinder, item, priority):
     entry = (priority, item)
     entryFinder[item] = entry
     heapq.heappush(elements, entry)
-@jit
+@jit(nopython=True)
 def removeFromPQ(entryFinder, item):
     REMOVED = (9999, 9999)
     entry = entryFinder.pop(item)

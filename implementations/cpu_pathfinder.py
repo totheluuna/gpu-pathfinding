@@ -135,9 +135,11 @@ def search(grid, start, goal, parentHash, FValue):
     width, height = grid.shape
 
     openList = List()
+    openList.append([9999, (-1, -1)])
     openListEntryFinder = {}
 
     closedList = List()
+    openList.append([9999, (-1, -1)])
     closedListEntryFinder = {}
     
     GValue = np.zeros((width, height), dtype=np.int32)

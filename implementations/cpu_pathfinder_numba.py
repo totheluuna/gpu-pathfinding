@@ -137,49 +137,45 @@ def search(grid, start, goal, parentHash, FValue):
     openList = List()
     openList.append((-9999, (-1, -1)))
     openListEntryFinder = {(9999,9999) : (-9999, (-1, -1))}
-    openList.remove((-9999, (-1, -1)))
-    openListEntryFinder.pop((9999,9999))
 
     closedList = List()
     closedList.append((-9999, (-1, -1)))
     closedListEntryFinder = {(9999,9999) : (-9999, (-1, -1))}
-    closedList.remove((-9999, (-1, -1)))
-    closedListEntryFinder.pop((9999,9999))
     
     GValue = np.zeros((width, height), dtype=np.int32)
     HValue = np.zeros((width, height), dtype=np.int32)
     parentHash[:] = np.array([-1,-1])
     
-    addToPQ(openList, openListEntryFinder, start, np.int64(0))
-    startX, startY = start
-    GValue[startX, startY] = 0
-    HValue[startX, startY] = heuristic(start, goal)
-    FValue[startX, startY] = GValue[startX, startY] + HValue[startX, startY]
+    # addToPQ(openList, openListEntryFinder, start, np.int64(0))
+    # startX, startY = start
+    # GValue[startX, startY] = 0
+    # HValue[startX, startY] = heuristic(start, goal)
+    # FValue[startX, startY] = GValue[startX, startY] + HValue[startX, startY]
 
-    while not len(openList) == 0:
-        current = popFromPQ(openList, openListEntryFinder)
-        # print(grid[current])
-        currentX, currentY = current
-        if current == goal:
-            print('Found goal %s' %(str(current)))
-            break
-        for next in getNeighbors(grid, current):
-            # print(next)
-            nextX, nextY = next
-            newG = GValue[currentX, currentY] + 1 # constant 1 since grid
-            if next in openListEntryFinder:
-                if newG < GValue[nextX, nextY]:
-                    removeFromPQ(openListEntryFinder, next)
-            if next in closedListEntryFinder:
-                if newG < GValue[nextX, nextY]:
-                    removeFromPQ(closedListEntryFinder, next)
-            if (next not in openListEntryFinder) and (next not in closedListEntryFinder):
-                parentHash[nextX, nextY] = np.array([currentX, currentY])
-                GValue[nextX, nextY] = newG
-                HValue[nextX, nextY] = heuristic(next, goal)
-                FValue[nextX, nextY] = GValue[nextX, nextY] + HValue[nextX, nextY]
-                addToPQ(openList, openListEntryFinder, next, FValue[nextX, nextY])
-        addToPQ(closedList, closedListEntryFinder, current, FValue[currentX, currentY])
+    # while not len(openList) == 0:
+    #     current = popFromPQ(openList, openListEntryFinder)
+    #     # print(grid[current])
+    #     currentX, currentY = current
+    #     if current == goal:
+    #         print('Found goal %s' %(str(current)))
+    #         break
+    #     for next in getNeighbors(grid, current):
+    #         # print(next)
+    #         nextX, nextY = next
+    #         newG = GValue[currentX, currentY] + 1 # constant 1 since grid
+    #         if next in openListEntryFinder:
+    #             if newG < GValue[nextX, nextY]:
+    #                 removeFromPQ(openListEntryFinder, next)
+    #         if next in closedListEntryFinder:
+    #             if newG < GValue[nextX, nextY]:
+    #                 removeFromPQ(closedListEntryFinder, next)
+    #         if (next not in openListEntryFinder) and (next not in closedListEntryFinder):
+    #             parentHash[nextX, nextY] = np.array([currentX, currentY])
+    #             GValue[nextX, nextY] = newG
+    #             HValue[nextX, nextY] = heuristic(next, goal)
+    #             FValue[nextX, nextY] = GValue[nextX, nextY] + HValue[nextX, nextY]
+    #             addToPQ(openList, openListEntryFinder, next, FValue[nextX, nextY])
+    #     addToPQ(closedList, closedListEntryFinder, current, FValue[currentX, currentY])
 
 # functions for priority queue
 @jit(nopython=True)

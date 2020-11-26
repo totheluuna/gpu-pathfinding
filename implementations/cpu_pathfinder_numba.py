@@ -134,13 +134,19 @@ def heuristic(a, b):
 def search(grid, start, goal, parentHash, FValue):
     width, height = grid.shape
 
+    temp_data = (-1, (-1, -1))
+
     openList = List()
-    openList.append((-9999, (-1, -1)))
-    openListEntryFinder = {(9999,9999) : (-9999, (-1, -1))}
+    openList.append(temp_data)
+    openListEntryFinder = {temp_data[1] : temp_data}
+    openList.remove(temp_data)
+    openListEntryFinder.pop(temp_data[1])
 
     closedList = List()
-    closedList.append((-9999, (-1, -1)))
-    closedListEntryFinder = {(9999,9999) : (-9999, (-1, -1))}
+    closedList.append(temp_data)
+    closedListEntryFinder = {temp_data[1] : temp_data}
+    closedList.remove(temp_data)
+    closedListEntryFinder.pop(temp_data[1])}
     
     GValue = np.zeros((width, height), dtype=np.int32)
     HValue = np.zeros((width, height), dtype=np.int32)

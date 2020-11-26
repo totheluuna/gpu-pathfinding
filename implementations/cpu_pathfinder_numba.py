@@ -178,7 +178,7 @@ def search(grid, start, goal, parentHash, FValue):
         addToPQ(closedList, closedListEntryFinder, current, FValue[currentX, currentY])
 
 # functions for priority queue
-@jit
+@jit(nopython=True)
 def addToPQ(elements, entryFinder, item, priority):
     if item in entryFinder:
         removeFromPQ(item)

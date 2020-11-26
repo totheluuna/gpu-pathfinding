@@ -181,7 +181,7 @@ def search(grid, start, goal, parentHash, FValue):
 @jit(nopython=True)
 def addToPQ(elements, entryFinder, item, priority):
     if item in entryFinder:
-        removeFromPQ(item)
+        removeFromPQ(entryFinder, item)
     entry = (priority, item)
     entryFinder[item] = entry
     heapq.heappush(elements, entry)

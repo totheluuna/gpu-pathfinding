@@ -164,7 +164,7 @@ def search(grid, start, goal):
 
     while not len(openList) == 0:
         current = popFromPQ(openList, openListEntryFinder)
-        print(grid[current])
+        # print(grid[current])
         currentX, currentY = current
         if current == goal:
             print('Found goal %s' %(str(current)))

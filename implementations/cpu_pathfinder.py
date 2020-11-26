@@ -64,6 +64,7 @@ def createGridFromDatasetImage(dataset, grid, dim):
     print('Random Image: ', image)
     imageToGrid(image, grid, dim)
 
+@jit
 def randomStartGoal(grid, start, goal):
     print('----- Generating Random Start and Goal -----')
     dist = 0

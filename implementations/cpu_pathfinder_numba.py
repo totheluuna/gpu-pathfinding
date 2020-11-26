@@ -179,7 +179,7 @@ def search(grid, start, goal, parentHash, FValue):
 
 # functions for priority queue
 @jit
-def addToPQ(elements, entryFinder, item, priority=0):
+def addToPQ(elements, entryFinder, item, priority):
     if item in entryFinder:
         removeFromPQ(item)
     entry = (priority, item)

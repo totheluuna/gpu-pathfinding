@@ -12,11 +12,10 @@ from numba import jit
 
 seed(1)
 # functions for converting images to grids
-def getListOfFiles(dirName):
+def getListOfFiles(dirName, allFiles):
     # create a list of file and sub directories 
     # names in the given directory 
     listOfFile = os.listdir(dirName)
-    allFiles = list()
     # Iterate over all the entries
     for entry in listOfFile:
         # Create full path
@@ -27,8 +26,7 @@ def getListOfFiles(dirName):
         else:
             allFiles.append(fullPath)
                 
-    return allFiles
-def imageToGrid(image):
+def imageToGrid(image, grid, dim):
     print("----- Converting Image to Grid Object -----")
     # load image
     img = cv.imread(cv.samples.findFile(image))
@@ -37,14 +35,6 @@ def imageToGrid(image):
     cv.imwrite("output/original.png", img)
 
     # resize image
-    print('Original Dimensions : ',img.shape)
-    # scale_percent = 10 # percent of original size
-    # width = int(img.shape[1] * scale_percent / 100)
-    # height = int(img.shape[0] * scale_percent / 100)
-    scale_power = 7 # resize to a power of 2
-    width = int(math.pow(2, scale_power))
-    height = int(math.pow(2, scale_power))
-    dim = (width, height)
     resized = cv.resize(img, dim, interpolation = cv.INTER_AREA)
     cv.imwrite("output/resized.png", resized) 
     print('Resized Dimensions : ',resized.shape) 
@@ -52,29 +42,29 @@ def imageToGrid(image):
     # convert to grayscale
     grayImg = cv.cvtColor(resized, cv.COLOR_BGR2GRAY)
     cv.imwrite("output/grayscale.png", grayImg)
-
-    # calculate histogram
-    # hist = cv.calcHist([grayImg],[0],None,[256],[0,256])
-    # for i in range(len(hist)):
-    #     if hist[i][0] > 0:
-    #         print(i)
     
     # apply thresholding to easily separate walkable and unwalkable areas
     ret, thresh1 = cv.threshold(grayImg,75,229,cv.THRESH_BINARY)
     cv.imwrite("output/threshold.png", thresh1)
     print('Threshold Dimensions : ', thresh1.shape)
 
-    gridArray = np.ones((thresh1.shape), dtype=np.int32)
     for i in range(thresh1.shape[0]):
         for j in range(thresh1.shape[1]):
             # if the current value = 0 (meaning black) append to list of walls
             if thresh1[i][j] == 0:
-                gridArray[i,j] = 0
+                grid[i,j] = 0
             else:
-                gridArray[i,j] = 1
+                grid[i,j] = 1
 
-    return gridArray
-def randomStartGoal(grid):
+def createGridFromDatasetImage(dataset, grid, dim):
+    print('----- Creating Grid Object from Dataset Image-----')
+    listOfImages = []
+    getListOfFiles(dataset, listOfImages)
+    image = listOfImages[randint(0, len(listOfImages)-1)]
+    print('Random Image: ', image)
+    imageToGrid(image, grid, dim)
+
+def randomStartGoal(grid, start, goal):
     print('----- Generating Random Start and Goal -----')
     dist = 0
     width, height = grid.shape
@@ -82,43 +72,36 @@ def randomStartGoal(grid):
     while dist <= 0.50*hypotenuse:
         random_x = randint(0, width-1)
         random_y = randint(0, height-1)
-        start = (random_x, random_y)
+        start[0] = random_x
+        start[1] = random_y
         while grid[random_x, random_y] == 0:
             random_x = randint(0, width-1)
             random_y = randint(0, height-1)
-            start = (random_x, random_y)
+            start[0] = random_x
+            start[1] = random_y
 
         random_x = randint(0, width-1)
         random_y = randint(0, height-1)
-        goal = (random_x, random_y)
+        goal[0] = random_x
+        goal[1] = random_y
         while grid[random_x, random_y] == 0:
             random_x = randint(0, width-1)
             random_y = randint(0, height-1)
-            goal = (random_x, random_y)
+            goal[0] = random_x
+            goal[1] = random_y
         a = np.array(start)
         b = np.array(goal)
         dist = np.linalg.norm(a-b)
 
-    return start, goal
-def createGridFromDatasetImage(dataset):
-    print('----- Creating Grid Object from Dataset Image-----')
-    listOfImages = getListOfFiles(dataset)
-    image = listOfImages[randint(0, len(listOfImages)-1)]
-    print('Random Image: ', image)
-    grid = imageToGrid(image)
-
-    return grid
 
 # function for reconstructing found path
-def reconstructPathV2(cameFrom, start, goal):
+def reconstructPathV2(cameFrom, start, goal, path):
     currentX, currentY = goal
-    path = []
     while (currentX, currentY) != start:
         path.append((currentX, currentY))
         currentX, currentY = cameFrom[currentX, currentY]
     path.append(start)
     path.reverse
-    return path
 
 # functions for pathfinding
 def passable(grid, tile):
@@ -141,7 +124,7 @@ def heuristic(a, b):
     (x1, y1) = a
     (x2, y2) = b
     return abs(x1-x2) + abs(y1-y2)
-def search(grid, start, goal):
+def search(grid, start, goal, parentHash, FValue):
     width, height = grid.shape
 
     openList = []
@@ -150,10 +133,8 @@ def search(grid, start, goal):
     closedList = []
     closedListEntryFinder = {}
     
-    parentHash = np.empty((width, height, 2), dtype=np.int32)
     GValue = np.zeros((width, height), dtype=np.int32)
     HValue = np.zeros((width, height), dtype=np.int32)
-    FValue = np.zeros((width, height), dtype=np.int32)
     parentHash[:] = np.array([-1,-1])
     
     addToPQ(openList, openListEntryFinder, start, 0)
@@ -187,8 +168,6 @@ def search(grid, start, goal):
                 addToPQ(openList, openListEntryFinder, next, FValue[nextX, nextY])
         addToPQ(closedList, closedListEntryFinder, current, FValue[currentX, currentY])
 
-    return parentHash, FValue
-
 # functions for priority queue
 def addToPQ(elements, entryFinder, item, priority=0):
     if item in entryFinder:
@@ -211,15 +190,28 @@ def popFromPQ(elements, entryFinder):
 @jit
 def main():
     # create grid from image dataset
-    grid = createGridFromDatasetImage('dataset/da2-png')
+    scale_factor = 4 # scales to a power of 2
+    dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
+    grid = np.zeros(dim, dtype=np.int32)
+    createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
     # generate random start and goal
-    start, goal = randomStartGoal(grid)
-    print(start, goal)
+    start = [-1, -1]
+    goal = [-1, -1]
+    randomStartGoal(grid, start, goal)
+    start = tuple(start)
+    goal = tuple(goal)
+    
     # search for path
-    parents, cost = search(grid, start, goal)
+    width, height = grid.shape
+    parents = np.empty((width, height, 2), dtype=np.int32)
+    cost = np.zeros((width, height), dtype=np.int32)
+    search(grid, start, goal, parents, cost)
+    # print(parents)
+    # print(cost)
     # reconstruct path
-    path = reconstructPathV2(parents, start, goal)
+    path = []
+    reconstructPathV2(parents, tuple(start), tuple(goal), path)
     print(path)
 
 

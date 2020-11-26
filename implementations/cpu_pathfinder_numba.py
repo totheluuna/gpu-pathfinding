@@ -151,13 +151,22 @@ def search(grid, start, goal, parentHash, FValue):
     GValue = np.zeros((width, height), dtype=np.int32)
     HValue = np.zeros((width, height), dtype=np.int32)
     parentHash[:] = np.array([-1,-1])
+    
+    # addToPQ(openList, openListEntryFinder, start, np.int64(0))
+    # add start to openList
+    if start in openListEntryFinder:
+        REMOVED = (9999, 9999)
+        entry = openListEntryFinder.pop(start)
+        entry[-1] = REMOVED
+    entry = (priority, start)
+    openListEntryFinder[start] = entry
+    heapq.heappush(openList, entry)
 
     print(openList)
     print(closedList)
     print(openListEntryFinder)
     print(closedListEntryFinder)
-    
-    # addToPQ(openList, openListEntryFinder, start, np.int64(0))
+
     # startX, startY = start
     # GValue[startX, startY] = 0
     # HValue[startX, startY] = heuristic(start, goal)

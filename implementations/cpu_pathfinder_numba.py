@@ -215,7 +215,6 @@ def GPUSampleKernel(grid, start, goal, hArray):
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         if grid[x, y] != 0:
-            openList = pq.PriorityQueue()
             hArray[x, y] = heuristic(start, goal)
 
 
@@ -258,14 +257,14 @@ def main():
     print(path)
 
     # GPU Pathfinder
-    hArray = np.zeros(gridArray.shape, dtype=np.int64)
+    hArray = np.zeros(grid.shape, dtype=np.int64)
     TPB = 16
     path = []
     threadsperblock = (TPB, TPB)
-    blockspergrid_x = math.ceil(gridArray.shape[0] / threadsperblock[0])
-    blockspergrid_y = math.ceil(gridArray.shape[1] / threadsperblock[1])
+    blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
+    blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
-    GPUPathfinder[blockspergrid, threadsperblock](gridArray, start, goal, hArray)
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, hArray)
     print(hArray)
 
 

@@ -190,13 +190,11 @@ def addToPQ(elements, entryFinder, item, priority=0):
     # print(entryFinder)
 # @jit
 def removeFromPQ(elements, entryFinder, item):
-    REMOVED = (9999, 9999)
     entry = entryFinder.pop(item)
     elements.remove(entry)
     heapq.heapify(elements)
 # @jit
 def popFromPQ(elements, entryFinder):
-    REMOVED = (9999, 9999)
     priority, item = heapq.heappop(elements)
     return item
 

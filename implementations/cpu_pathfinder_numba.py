@@ -207,18 +207,14 @@ def addToPQ(elements, entryFinder, item, priority):
     entryFinder[item] = entry
     heapq.heappush(elements, entry)
 @jit(nopython=True)
-def removeFromPQ(entryFinder, item):
-    REMOVED = (9999, 9999)
+def removeFromPQ(elements, entryFinder, item):
     entry = entryFinder.pop(item)
-    entry[-1] = REMOVED
+    elements.remove(entry)
+    heapq.heapify(elements)
 @jit
 def popFromPQ(elements, entryFinder):
-    REMOVED = (9999, 9999)
     priority, item = heapq.heappop(elements)
-    if item is not REMOVED:
-        del entryFinder[item]
-        return item
-    raise KeyError('pop from an empty priority queue')
+    return item
 
 
 def main():

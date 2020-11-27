@@ -186,10 +186,10 @@ def search(grid, start, goal, parentHash, FValue):
             newG = GValue[currentX, currentY] + 1 # constant 1 since grid
             if next in openListEntryFinder:
                 if newG < GValue[nextX, nextY]:
-                    removeFromPQ(openListEntryFinder, next)
+                    removeFromPQ(openList, openListEntryFinder, next)
             if next in closedListEntryFinder:
                 if newG < GValue[nextX, nextY]:
-                    removeFromPQ(closedListEntryFinder, next)
+                    removeFromPQ(closedList, closedListEntryFinder, next)
             if (next not in openListEntryFinder) and (next not in closedListEntryFinder):
                 parentHash[nextX, nextY] = np.array([currentX, currentY])
                 GValue[nextX, nextY] = newG
@@ -202,7 +202,7 @@ def search(grid, start, goal, parentHash, FValue):
 @jit(nopython=True)
 def addToPQ(elements, entryFinder, item, priority):
     if item in entryFinder:
-        removeFromPQ(entryFinder, item)
+        removeFromPQ(elements, entryFinder, item)
     entry = [priority, item]
     entryFinder[item] = entry
     heapq.heappush(elements, entry)

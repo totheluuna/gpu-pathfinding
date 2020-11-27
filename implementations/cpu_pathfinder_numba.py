@@ -8,7 +8,7 @@ import numpy as np
 
 import heapq
 
-from numba import jit, njit
+from numba import jit, njit, cuda
 from numba.typed import List
 
 from timeit import default_timer as timer

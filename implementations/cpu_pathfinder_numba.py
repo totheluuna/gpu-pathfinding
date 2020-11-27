@@ -245,7 +245,16 @@ def main():
     path = []
     reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()
-    print('Time it took: ', e-s)
+    print('Before compilation: ', e-s)
+    s = timer()
+    search(grid, start, goal, parents, cost)
+    # print(parents)
+    # print(cost)
+    # reconstruct path
+    path = []
+    reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    e = timer()
+    print('After compilation: ', e-s))
     print(path)
 
 

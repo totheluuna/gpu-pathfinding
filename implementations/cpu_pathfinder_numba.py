@@ -211,7 +211,7 @@ def GPUSampleKernel(grid, start, goal, hArray):
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid
-    print(bpg)
+    # print(bpg)
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         if grid[x, y] != 0:
@@ -266,6 +266,8 @@ def main():
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     GPUSampleKernel[blockspergrid, threadsperblock](grid, start, goal, hArray)
     print(hArray)
+
+    numba.cuda.profile_stop()
 
 
 if __name__ == "__main__":

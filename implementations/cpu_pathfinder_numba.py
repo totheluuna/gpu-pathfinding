@@ -134,7 +134,7 @@ def heuristic(a, b):
 def search(grid, start, goal, parentHash, FValue):
     width, height = grid.shape
 
-    temp_data = [-1, (-1, -1)] 
+    temp_data = (-1, (-1, -1)) 
 
 
     openList = List()
@@ -203,7 +203,7 @@ def search(grid, start, goal, parentHash, FValue):
 def addToPQ(elements, entryFinder, item, priority):
     if item in entryFinder:
         removeFromPQ(elements, entryFinder, item)
-    entry = [priority, item]
+    entry = (priority, item)
     entryFinder[item] = entry
     heapq.heappush(elements, entry)
 @jit(nopython=True)

@@ -11,6 +11,8 @@ import heapq
 from numba import jit, njit
 from numba.typed import List
 
+from timeit import default_timer as timer
+
 seed(1)
 # functions for converting images to grids
 def getListOfFiles(dirName, allFiles):
@@ -235,12 +237,15 @@ def main():
     width, height = grid.shape
     parents = np.empty((width, height, 2), dtype=np.int64)
     cost = np.zeros((width, height), dtype=np.int64)
+    s = timer()
     search(grid, start, goal, parents, cost)
     # print(parents)
     # print(cost)
     # reconstruct path
     path = []
     reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    e = timer()
+    print('Time it took: ', s-e)
     print(path)
 
 

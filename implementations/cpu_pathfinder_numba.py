@@ -149,8 +149,8 @@ def search(grid, start, goal, parentHash, FValue):
     closedList.remove(temp_data)
     closedListEntryFinder.pop(temp_data[1])
     
-    GValue = np.zeros((width, height), dtype=np.int32)
-    HValue = np.zeros((width, height), dtype=np.int32)
+    GValue = np.zeros((width, height), dtype=np.int64)
+    HValue = np.zeros((width, height), dtype=np.int64)
     parentHash[:] = np.array([-1,-1])
     
     addToPQ(openList, openListEntryFinder, start, np.int64(0))
@@ -233,8 +233,8 @@ def main():
     
     # search for path
     width, height = grid.shape
-    parents = np.empty((width, height, 2), dtype=np.int32)
-    cost = np.zeros((width, height), dtype=np.int32)
+    parents = np.empty((width, height, 2), dtype=np.int64)
+    cost = np.zeros((width, height), dtype=np.int64)
     search(grid, start, goal, parents, cost)
     # print(parents)
     # print(cost)

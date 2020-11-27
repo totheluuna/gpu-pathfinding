@@ -4,13 +4,19 @@ import numpy as np
 
 import heapq
 
-from numba import cuda, jit, int32
+from numba import cuda, jit, njit, int32
 import math
 TPB = 16
 
-@jit
-def heuristic(x1, y1, x2, y2):
-    return np.int32(abs(x1-x2) + abs(y1-y2))
+# @jit
+# def heuristic(x1, y1, x2, y2):
+#     return np.int32(abs(x1-x2) + abs(y1-y2))
+
+@njit
+def heuristic(a, b):
+    x1, y1 = a
+    x2, y2 = b
+    return abs(x1-x2) + abs(y1-y2)
 
 @cuda.jit
 def GPUPathfinder(grid, start, goal, hArray):

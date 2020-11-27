@@ -8,7 +8,7 @@ import numpy as np
 
 import heapq
 
-from numba import jit, njit, cuda
+from numba import jit, njit, cuda, typeof
 from numba.typed import List
 
 from timeit import default_timer as timer
@@ -231,6 +231,8 @@ def main():
     randomStartGoal(grid, start, goal)
     start = tuple(start)
     goal = tuple(goal)
+    print('start: ', start, typeof(start))
+    print('goal: ', goal, typeof(goal))
     
     # search for path
     width, height = grid.shape

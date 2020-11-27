@@ -245,7 +245,7 @@ def main():
     path = []
     reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()
-    print('Time it took: ', s-e)
+    print('Time it took: ', e-s)
     print(path)
 
 

@@ -154,12 +154,12 @@ def search(grid, start, goal, parentHash, FValue):
     FValue[startX, startY] = GValue[startX, startY] + HValue[startX, startY]
 
     while not len(openList) == 0:
-        print(openListEntryFinder)
+        # print(openListEntryFinder)
         current = popFromPQ(openList, openListEntryFinder)
         # print(grid[current])
         currentX, currentY = current
         if current == goal:
-            print('Found goal %s' %(str(current)))
+            # print('Found goal %s' %(str(current)))
             break
         for next in getNeighbors(grid, current):
             # print(next)

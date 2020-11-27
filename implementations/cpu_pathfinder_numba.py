@@ -138,7 +138,6 @@ def search(grid, start, goal, parentHash, FValue):
 
     temp_data = (-1, (-1, -1)) 
 
-
     openList = []
     openList.append(temp_data)
     openListEntryFinder = {temp_data[1] : temp_data}
@@ -156,19 +155,6 @@ def search(grid, start, goal, parentHash, FValue):
     parentHash[:] = np.array([-1,-1])
     
     addToPQ(openList, openListEntryFinder, start, np.int64(0))
-    # add start to openList
-    # if start in openListEntryFinder:
-    #     REMOVED = (9999, 9999)
-    #     entry = openListEntryFinder.pop(start)
-    #     entry[-1] = REMOVED
-    # entry = [0, start]
-    # openListEntryFinder[start] = entry
-    # heapq.heappush(openList, entry)
-
-    # print(openList)
-    # print(closedList)
-    # print(openListEntryFinder)
-    # print(closedListEntryFinder)
 
     startX, startY = start
     GValue[startX, startY] = 0
@@ -218,6 +204,20 @@ def popFromPQ(elements, entryFinder):
     priority, item = heapq.heappop(elements)
     return item
 
+@cuda.jit
+def GPUSampleKernel(grid, start, goal, hArray):
+    x, y = cuda.grid(2)
+
+    tx = cuda.threadIdx.x
+    ty = cuda.threadIdx.y
+    bpg = cuda.gridDim.x    # blocks per grid
+    print(bpg)
+    if x < grid.shape[0] and y < grid.shape[1]:
+        goal_x, goal_y = goal
+        if grid[x, y] != 0:
+            openList = pq.PriorityQueue()
+            hArray[x, y] = heuristic(x, y, goal_x, goal_y)
+
 
 def main():
     # create grid from image dataset
@@ -256,6 +256,17 @@ def main():
     e = timer()
     print('After compilation: ', e-s)
     print(path)
+
+    # GPU Pathfinder
+    hArray = np.zeros(gridArray.shape, dtype=np.int64)
+    TPB = 16
+    path = []
+    threadsperblock = (TPB, TPB)
+    blockspergrid_x = math.ceil(gridArray.shape[0] / threadsperblock[0])
+    blockspergrid_y = math.ceil(gridArray.shape[1] / threadsperblock[1])
+    blockspergrid = (blockspergrid_x, blockspergrid_y)
+    GPUPathfinder[blockspergrid, threadsperblock](gridArray, start, goal, hArray)
+    print(hArray)
 
 
 if __name__ == "__main__":

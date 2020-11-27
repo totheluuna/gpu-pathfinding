@@ -13,6 +13,8 @@ from numba.typed import List
 
 from timeit import default_timer as timer
 
+from implementations import gpu_pathfinder as gpupath
+
 seed(1)
 # functions for converting images to grids
 def getListOfFiles(dirName, allFiles):
@@ -266,7 +268,7 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     print('Here')
-    GPUSampleKernel[blockspergrid, threadsperblock](grid, start, goal, hArray)
+    gpupath.GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, hArray)
     print(hArray)
 
 

@@ -11,7 +11,7 @@ import heapq
 # from numba import jit
 # from numba.typed import List
 
-seed(1)
+seed(42069)
 # functions for converting images to grids
 def getListOfFiles(dirName, allFiles):
     # create a list of file and sub directories 
@@ -153,6 +153,7 @@ def search(grid, start, goal, parentHash, FValue):
     FValue[startX, startY] = GValue[startX, startY] + HValue[startX, startY]
 
     while not len(openList) == 0:
+        print(openListEntryFinder)
         current = popFromPQ(openList, openListEntryFinder)
         # print(grid[current])
         currentX, currentY = current
@@ -165,10 +166,10 @@ def search(grid, start, goal, parentHash, FValue):
             newG = GValue[currentX, currentY] + 1 # constant 1 since grid
             if next in openListEntryFinder:
                 if newG < GValue[nextX, nextY]:
-                    removeFromPQ(openListEntryFinder, next)
+                    removeFromPQ(openList, openListEntryFinder, next)
             if next in closedListEntryFinder:
                 if newG < GValue[nextX, nextY]:
-                    removeFromPQ(closedListEntryFinder, next)
+                    removeFromPQ(closedList, closedListEntryFinder, next)
             if (next not in openListEntryFinder) and (next not in closedListEntryFinder):
                 parentHash[nextX, nextY] = np.array([currentX, currentY])
                 GValue[nextX, nextY] = newG
@@ -181,30 +182,27 @@ def search(grid, start, goal, parentHash, FValue):
 # @jit
 def addToPQ(elements, entryFinder, item, priority=0):
     if item in entryFinder:
-        removeFromPQ(item)
+        removeFromPQ(elements, entryFinder, item)
     entry = (priority, item)
     entryFinder[item] = entry
     heapq.heappush(elements, entry)
     # print(elements)
-    print(entryFinder)
+    # print(entryFinder)
 # @jit
-def removeFromPQ(entryFinder, item):
+def removeFromPQ(elements, entryFinder, item):
     REMOVED = (9999, 9999)
     entry = entryFinder.pop(item)
-    entry[-1] = REMOVED
+    elements.remove(entry)
+    heapq.heapify(elements)
 # @jit
 def popFromPQ(elements, entryFinder):
     REMOVED = (9999, 9999)
     priority, item = heapq.heappop(elements)
-    if item is not REMOVED:
-        del entryFinder[item]
-        return item
-    raise KeyError('pop from an empty priority queue')
-
+    return item
 
 def main():
     # create grid from image dataset
-    scale_factor = 4 # scales to a power of 2
+    scale_factor = 7 # scales to a power of 2
     dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
     grid = np.zeros(dim, dtype=np.int32)
     createGridFromDatasetImage('dataset/da2-png', grid, dim)

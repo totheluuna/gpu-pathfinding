@@ -137,13 +137,13 @@ def search(grid, start, goal, parentHash, FValue):
     temp_data = (-1, (-1, -1)) 
 
 
-    openList = List()
+    openList = []
     openList.append(temp_data)
     openListEntryFinder = {temp_data[1] : temp_data}
     openList.remove(temp_data)
     openListEntryFinder.pop(temp_data[1])
 
-    closedList = List()
+    closedList = []
     closedList.append(temp_data)
     closedListEntryFinder = {temp_data[1] : temp_data}
     closedList.remove(temp_data)

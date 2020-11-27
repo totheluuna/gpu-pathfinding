@@ -1,7 +1,7 @@
 import os, math, argparse
 from implementations import cpu_threaded as cpu
 from implementations import gpu_threaded as gpu
-# from implementations import gpu_pathfinder as gpu_path
+from implementations import gpu_pathfinder as gpu_path
 from models import grid
 from utilities import helper
 

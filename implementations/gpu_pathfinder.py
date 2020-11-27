@@ -23,7 +23,7 @@ def GPUPathfinder(grid, start, goal, hArray):
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid
-    print(bpg)
+    # print(bpg)
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         if grid[x, y] != 0:

@@ -13,7 +13,7 @@ from numba.typed import List
 
 from timeit import default_timer as timer
 
-from implementations import gpu_pathfinder as gpupath
+import gpu_pathfinder as gpupath
 
 seed(1)
 # functions for converting images to grids

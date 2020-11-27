@@ -216,7 +216,7 @@ def GPUSampleKernel(grid, start, goal, hArray):
         goal_x, goal_y = goal
         if grid[x, y] != 0:
             openList = pq.PriorityQueue()
-            hArray[x, y] = heuristic(x, y, goal_x, goal_y)
+            hArray[x, y] = heuristic(start, goal)
 
 
 def main():

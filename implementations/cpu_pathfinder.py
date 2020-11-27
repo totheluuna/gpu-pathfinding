@@ -7,6 +7,7 @@ import math
 import numpy as np
 
 import heapq
+from timeit import default_timer as timer
 
 # from numba import jit
 # from numba.typed import List
@@ -216,12 +217,15 @@ def main():
     width, height = grid.shape
     parents = np.empty((width, height, 2), dtype=np.int32)
     cost = np.zeros((width, height), dtype=np.int32)
+    s = timer()
     search(grid, start, goal, parents, cost)
     # print(parents)
     # print(cost)
     # reconstruct path
     path = []
     reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    e = timer()
+    print('Time it took: ', e-s)
     print(path)
 
 

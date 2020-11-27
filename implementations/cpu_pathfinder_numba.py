@@ -130,7 +130,7 @@ def heuristic(a, b):
     (x2, y2) = b
     return abs(x1-x2) + abs(y1-y2)
 
-@jit(nopython=True)
+@jit
 def search(grid, start, goal, parentHash, FValue):
     width, height = grid.shape
 
@@ -199,14 +199,14 @@ def search(grid, start, goal, parentHash, FValue):
         addToPQ(closedList, closedListEntryFinder, current, FValue[currentX, currentY])
 
 # functions for priority queue
-@jit(nopython=True)
+@jit
 def addToPQ(elements, entryFinder, item, priority):
     if item in entryFinder:
         removeFromPQ(elements, entryFinder, item)
     entry = (priority, item)
     entryFinder[item] = entry
     heapq.heappush(elements, entry)
-@jit(nopython=True)
+@jit
 def removeFromPQ(elements, entryFinder, item):
     entry = entryFinder.pop(item)
     elements.remove(entry)

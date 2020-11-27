@@ -163,10 +163,10 @@ def search(grid, start, goal, parentHash, FValue):
     # openListEntryFinder[start] = entry
     # heapq.heappush(openList, entry)
 
-    print(openList)
-    print(closedList)
-    print(openListEntryFinder)
-    print(closedListEntryFinder)
+    # print(openList)
+    # print(closedList)
+    # print(openListEntryFinder)
+    # print(closedListEntryFinder)
 
     startX, startY = start
     GValue[startX, startY] = 0
@@ -178,7 +178,7 @@ def search(grid, start, goal, parentHash, FValue):
         # print(grid[current])
         currentX, currentY = current
         if current == goal:
-            print('Found goal %s' %(str(current)))
+            # print('Found goal %s' %(str(current)))
             break
         for next in getNeighbors(grid, current):
             # print(next)

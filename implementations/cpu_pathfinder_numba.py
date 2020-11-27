@@ -215,7 +215,7 @@ def GPUSampleKernel(grid, start, goal, hArray):
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         if grid[x, y] != 0:
-            hArray[x, y] = heuristic(start, goal)
+            hArray[x, y] *= 256
 
 
 def main():
@@ -259,7 +259,6 @@ def main():
     # GPU Pathfinder
     hArray = np.zeros(grid.shape, dtype=np.int64)
     TPB = 16
-    path = []
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])

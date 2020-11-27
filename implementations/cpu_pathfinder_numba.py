@@ -128,8 +128,8 @@ def getNeighbors(grid, tile):
     return results
 @njit
 def heuristic(a, b):
-    (x1, y1) = a
-    (x2, y2) = b
+    x1, y1 = a
+    x2, y2 = b
     return abs(x1-x2) + abs(y1-y2)
 
 @njit

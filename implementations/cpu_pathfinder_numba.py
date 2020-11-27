@@ -267,8 +267,6 @@ def main():
     GPUSampleKernel[blockspergrid, threadsperblock](grid, start, goal, hArray)
     print(hArray)
 
-    numba.cuda.profile_stop()
-
 
 if __name__ == "__main__":
     main()

@@ -8,7 +8,7 @@ import numpy as np
 
 import heapq
 
-from numba import jit
+from numba import jit, njit
 from numba.typed import List
 
 seed(1)

@@ -254,7 +254,7 @@ def main():
     path = []
     reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()
-    print('After compilation: ', e-s))
+    print('After compilation: ', e-s)
     print(path)
 
 

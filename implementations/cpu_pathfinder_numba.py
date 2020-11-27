@@ -134,7 +134,7 @@ def heuristic(a, b):
 def search(grid, start, goal, parentHash, FValue):
     width, height = grid.shape
 
-    temp_data = (-1, (-1, -1)) 
+    temp_data = [-1, (-1, -1)] 
 
 
     openList = List()

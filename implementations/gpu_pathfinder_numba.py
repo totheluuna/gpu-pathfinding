@@ -247,6 +247,8 @@ def main():
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
+    start = np.asarray(start, dtype=np.int64)
+    goal = np.asarray(goal, dtype=np.int64)
     GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, hArray)
     print(hArray)
 

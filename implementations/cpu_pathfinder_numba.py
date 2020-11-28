@@ -13,8 +13,6 @@ from numba.typed import List
 
 from timeit import default_timer as timer
 
-import gpu_pathfinder as gpupath
-
 seed(1)
 # functions for converting images to grids
 def getListOfFiles(dirName, allFiles):
@@ -134,7 +132,7 @@ def heuristic(a, b):
     x2, y2 = b
     return abs(x1-x2) + abs(y1-y2)
 
-@jit
+@njit
 def search(grid, start, goal, parentHash, FValue):
     width, height = grid.shape
 
@@ -206,22 +204,6 @@ def popFromPQ(elements, entryFinder):
     priority, item = heapq.heappop(elements)
     return item
 
-@cuda.jit
-def GPUPathfinder(grid, start, goal, hArray, parents, cost):
-    x, y = cuda.grid(2)
-
-    tx = cuda.threadIdx.x
-    ty = cuda.threadIdx.y
-    bpg = cuda.gridDim.x    # blocks per grid
-    # print(bpg)
-    if x < grid.shape[0] and y < grid.shape[1]:
-        goal_x, goal_y = goal
-        if grid[x, y] != 0:
-            # hArray[x, y] *= 256
-            # print(x, y)
-            search(grid, start, goal, parents, cost)
-
-
 def main():
     # create grid from image dataset
     scale_factor = 4 # scales to a power of 2
@@ -238,43 +220,27 @@ def main():
     print('start: ', start, typeof(start))
     print('goal: ', goal, typeof(goal))
     
-    # # search for path
     width, height = grid.shape
     parents = np.empty((width, height, 2), dtype=np.int64)
     cost = np.zeros((width, height), dtype=np.int64)
-    # s = timer()
-    # search(grid, start, goal, parents, cost)
-    # # print(parents)
-    # # print(cost)
-    # # reconstruct path
-    # path = []
-    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    # e = timer()
-    # print('Before compilation: ', e-s)
-    # s = timer()
-    # search(grid, start, goal, parents, cost)
-    # # print(parents)
-    # # print(cost)
-    # # reconstruct path
-    # path = []
-    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    # e = timer()
-    # print('After compilation: ', e-s)
-    # print(path)
 
-    # GPU Pathfinder
-    hArray = np.zeros(grid.shape, dtype=np.int64)
-    TPB = 16
-    threadsperblock = (TPB, TPB)
-    blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
-    blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
-    blockspergrid = (blockspergrid_x, blockspergrid_y)
-    print('Here')
-    start = np.asarray(start, dtype=np.int64)
-    goal = np.asarray(goal, dtype=np.int64)
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, hArray, parents, cost)
-    print(hArray)
+    # search for path (before compilation)
+    s = timer()
+    search(grid, start, goal, parents, cost)
+    path = []
+    reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    e = timer()
+    print('Before compilation: ', e-s)
 
+    # search for path (after compilation)
+    s = timer()
+    search(grid, start, goal, parents, cost)
+    path = []
+    reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    e = timer()
+    print('After compilation: ', e-s)
+
+    print(path)
 
 if __name__ == "__main__":
     main()

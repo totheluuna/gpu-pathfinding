@@ -239,9 +239,9 @@ def main():
     print('goal: ', goal, typeof(goal))
     
     # # search for path
-    # width, height = grid.shape
-    # parents = np.empty((width, height, 2), dtype=np.int64)
-    # cost = np.zeros((width, height), dtype=np.int64)
+    width, height = grid.shape
+    parents = np.empty((width, height, 2), dtype=np.int64)
+    cost = np.zeros((width, height), dtype=np.int64)
     # s = timer()
     # search(grid, start, goal, parents, cost)
     # # print(parents)

@@ -8,7 +8,7 @@ import numpy as np
 
 import heapq
 
-from numba import jit, jit(target='cuda'), cuda, typeof
+from numba import jit, cuda, typeof
 from numba.typed import List
 
 from timeit import default_timer as timer

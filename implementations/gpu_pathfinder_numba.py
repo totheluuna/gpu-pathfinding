@@ -107,15 +107,15 @@ def reconstructPathV2(cameFrom, start, goal, path):
     path.reverse
 
 # functions for pathfinding
-@jit(target='cuda')
+@cuda.jit(device=True)
 def passable(grid, tile):
     x,y = tile
     return grid[tile] == 1
-@jit(target='cuda')
+@cuda.jit(device=True)
 def inBounds(grid, tile):
     (x, y) = tile
     return 0 <= x < grid.shape[0] and 0 <= y < grid.shape[1]
-@jit(target='cuda')
+@cuda.jit(device=True)
 def getNeighbors(grid, tile):
     (x, y) = tile
     results = []
@@ -126,13 +126,13 @@ def getNeighbors(grid, tile):
                 results.append(tile)
     if (x + y)%2 == 0: results.reverse()
     return results
-@jit(target='cuda')
+@cuda.jit(device=True)
 def heuristic(a, b):
     x1, y1 = a
     x2, y2 = b
     return abs(x1-x2) + abs(y1-y2)
 
-@jit(target='cuda')
+@cuda.jit(device=True)
 def search(grid, start, goal, parentHash, FValue):
     width, height = grid.shape
 
@@ -187,19 +187,19 @@ def search(grid, start, goal, parentHash, FValue):
         addToPQ(closedList, closedListEntryFinder, current, FValue[currentX, currentY])
 
 # functions for priority queue
-@jit(target='cuda')
+@cuda.jit(device=True)
 def addToPQ(elements, entryFinder, item, priority):
     if item in entryFinder:
         removeFromPQ(elements, entryFinder, item)
     entry = (priority, item)
     entryFinder[item] = entry
     heapq.heappush(elements, entry)
-@jit(target='cuda')
+@cuda.jit(device=True)
 def removeFromPQ(elements, entryFinder, item):
     entry = entryFinder.pop(item)
     elements.remove(entry)
     heapq.heapify(elements)
-@jit(target='cuda')
+@cuda.jit(device=True)
 def popFromPQ(elements, entryFinder):
     priority, item = heapq.heappop(elements)
     return item

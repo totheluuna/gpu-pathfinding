@@ -272,7 +272,7 @@ def main():
     print('Here')
     start = np.asarray(start, dtype=np.int64)
     goal = np.asarray(goal, dtype=np.int64)
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, hArray)
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, hArray, parents, cost)
     print(hArray)
 
 

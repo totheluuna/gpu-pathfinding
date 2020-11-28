@@ -207,7 +207,7 @@ def popFromPQ(elements, entryFinder):
     return item
 
 @cuda.jit
-def GPUPathfinder(grid, start, goal, hArray):
+def GPUPathfinder(grid, start, goal, hArray, parents, cost):
     x, y = cuda.grid(2)
 
     tx = cuda.threadIdx.x
@@ -217,7 +217,8 @@ def GPUPathfinder(grid, start, goal, hArray):
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         if grid[x, y] != 0:
-            hArray[x, y] *= 256
+            # hArray[x, y] *= 256
+            search(grid, start, goal, parents, cost)
 
 
 def main():

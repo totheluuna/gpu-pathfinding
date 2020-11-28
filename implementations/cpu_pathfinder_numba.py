@@ -218,6 +218,7 @@ def GPUPathfinder(grid, start, goal, hArray, parents, cost):
         goal_x, goal_y = goal
         if grid[x, y] != 0:
             # hArray[x, y] *= 256
+            print(x, y)
             search(grid, start, goal, parents, cost)
 
 

@@ -207,7 +207,7 @@ def popFromPQ(elements, entryFinder):
     return item
 
 @cuda.jit
-def GPUSampleKernel(grid, start, goal, hArray):
+def GPUPathfinder(grid, start, goal, hArray):
     x, y = cuda.grid(2)
 
     tx = cuda.threadIdx.x
@@ -270,7 +270,7 @@ def main():
     print('Here')
     start = np.asarray(start, dtype=np.int64)
     goal = np.asarray(goal, dtype=np.int64)
-    gpupath.GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, hArray)
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, hArray)
     print(hArray)
 
 

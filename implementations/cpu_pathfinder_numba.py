@@ -206,7 +206,7 @@ def popFromPQ(elements, entryFinder):
 
 def main():
     # create grid from image dataset
-    scale_factor = 4 # scales to a power of 2
+    scale_factor = 7 # scales to a power of 2
     dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
     grid = np.zeros(dim, dtype=np.int32)
     createGridFromDatasetImage('dataset/da2-png', grid, dim)

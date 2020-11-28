@@ -268,8 +268,8 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     print('Here')
-    # start = np.asarray(start, dtype=np.int64)
-    # goal = np.asarray(goal, dtype=np.int64)
+    start = np.asarray(start, dtype=np.int64)
+    goal = np.asarray(goal, dtype=np.int64)
     gpupath.GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, hArray)
     print(hArray)
 

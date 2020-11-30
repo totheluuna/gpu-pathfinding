@@ -129,8 +129,7 @@ def getNeighbors(grid, tile):
 @cuda.jit(device=True)
 # @jit
 def heuristic(a, b):
-    temp = List()
-    temp.append(0)
+    temp = [1,2]
     x1, y1 = a
     x2, y2 = b
     heapq.heappush(temp, abs(x1-x2) + abs(y1-y2))

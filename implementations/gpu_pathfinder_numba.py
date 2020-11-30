@@ -126,7 +126,7 @@ def getNeighbors(grid, tile):
                 results.append(tile)
     if (x + y)%2 == 0: results.reverse()
     return results
-@cuda.jit(device=True)t
+@cuda.jit(device=True)
 def heuristic(a, b):
     temp = [1,2]
     x1, y1 = a

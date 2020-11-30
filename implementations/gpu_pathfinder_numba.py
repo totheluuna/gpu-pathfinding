@@ -135,7 +135,7 @@ def heuristic(a, b):
 
 @cuda.jit(device=True)
 def test_func():
-    temp = cp.ones(dtype=cp.int64)
+    temp = cp.ones((4,4),dtype=cp.int64)
     temp[1,2] = 999
     # heapq.heappush(temp, 0)
     # for i in range(5):

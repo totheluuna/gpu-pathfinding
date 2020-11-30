@@ -5,6 +5,7 @@ import sys
 import os
 import math
 import numpy as np
+import cupy as cp
 
 import heapq
 
@@ -134,11 +135,12 @@ def heuristic(a, b):
 
 @cuda.jit(device=True)
 def test_func():
-    temp = cuda.device_array(shape=(2,2), dtype=np.int64)
-    temp[:] = 1
+    temp = cp.ones(dtype=cp.int64)
+    temp[1,2] = 999
     # heapq.heappush(temp, 0)
     # for i in range(5):
     #     temp[i] = 973
+    print(np.where(temp == 999))
     
 
 @cuda.jit(device=True)

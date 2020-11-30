@@ -208,6 +208,7 @@ def popFromPQ(elements, entryFinder):
 def GPUPathfinder(grid, start, goal, hArray, parents, cost):
     x, y = cuda.grid(2)
     temp = []
+    temp.append(1)
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid

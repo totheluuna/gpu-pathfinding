@@ -132,6 +132,12 @@ def heuristic(a, b):
     x2, y2 = b
     return abs(x1-x2) + abs(y1-y2)
 
+@jit
+def test_func():
+    temp = []
+    for i in range(5):
+        heapq.heappush(temp, i)
+
 @cuda.jit(device=True)
 def search(grid, start, goal, parentHash, FValue):
     width, height = grid.shape
@@ -216,10 +222,7 @@ def GPUPathfinder(grid, start, goal, hArray, parents, cost):
         goal_x, goal_y = goal
         if grid[x, y] != 0:
             # hArray[x, y] = heuristic((x, y), temp)
-            parents[x,y] = np.array(temp, dtype=np.int64)
-            
-            # search(grid, start, goal, parents, cost)
-            # temp.append(1)
+            test_func()
 
 
 def main():

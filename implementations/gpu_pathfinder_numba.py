@@ -126,8 +126,9 @@ def getNeighbors(grid, tile):
                 results.append(tile)
     if (x + y)%2 == 0: results.reverse()
     return results
-@cuda.jit(device=True)
+@jit
 def heuristic(a, b):
+    temp = [1,2]
     x1, y1 = a
     x2, y2 = b
     return abs(x1-x2) + abs(y1-y2)
@@ -207,7 +208,7 @@ def popFromPQ(elements, entryFinder):
 @cuda.jit
 def GPUPathfinder(grid, start, goal, hArray, parents, cost):
     x, y = cuda.grid(2)
-    temp = [1,2]
+    temp = (1,2)
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid

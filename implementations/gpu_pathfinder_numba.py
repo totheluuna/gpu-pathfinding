@@ -131,6 +131,7 @@ def heuristic(a, b):
     temp = [1,2]
     x1, y1 = a
     x2, y2 = b
+    temp.append(abs(x1-x2) + abs(y1-y2))
     return abs(x1-x2) + abs(y1-y2)
 
 @cuda.jit(device=True)

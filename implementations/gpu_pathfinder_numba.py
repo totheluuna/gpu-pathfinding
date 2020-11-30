@@ -215,7 +215,8 @@ def GPUPathfinder(grid, start, goal, hArray, parents, cost):
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         if grid[x, y] != 0:
-            hArray[x, y] = heuristic((x, y), goal)
+            hArray[x, y] = heuristic((x, y), temp)
+            
             # search(grid, start, goal, parents, cost)
             # temp.append(1)
 

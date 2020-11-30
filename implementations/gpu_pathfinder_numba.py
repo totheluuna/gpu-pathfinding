@@ -132,7 +132,7 @@ def heuristic(a, b):
     x2, y2 = b
     return abs(x1-x2) + abs(y1-y2)
 
-@cuda.jit(device=true)
+@cuda.jit(device=True)
 def test_func():
     temp = []
     for i in range(5):

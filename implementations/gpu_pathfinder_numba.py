@@ -199,7 +199,9 @@ def search(grid, start, goal, parentHash, FValue):
 
 @cuda.jit(device=True)
 def search_gpu(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray):
-    openArray[:] += 1
+    for i in range(cost.shape[0]):
+        for j in range(cost.shape[1]):
+            cost[i,j] += 1
 
 # functions for priority queue
 @cuda.jit(device=True)
@@ -267,8 +269,7 @@ def main():
     start = np.asarray(start, dtype=np.int64)
     goal = np.asarray(goal, dtype=np.int64)
     GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, parents, cost, gArray, hArray, openStatus, closedStatus)
-    print(hArray)
-    print(parents)
+    print(cost)
 
 if __name__ == "__main__":
     main()

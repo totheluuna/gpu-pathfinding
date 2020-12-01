@@ -201,7 +201,7 @@ def search(grid, start, goal, parentHash, FValue):
 def search_gpu(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray):
     for i in range(cost.shape[0]):
         for j in range(cost.shape[1]):
-            cost[i,j] += 1
+            cost[j,i] += 1
 
 # functions for priority queue
 @cuda.jit(device=True)
@@ -259,6 +259,7 @@ def main():
     hArray = np.zeros(grid.shape, dtype=np.int64)
     openStatus = np.zeros(grid.shape, dtype=np.int64)
     closedStatus = np.zeros(grid.shape, dtype=np.int64)
+    print(cost)
 
     TPB = 16
     path = []

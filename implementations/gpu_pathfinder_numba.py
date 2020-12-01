@@ -269,7 +269,7 @@ def main():
     start = np.asarray(start, dtype=np.int64)
     goal = np.asarray(goal, dtype=np.int64)
     GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, parents, cost, gArray, hArray, openStatus, closedStatus)
-    print(cost)
+    print(hArray)
 
 if __name__ == "__main__":
     main()

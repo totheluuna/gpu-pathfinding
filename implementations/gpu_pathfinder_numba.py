@@ -199,7 +199,7 @@ def search(grid, start, goal, parentHash, FValue):
 
 @cuda.jit(device=True)
 def search_gpu(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray):
-    hArray[start] += 69
+    hArray[start] = heuristic(start, goal)
 
 # functions for priority queue
 @cuda.jit(device=True)

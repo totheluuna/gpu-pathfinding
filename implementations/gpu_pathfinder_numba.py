@@ -199,10 +199,7 @@ def search(grid, start, goal, parentHash, FValue):
 
 @cuda.jit(device=True)
 def search_gpu(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray):
-    # print(cost.shape)
-    for i in range(cost.shape[0]):
-        for j in range(cost.shape[1]):
-            cost[j,i] += 1
+    hArray[start] = heuristic(start, goal)
 
 # functions for priority queue
 @cuda.jit(device=True)
@@ -234,9 +231,8 @@ def GPUPathfinder(grid, start, goal, parents, cost, gArray, hArray, openArray, c
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         # if grid[x, y] != 0:
-        # search_gpu(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray)
+        search_gpu(grid, (x, y), goal, parents, cost, gArray, hArray, openArray, closedArray)
         # cuda.syncthreads()
-        cost[x,y] += 1
 
 
 def main():

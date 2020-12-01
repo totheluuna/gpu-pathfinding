@@ -225,12 +225,14 @@ def popFromPQ(elements, entryFinder):
 @cuda.jit
 def GPUPathfinder(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray):
     x, y = cuda.grid(2)
+    width, height = cost.shape
     temp = (1,2)
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid
     # print(bpg)
-    print(cost.shape)
+    print(width)
+    print(height)
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         # if grid[x, y] != 0:

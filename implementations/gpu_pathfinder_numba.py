@@ -231,9 +231,9 @@ def GPUPathfinder(grid, start, goal, parents, cost, gArray, hArray, openArray, c
     # print(bpg)
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
-        if grid[x, y] != 0:
-            search_gpu(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray)
-        cuda.syncthreads()
+        # if grid[x, y] != 0:
+        search_gpu(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray)
+        # cuda.syncthreads()
 
 
 def main():

@@ -197,6 +197,10 @@ def search(grid, start, goal, parentHash, FValue):
                 addToPQ(openList, openListEntryFinder, next, FValue[nextX, nextY])
         addToPQ(closedList, closedListEntryFinder, current, FValue[currentX, currentY])
 
+@cuda.jit(device=True)
+def search_gpu(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray):
+    openArray[:] += 1
+
 # functions for priority queue
 @cuda.jit(device=True)
 def addToPQ(elements, entryFinder, item, priority):
@@ -216,7 +220,7 @@ def popFromPQ(elements, entryFinder):
     return item
 
 @cuda.jit
-def GPUPathfinder(grid, start, goal, hArray, parents, cost):
+def GPUPathfinder(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray):
     x, y = cuda.grid(2)
     temp = (1,2)
     tx = cuda.threadIdx.x
@@ -226,8 +230,8 @@ def GPUPathfinder(grid, start, goal, hArray, parents, cost):
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         if grid[x, y] != 0:
-            # hArray[x, y] = heuristic((x, y), temp)
-            test_func()
+            search_gpu(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray)
+            
 
 
 def main():
@@ -249,8 +253,11 @@ def main():
     width, height = grid.shape
     parents = np.empty((width, height, 2), dtype=np.int64)
     cost = np.zeros((width, height), dtype=np.int64)
-
+    gArray = np.zeros(grid.shape, dtype=np.int64)
     hArray = np.zeros(grid.shape, dtype=np.int64)
+    openStatus = np.zeros(grid.shape, dtype=np.int64)
+    closedStatus = np.zeros(grid.shape, dtype=np.int64)
+
     TPB = 16
     path = []
     threadsperblock = (TPB, TPB)
@@ -259,7 +266,7 @@ def main():
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     start = np.asarray(start, dtype=np.int64)
     goal = np.asarray(goal, dtype=np.int64)
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, hArray, parents, cost)
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray)
     print(hArray)
     print(parents)
 

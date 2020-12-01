@@ -199,7 +199,7 @@ def search(grid, start, goal, parentHash, FValue):
 
 @cuda.jit(device=True)
 def search_gpu(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray):
-    print(cost.shape)
+    # print(cost.shape)
     for i in range(cost.shape[0]):
         for j in range(cost.shape[1]):
             cost[j,i] += 1
@@ -230,6 +230,7 @@ def GPUPathfinder(grid, start, goal, parents, cost, gArray, hArray, openArray, c
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid
     # print(bpg)
+    print(cost.shape)
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         # if grid[x, y] != 0:

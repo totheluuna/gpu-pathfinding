@@ -253,9 +253,9 @@ def main():
     reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()
     print('\n (Before compilation) Path found in ', e-s, 's')
-    print(path)
+    # print(path)
     s = timer()
-    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED)
+    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
     x,y = start
     path = []
     reconstructPathV2(parents, tuple(start), tuple(goal), path)

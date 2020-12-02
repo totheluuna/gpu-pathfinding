@@ -199,7 +199,9 @@ def search(grid, start, goal, parentHash, FValue):
 
 @cuda.jit(device=True)
 def search_gpu(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray):
-    hArray[start] = heuristic(start, goal)
+    # hArray[start] = heuristic(start, goal)
+    return np.amin(openArray)
+    
 
 # functions for priority queue
 @cuda.jit(device=True)
@@ -220,7 +222,7 @@ def popFromPQ(elements, entryFinder):
     return item
 
 @cuda.jit
-def GPUPathfinder(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray):
+def GPUPathfinder(grid, start, goal, parents, cost, gArray, hArray, openArray, closedArray, temp):
     x, y = cuda.grid(2)
     width, height = cost.shape
     temp = (1,2)
@@ -231,7 +233,7 @@ def GPUPathfinder(grid, start, goal, parents, cost, gArray, hArray, openArray, c
     if x < grid.shape[0] and y < grid.shape[1]:
         goal_x, goal_y = goal
         # if grid[x, y] != 0:
-        search_gpu(grid, (x, y), goal, parents, cost, gArray, hArray, openArray, closedArray)
+        temp = search_gpu(grid, (x, y), goal, parents, cost, gArray, hArray, openArray, closedArray)
         # cuda.syncthreads()
 
 
@@ -268,8 +270,10 @@ def main():
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     start = np.asarray(start, dtype=np.int64)
     goal = np.asarray(goal, dtype=np.int64)
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, parents, cost, gArray, hArray, openStatus, closedStatus)
+    temp = 999999999
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, parents, cost, gArray, hArray, openStatus, closedStatus, temp)
     print(hArray)
+    print(temp)
 
 if __name__ == "__main__":
     main()

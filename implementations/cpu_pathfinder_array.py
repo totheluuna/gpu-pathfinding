@@ -166,13 +166,13 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED):
 
     counter = 0
     while np.amin(open) < UNEXPLORED:
-        print("\riterations: {}".format(counter), end='')
+        # print("\riterations: {}".format(counter), end='')
         # current = np.unravel_index(np.argmin(open, axis=None), open.shape)
         # current_x, current_y = current
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         if current_x == goal_x and current_y == goal_y:
-            print("\riterations: {}".format(counter), end='')
+            # print("\riterations: {}".format(counter), end='')
             break
         for next in getNeighbors(grid, current):
             next_x, next_y = next

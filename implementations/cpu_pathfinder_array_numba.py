@@ -211,48 +211,8 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         counter += 1
 
 def main():
-    # COMPILATION PROCESS
     # create grid from image dataset
-    scale_factor = 4 # scales to a power of 2
-    dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
-    UNEXPLORED = int(math.pow(2, (scale_factor*2)))
-    grid = np.zeros(dim, dtype=np.int32)
-    createGridFromDatasetImage('dataset/da2-png', grid, dim)
-
-    # generate random start and goal
-    start = [-1, -1]
-    goal = [-1, -1]
-    neighbors = np.empty((4,2), dtype=np.int32)
-    neighbors[:] = np.array([0,0])
-    randomStartGoal(grid, start, goal)
-    start = np.array(start)
-    goal = np.array(goal)
-
-    # search for path
-    width, height = grid.shape
-    open = np.empty((width, height), dtype=np.int32) # open or closed
-    open[:] = UNEXPLORED
-    closed = np.empty((width, height), dtype=np.int32) # open or closed
-    closed[:] = UNEXPLORED
-    parents = np.empty((width, height, 2), dtype=np.int32)
-    parents[:] = np.array([-1,-1])
-    cost = np.zeros((width, height), dtype=np.int32)
-    g = np.zeros((width, height), dtype=np.int32)
-    h = np.zeros((width, height), dtype=np.int32)
-    x,y = start
-
-    print("----- Searching for Path -----")
-    s = timer()
-    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-    x,y = start
-    path = []
-    reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    e = timer()
-    print('(Search + compilation) Path found in ', e-s, 's')
-
-    # POST-COMPILATION PROCESS
-    # create grid from image dataset
-    scale_factor = 10 # scales to a power of 2
+    scale_factor = 7 # scales to a power of 2
     dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
     UNEXPLORED = int(math.pow(2, (scale_factor*2)))
     grid = np.zeros(dim, dtype=np.int32)
@@ -284,6 +244,14 @@ def main():
     h = np.zeros((width, height), dtype=np.int32)
     x,y = start
     # print(parents)
+    print("----- Searching for Path -----")
+    s = timer()
+    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    x,y = start
+    path = []
+    reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    e = timer()
+    print('(Search + compilation) Path found in ', e-s, 's')
     s = timer()
     search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
     x,y = start

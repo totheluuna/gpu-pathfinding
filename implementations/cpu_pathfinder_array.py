@@ -113,23 +113,53 @@ def reconstructPathV2(cameFrom, start, goal, path):
 # @jit
 def passable(grid, tile):
     x,y = tile
-    return grid[tile] == 1
+    return grid[x,y] == 1
 # @jit
 def inBounds(grid, tile):
     (x, y) = tile
     return 0 <= x < grid.shape[0] and 0 <= y < grid.shape[1]
 # @jit
-def getNeighbors(grid, tile):
+def getNeighbors(grid, tile, neighbors):
     # TO DO: modify to use numpy array
     (x, y) = tile
-    results = []
-    possibleNeighbors = [(x+1,y), (x,y-1), (x-1,y), (x,y+1)]
-    for tile in possibleNeighbors:
-        if inBounds(grid, tile):
-            if passable(grid, tile):
-                results.append(tile)
-    if (x + y)%2 == 0: results.reverse()
-    return results
+    for i in range(neighbors.size):
+        if (x+y)%2 == 0:
+            if i == 0:
+                neighbors[i,0] = x
+                neighbors[i,1] = y+1
+            elif i == 1:
+                neighbors[i,0] = x-1
+                neighbors[i,1] = y
+            elif i == 2:
+                neighbors[i,0] = x
+                neighbors[i,1] = y-1
+            elif i == 3:
+                neighbors[i,0] = x+1
+                neighbors[i,1] = y
+        else:
+            if i == 0:
+                neighbors[i,0] = x+1
+                neighbors[i,1] = y
+            elif i == 1:
+                neighbors[i,0] = x
+                neighbors[i,1] = y-1
+            elif i == 2:
+                neighbors[i,0] = x-1
+                neighbors[i,1] = y
+            elif i == 3:
+                neighbors[i,0] = x
+                neighbors[i,1] = y+1
+    # results = []
+    # possibleNeighbors = [(x+1,y), (x,y-1), (x-1,y), (x,y+1)]
+    # for tile in possibleNeighbors:
+    #     if inBounds(grid, tile):
+    #         if passable(grid, tile):
+    #             results.append(tile)
+    #     # if inBounds(grid, tile) and passable(grid, tile):
+    #     #     results.append(tile)
+    # if (x + y)%2 == 0: results.reverse()
+
+    # return results
 # @jit
 def heuristic(a, b):
     (x1, y1) = a
@@ -154,7 +184,7 @@ def getMinIndex(arr):
 
 
 # @jit(nopython=True)
-def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED):
+def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -172,25 +202,28 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED):
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         if current_x == goal_x and current_y == goal_y:
-            # print("\riterations: {}".format(counter), end='')
+            print("\riterations: {}".format(counter), end='')
             break
-        for next in getNeighbors(grid, current):
-            next_x, next_y = next
-            new_g = g[current_x, current_y] + 1
-            if open[next_x, next_y] != UNEXPLORED:
-                if new_g < g[next_x, next_y]:
-                    open[next_x, next_y] = UNEXPLORED
-            if closed[next_x, next_y] != UNEXPLORED:
-                if new_g < g[next_x, next_y]:
-                    closed[next_x, next_y] = UNEXPLORED
-            if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
-                parents[next_x, next_y] = np.array([current_x, current_y])
-                g[next_x, next_y] = new_g
-                h[next_x, next_y] = heuristic(next, goal)
-                cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
-                open[next_x, next_y] = cost[next_x, next_y]
-            closed[current_x, current_y] = cost[current_x, current_y]
-            open[current_x, current_y] = UNEXPLORED
+        getNeighbors(grid, current, neighbors)
+        # for next in getNeighbors(grid, current, neighbors):
+        for next in neighbors:
+            if passable(grid, next) and inBounds(grid, next):
+                next_x, next_y = next
+                new_g = g[current_x, current_y] + 1
+                if open[next_x, next_y] != UNEXPLORED:
+                    if new_g < g[next_x, next_y]:
+                        open[next_x, next_y] = UNEXPLORED
+                if closed[next_x, next_y] != UNEXPLORED:
+                    if new_g < g[next_x, next_y]:
+                        closed[next_x, next_y] = UNEXPLORED
+                if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
+                    parents[next_x, next_y] = np.array([current_x, current_y])
+                    g[next_x, next_y] = new_g
+                    h[next_x, next_y] = heuristic(next, goal)
+                    cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
+                    open[next_x, next_y] = cost[next_x, next_y]
+                closed[current_x, current_y] = cost[current_x, current_y]
+                open[current_x, current_y] = UNEXPLORED
         counter += 1
 
 def main():
@@ -204,6 +237,9 @@ def main():
     # generate random start and goal
     start = [-1, -1]
     goal = [-1, -1]
+    neighbors = np.empty((4,2), dtype=np.int32)
+    neighbors[:] = np.array([0,0])
+    print(neighbors)
     randomStartGoal(grid, start, goal)
     start = np.array(start)
     goal = np.array(goal)
@@ -225,7 +261,7 @@ def main():
 
     print("----- Searching for Path -----")
     s = timer()
-    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED)
+    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
     x,y = start
     path = []
     reconstructPathV2(parents, tuple(start), tuple(goal), path)

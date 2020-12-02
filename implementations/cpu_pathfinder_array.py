@@ -136,6 +136,23 @@ def heuristic(a, b):
     (x2, y2) = b
     return abs(x1-x2) + abs(y1-y2)
 
+def getMinIndex(arr):
+    width, height = arr.shape
+    min = arr[0,0]
+    min_x = 0
+    min_y = 0
+    for i in range(width):
+        for j in range(height):
+            # print(arr[i,j])
+            if arr[i,j] < min:
+                min = arr[i,j]
+                min_x = i
+                min_y = j
+    
+    return min_x, min_y
+
+
+
 # @jit(nopython=True)
 def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED):
     width, height = grid.shape
@@ -149,10 +166,13 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED):
 
     counter = 0
     while np.amin(open) < UNEXPLORED:
-        current = np.unravel_index(np.argmin(open, axis=None), open.shape)
-        current_x, current_y = current
+        print("\riterations: {}".format(counter), end='')
+        # current = np.unravel_index(np.argmin(open, axis=None), open.shape)
+        # current_x, current_y = current
+        current_x, current_y = getMinIndex(open)
+        current = (current_x, current_y)
         if current_x == goal_x and current_y == goal_y:
-            print("iterations: ", counter)
+            print("\riterations: {}".format(counter), end='')
             break
         for next in getNeighbors(grid, current):
             next_x, next_y = next
@@ -175,7 +195,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED):
 
 def main():
     # create grid from image dataset
-    scale_factor = 7 # scales to a power of 2
+    scale_factor = 9 # scales to a power of 2
     dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
     UNEXPLORED = int(math.pow(2, (scale_factor*2)))
     grid = np.zeros(dim, dtype=np.int32)
@@ -210,23 +230,8 @@ def main():
     path = []
     reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()
-    print('Path found in ', e-s, 'ns')
+    print('\nPath found in ', e-s, 's')
     print(path)
-
-
-
-
-    # s = timer()
-    # search(grid, start, goal, parents, cost)
-    # # print(parents)
-    # # print(cost)
-    # # reconstruct path
-    # path = []
-    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    # e = timer()
-    # print('Before compilation: ', e-s)
-    # s = timer()
-    # search(grid, start, goal, parents, cost)
 
 if __name__ == "__main__":
     main()

@@ -174,7 +174,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED):
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         if current_x == goal_x and current_y == goal_y:
-            print("\riterations: {}".format(counter), end='')
+            # print("\riterations: {}".format(counter), end='')
             break
         for next in getNeighbors(grid, current):
             next_x, next_y = next

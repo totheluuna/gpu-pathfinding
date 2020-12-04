@@ -275,25 +275,24 @@ def main():
     goal = [-1, -1]
     neighbors = np.empty((4,2), dtype=np.int32)
     neighbors[:] = np.array([0,0])
-    print(neighbors)
     randomStartGoal(grid, start, goal)
     start = np.array(start)
     goal = np.array(goal)
     print(start)
     print(goal)
 
+    # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
     width, height = grid.shape
-    open = np.empty((width, height), dtype=np.int32) # open or closed
+    open = np.empty((width, height), dtype=np.int32)
     open[:] = UNEXPLORED
-    closed = np.empty((width, height), dtype=np.int32) # open or closed
+    closed = np.empty((width, height), dtype=np.int32)
     closed[:] = UNEXPLORED
     parents = np.empty((width, height, 2), dtype=np.int32)
     parents[:] = np.array([-1,-1])
     cost = np.zeros((width, height), dtype=np.int32)
     g = np.zeros((width, height), dtype=np.int32)
     h = np.zeros((width, height), dtype=np.int32)
-    x,y = start
 
     TPB = 16
     path = []
@@ -303,7 +302,7 @@ def main():
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     print('----- Precomputing Heuristics -----')
     precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h)
-
+    print(h)
     print("----- Searching for Path -----")
     s = timer()
     search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)

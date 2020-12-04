@@ -325,7 +325,11 @@ def main():
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()
-    print('Kernel Launch done in ', e-s, 's')
+    print('Kernel Launch done in (before compilation) ', e-s, 's')
+    s = timer()
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, neighbors)
+    e = timer()
+    print('Kernel Launch done in (after compilation) ', e-s, 's')
     # print(path)
     print('After: ', parents[x,y])
 

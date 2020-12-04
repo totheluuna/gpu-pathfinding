@@ -13,14 +13,11 @@ from numba import cuda, int32, typeof
 
 OPEN = 1
 CLOSED = 0
-UNEXPLORED = 999999
 
-width_glb = 16
-height_glb = 16
-dim_glb = (width_glb, height_glb)
+scale_factor = 4 # scales to a power of 2
+dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
+UNEXPLORED = int(math.pow(2, (scale_factor*2))))
 
-# from numba import jit
-# from numba.typed import List
 
 seed(42069)
 # functions for converting images to grids
@@ -189,7 +186,7 @@ def getMin(arr):
 
 
 @cuda.jit(device=True)
-def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):
+def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -229,7 +226,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         counter += 1
 
 @cuda.jit
-def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):    
+def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbors):    
     x, y = cuda.grid(2)
     # glb_x, glb_y = dim_glb
     # print(glb_x, glb_y) 
@@ -246,11 +243,23 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid
+
+    for i in range(x):
+        for j in range(y):
+            open_copy[i, j] = open[i, j]
+            closed_copy[i, j] = open[i, j]
+            parents_copy[i, j] = open[i, j]
+            cost_copy[i, j] = open[i, j]
+            g_copy[i, j] = open[i, j]
+    for i in range(4)
+        neighbors_copy[i, 0] = neighbors[i, 0]
+        neighbors_copy[i, 1] = neighbors[i, 1]
+            
     # print(bpg)
     if x >= grid.shape[0] and y >= grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
-        search(grid, start, goal, open_copy, closed_copy, parents_copy, cost_copy, g_copy, h, UNEXPLORED, neighbors_copy)
-        # cuda.syncthreads() 
+        search(grid, start, goal, open_copy, closed_copy, parents_copy, cost_copy, g_copy, h, neighbors_copy)
+        cuda.syncthreads() 
 
 @cuda.jit
 def precomputeHeuristics(grid, start, goal, h):
@@ -265,9 +274,6 @@ def precomputeHeuristics(grid, start, goal, h):
 
 def main():
     # create grid from image dataset
-    scale_factor = 4 # scales to a power of 2
-    dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
-    UNEXPLORED = int(math.pow(2, (scale_factor*2)))
     grid = np.zeros(dim, dtype=np.int32)
     createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
@@ -297,8 +303,6 @@ def main():
     h = np.zeros((width, height), dtype=np.int32)
 
     TPB = 16
-    dim_glb = grid.shape
-    print('FUVK numba: ', dim_glb, typeof(dim_glb))
     path = []
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
@@ -316,9 +320,7 @@ def main():
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
-    print('FUVK numba: ', typeof(dim_glb))
-    print('FUvK NuMbA: ', typeof(grid.shape))
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, neighbors)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()

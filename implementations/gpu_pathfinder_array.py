@@ -15,8 +15,8 @@ OPEN = 1
 CLOSED = 0
 UNEXPLORED = 999999
 
-width_glb = 16
-height_glb = 16
+width_glb = 1
+height_glb = 1
 dim_glb = (width_glb, height_glb)
 
 # from numba import jit

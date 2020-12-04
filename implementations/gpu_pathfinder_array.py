@@ -297,16 +297,17 @@ def main():
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     counter = 0
     print('before:')
-    print(parents)
+    x,y = goal
+    print(parents[x,y])
     GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, counter)
-    # x,y = start
-    # path = []
-    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    # # e = timer()
-    # # print('(Post-compilation) Path found in ', e-s, 's')
-    # print(path)
     print('after')
-    print(parents)
+    print(parents[x,y])
+    path = []
+    reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    # e = timer()
+    # print('(Post-compilation) Path found in ', e-s, 's')
+    print(path)
+    
 
 
 if __name__ == "__main__":

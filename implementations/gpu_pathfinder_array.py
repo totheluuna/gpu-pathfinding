@@ -197,7 +197,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
 
     counter = 0
     # while np.amin(open) < UNEXPLORED:
-    while getMin(open) < UNEXPLORED
+    while getMin(open) < UNEXPLORED:
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         if current_x == goal_x and current_y == goal_y:

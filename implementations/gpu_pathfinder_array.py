@@ -9,7 +9,7 @@ import numpy as np
 import heapq
 from timeit import default_timer as timer
 
-from numba import cuda, int32
+from numba import cuda, int32, typeof
 
 OPEN = 1
 CLOSED = 0

@@ -302,11 +302,12 @@ def main():
     GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, counter)
     print('after')
     print(parents[x,y])
-    path = []
-    reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    # e = timer()
-    # print('(Post-compilation) Path found in ', e-s, 's')
-    print(path)
+    print(counter)
+    # path = []
+    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    # # e = timer()
+    # # print('(Post-compilation) Path found in ', e-s, 's')
+    # print(path)
     
 
 

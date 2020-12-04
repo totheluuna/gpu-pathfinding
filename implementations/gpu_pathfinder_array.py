@@ -228,16 +228,16 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors):
 @cuda.jit
 def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbors):    
     x, y = cuda.grid(2)
-    # glb_x, glb_y = dim_glb
+    # glb_x, glb_y = dim
     # print(glb_x, glb_y) 
     width = 4
     height = 4
     # create copies of all arrays expected to have changing values
     open_copy = cuda.local.array((width, height), int32)
-    closed_copy = cuda.local.array(dim_glb, int32)
-    parents_copy = cuda.local.array(dim_glb, int32)
-    cost_copy = cuda.local.array(dim_glb, int32)
-    g_copy =  cuda.local.array(dim_glb, int32)
+    closed_copy = cuda.local.array(dim, int32)
+    parents_copy = cuda.local.array(dim, int32)
+    cost_copy = cuda.local.array(dim, int32)
+    g_copy =  cuda.local.array(dim, int32)
     neighbors_copy = cuda.local.array((4,2), int32)
 
     tx = cuda.threadIdx.x

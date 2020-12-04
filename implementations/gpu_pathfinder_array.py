@@ -192,7 +192,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
 
     open[start_x, start_y] = 0
     g[start_x, start_y] = 0
-    h[start_x, start_y] = heuristic(start, goal)
+    # h[start_x, start_y] = heuristic(start, goal)
     cost[start_x, start_y] = g[start_x, start_y] + h[start_x, start_y]
 
     counter = 0

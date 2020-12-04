@@ -269,7 +269,8 @@ def precomputeHeuristics(grid, start, goal, h):
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid
     if x < grid.shape[0] and y < grid.shape[1]:
-        h[x,y] = heuristic((x,y), goal)
+        if passable(grid, (x,y)) and inBounds(grid, (x,y)):
+            h[x,y] = heuristic((x,y), goal)
         cuda.syncthreads() 
 
 def main():

@@ -325,7 +325,7 @@ def main():
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()
-    # print('Path found in ', e-s, 's')
+    print('Kernel Launch done in ', e-s, 's')
     # print(path)
     print('After: ', parents[x,y])
 

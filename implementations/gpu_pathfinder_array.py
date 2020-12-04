@@ -231,7 +231,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
 
     # create copies of all arrays expected to have changing values
     open_copy = cuda.local.array(shape=(width, height), dtype=int32)
-    # closed_copy = cuda.local.array(shape=(width, height), dtype=int32)
+    closed_copy = cuda.local.array(shape=(width, height), dtype=int32)
     # parents_copy = cuda.local.array(shape=(width, height), dtype=int32)
     # cost_copy = cuda.local.array(shape=(width, height), dtype=int32)
     # g_copy =  cuda.local.array(shape=(width, height), dtype=int32)
@@ -243,7 +243,8 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
     # print(bpg)
     if x >= grid.shape[0] and y >= grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
-        search(grid, start, goal, open_copy, closed_copy, parents_copy, cost_copy, g_copy, h, UNEXPLORED, neighbors_copy)
+        # search(grid, start, goal, open_copy, closed_copy, parents_copy, cost_copy, g_copy, h, UNEXPLORED, neighbors_copy)
+        h[x,y] = heuristic((x,y), goal)
         # cuda.syncthreads() 
 
 @cuda.jit

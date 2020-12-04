@@ -296,7 +296,12 @@ def main():
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     counter = 0
     GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, counter)
-    print('number of searches done: ', counter )
+    x,y = start
+    path = []
+    reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    # e = timer()
+    # print('(Post-compilation) Path found in ', e-s, 's')
+    print(path)
 
 
 if __name__ == "__main__":

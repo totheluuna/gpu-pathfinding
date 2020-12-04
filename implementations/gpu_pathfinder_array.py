@@ -227,8 +227,8 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
 @cuda.jit
 def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):    
     x, y = cuda.grid(2)
-    width = grid.shape[0]
-    height = grid.shape[1]
+    width = int32(grid.shape[0])
+    height = int32(grid.shape[1])
     # print(typeof(width))
     # TPB = 16
     # print(typeof(TPB))

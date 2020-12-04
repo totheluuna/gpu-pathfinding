@@ -225,7 +225,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         counter += 1
 
 @cuda.jit
-def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):
+def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, counter):
     x, y = cuda.grid(2)
     width, height = cost.shape
     tx = cuda.threadIdx.x
@@ -235,6 +235,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
     if x < grid.shape[0] and y < grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
         search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+        counter += 1
         # cuda.syncthreads() 
 
 def main():
@@ -293,8 +294,9 @@ def main():
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-
+    counter = 0
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, counter)
+    print('number of searches done: ', counter )
 
 
 if __name__ == "__main__":

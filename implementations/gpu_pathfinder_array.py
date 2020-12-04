@@ -234,7 +234,8 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
     # print(bpg)
     if x < grid.shape[0] and y < grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
-        search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+        # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+        h[x,y] = heuristic((x,y), goal)
         # counter += 1
         # cuda.syncthreads() 
 
@@ -295,13 +296,17 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     counter = 0
+    print('before:')
+    print(h)
     GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, counter)
-    x,y = start
-    path = []
-    reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    # e = timer()
-    # print('(Post-compilation) Path found in ', e-s, 's')
-    print(path)
+    # x,y = start
+    # path = []
+    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    # # e = timer()
+    # # print('(Post-compilation) Path found in ', e-s, 's')
+    # print(path)
+    print('after')
+    print(h)
 
 
 if __name__ == "__main__":

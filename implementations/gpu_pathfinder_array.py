@@ -251,7 +251,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
             parents_copy[i, j] = open[i, j]
             cost_copy[i, j] = open[i, j]
             g_copy[i, j] = open[i, j]
-    for i in range(4)
+    for i in range(4):
         neighbors_copy[i, 0] = neighbors[i, 0]
         neighbors_copy[i, 1] = neighbors[i, 1]
             

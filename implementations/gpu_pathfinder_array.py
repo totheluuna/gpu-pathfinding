@@ -234,14 +234,13 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
     # print(bpg)
     if x < grid.shape[0] and y < grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
-        # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+        search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
         # h[x,y] = heuristic((x,y), goal)
-        counter += 1
-        # cuda.syncthreads() 
+        cuda.syncthreads() 
 
 def main():
     # create grid from image dataset
-    scale_factor = 4 # scales to a power of 2
+    scale_factor = 7 # scales to a power of 2
     dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
     UNEXPLORED = int(math.pow(2, (scale_factor*2)))
     grid = np.zeros(dim, dtype=np.int32)

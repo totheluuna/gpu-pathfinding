@@ -227,13 +227,14 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
 @cuda.jit
 def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):    
     x, y = cuda.grid(2)
-    width, height = grid.shape
+    width = grid.shape[0]
+    height = grid.shape[1]
     # print(typeof(width))
     # TPB = 16
     # print(typeof(TPB))
 
     # create copies of all arrays expected to have changing values
-    open_copy = cuda.shared.array(shape=4, dtype=int32)
+    open_copy = cuda.local.array(shape=(width, height), dtype=int32)
     # closed_copy = cuda.local.array(shape=(width, height), dtype=int32)
     # parents_copy = cuda.local.array(shape=(width, height), dtype=int32)
     # cost_copy = cuda.local.array(shape=(width, height), dtype=int32)

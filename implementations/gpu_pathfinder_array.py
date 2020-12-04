@@ -301,14 +301,16 @@ def main():
     print(h)
     print("----- Searching for Path -----")
     s = timer()
+    x,y = goal
+    print('Before: ', parents[x,y])
     # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
     GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-    x,y = start
-    path = []
-    reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    # path = []
+    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()
-    print('Path found in ', e-s, 's')
-    print(path)
+    # print('Path found in ', e-s, 's')
+    # print(path)
+    print('After: ', parents[x,y])
 
 if __name__ == "__main__":
     main()

@@ -151,7 +151,7 @@ def getNeighbors(grid, tile, neighbors):
             elif i == 3:
                 neighbors[i,0] = x
                 neighbors[i,1] = y+1
-# @cuda.jit(device=True)
+@cuda.jit(device=True)
 def heuristic(a, b):
     (x1, y1) = a
     (x2, y2) = b

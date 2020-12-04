@@ -112,15 +112,15 @@ def reconstructPathV2(cameFrom, start, goal, path):
     path.reverse
 
 # functions for pathfinding
-# @cuda.jit(device=True)
+@cuda.jit(device=True)
 def passable(grid, tile):
     x,y = tile
     return grid[x,y] == 1
-# @cuda.jit(device=True)
+@cuda.jit(device=True)
 def inBounds(grid, tile):
     x, y = tile
     return 0 <= x < grid.shape[0] and 0 <= y < grid.shape[1]
-# @cuda.jit(device=True)
+@cuda.jit(device=True)
 def getNeighbors(grid, tile, neighbors):
     # TO DO: modify to use numpy array
     (x, y) = tile
@@ -156,7 +156,7 @@ def heuristic(a, b):
     (x1, y1) = a
     (x2, y2) = b
     return abs(x1-x2) + abs(y1-y2)
-# @cuda.jit(device=True)
+@cuda.jit(device=True)
 def getMinIndex(arr):
     width, height = arr.shape
     min = arr[0,0]
@@ -172,7 +172,7 @@ def getMinIndex(arr):
     
     return min_x, min_y
 
-# @cuda.jit(device=True)
+@cuda.jit(device=True)
 def getMin(arr):
     width, height = arr.shape
     min = arr[0,0]
@@ -184,7 +184,7 @@ def getMin(arr):
     return min
 
 
-# @cuda.jit(device=True)
+@cuda.jit(device=True)
 def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):
     width, height = grid.shape
     start_x, start_y = start
@@ -225,10 +225,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         counter += 1
 
 @cuda.jit
-def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, counter):
-    TPB = 16
-    shared_h = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
-    
+def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):    
     x, y = cuda.grid(2)
     width, height = cost.shape
     tx = cuda.threadIdx.x
@@ -236,19 +233,10 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
     bpg = cuda.gridDim.x    # blocks per grid
     # print(bpg)
     if x >= grid.shape[0] and y >= grid.shape[1]:
-        # # do the search for as many times as number of tiles in the grid
-        # # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-        # h[x,y] = heuristic((x,y), goal)
-        # cuda.syncthreads() 
+        # do the search for as many times as number of tiles in the grid
+        search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+        cuda.syncthreads() 
         return
-
-    for i in range(bpg):
-        shared_h[tx, ty] = h[tx + i * TPB, ty + i * TPB]
-        cuda.syncthreads()
-        shared_h[tx, ty] = heuristic((x,y), goal)
-        cuda.syncthreads()
-        h[tx + i * TPB, ty + i * TPB] = shared_h[tx, ty]
-        cuda.syncthreads()
 
 @cuda.jit
 def precomputeHeuristics(grid, start, goal, h):
@@ -305,7 +293,8 @@ def main():
     print(h)
     print("----- Searching for Path -----")
     s = timer()
-    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
     x,y = start
     path = []
     reconstructPathV2(parents, tuple(start), tuple(goal), path)

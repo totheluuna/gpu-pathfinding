@@ -253,7 +253,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
 @cuda.jit
 def precomputeHeuristics(grid, start, goal, h):
     x, y = cuda.grid(2)
-    width, height = cost.shape
+    width, height = grid.shape
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid
@@ -308,7 +308,7 @@ def main():
     print('after')
     print(h)
 
-    
+
     # print(counter)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)

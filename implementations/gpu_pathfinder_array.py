@@ -250,6 +250,16 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
         h[tx + i * TPB, ty + i * TPB] = shared_h[tx, ty]
         cuda.syncthreads()
 
+@cuda.jit
+def precomputeHeuristics(grid, start, goal, h):
+    x, y = cuda.grid(2)
+    width, height = cost.shape
+    tx = cuda.threadIdx.x
+    ty = cuda.threadIdx.y
+    bpg = cuda.gridDim.x    # blocks per grid
+    if x < grid.shape[0] and y < grid.shape[1]:
+        h[x,y] = heuristic((x,y), goal)
+        cuda.syncthreads() 
 
 def main():
     # create grid from image dataset
@@ -284,23 +294,7 @@ def main():
     g = np.zeros((width, height), dtype=np.int32)
     h = np.zeros((width, height), dtype=np.int32)
     x,y = start
-    # print(parents)
-    # print("----- Searching for Path -----")
-    # s = timer()
-    # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-    # x,y = start
-    # path = []
-    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    # e = timer()
-    # print('(Search + compilation) Path found in ', e-s, 's')
-    # s = timer()
-    # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-    # x,y = start
-    # path = []
-    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    # e = timer()
-    # print('(Post-compilation) Path found in ', e-s, 's')
-    # print(path)
+
     TPB = 16
     path = []
     threadsperblock = (TPB, TPB)
@@ -309,13 +303,12 @@ def main():
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     counter = 0
     print('before:')
-    x,y = goal
-    # print(parents[x,y])
     print(h)
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, counter)
+    precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h)
     print('after')
-    # print(parents[x,y])
     print(h)
+
+    
     # print(counter)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)

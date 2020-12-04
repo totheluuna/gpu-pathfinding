@@ -301,7 +301,7 @@ def main():
     h = np.zeros((width, height), dtype=np.int32)
 
     TPB = 16
-    print('FUVK numba: ', typeof(TPB))
+    print('FUVK numba: ', typeof(dim_glb))
     path = []
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])

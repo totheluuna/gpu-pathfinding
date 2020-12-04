@@ -239,7 +239,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
     # print(typeof(TPB))
 
     # create copies of all arrays expected to have changing values
-    open_copy = cuda.shared.array(TPB, int32)
+    open_copy = cuda.shared.array((grid.shape[0], grid.shape[1]), int32)
     # closed_copy = cuda.local.array(shape=(width, height), dtype=int32)
     # parents_copy = cuda.local.array(shape=(width, height), dtype=int32)
     # cost_copy = cuda.local.array(shape=(width, height), dtype=int32)

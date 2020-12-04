@@ -9,7 +9,7 @@ import numpy as np
 import heapq
 from timeit import default_timer as timer
 
-from numba import cuda
+from numba import cuda, int32
 
 OPEN = 1
 CLOSED = 0
@@ -226,6 +226,9 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
 
 @cuda.jit
 def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, counter):
+    TPB = 16
+    shared_h = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
+    
     x, y = cuda.grid(2)
     width, height = cost.shape
     tx = cuda.threadIdx.x
@@ -233,10 +236,20 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
     bpg = cuda.gridDim.x    # blocks per grid
     # print(bpg)
     if x < grid.shape[0] and y < grid.shape[1]:
-        # do the search for as many times as number of tiles in the grid
-        # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-        h[x,y] = heuristic((x,y), goal)
-        cuda.syncthreads() 
+        # # do the search for as many times as number of tiles in the grid
+        # # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+        # h[x,y] = heuristic((x,y), goal)
+        # cuda.syncthreads() 
+        return
+
+    for i in range(bpg):
+        shared_h[tx, ty] = h[tx + i * TPB, ty + i * TPB]
+        cuda.syncthreads()
+        shared_h[tx, ty] = heuristic((x,y), goal)
+        cuda.syncthreads()
+        h[tx + i * TPB, ty + i * TPB] = shared_h[tx, ty]
+        cuda.syncthreads()
+
 
 def main():
     # create grid from image dataset

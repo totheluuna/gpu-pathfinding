@@ -15,8 +15,8 @@ OPEN = 1
 CLOSED = 0
 UNEXPLORED = 999999
 
-width_glb = 1
-height_glb = 1
+width_glb = 16
+height_glb = 16
 dim_glb = (width_glb, height_glb)
 
 # from numba import jit
@@ -231,16 +231,16 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
 @cuda.jit
 def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):    
     x, y = cuda.grid(2)
-    glb_x, glb_y = dim_glb
-    print(glb_x, glb_y) 
+    # glb_x, glb_y = dim_glb
+    # print(glb_x, glb_y) 
 
     # create copies of all arrays expected to have changing values
-    # open_copy = cuda.shared.array(dim_glb, int32)
-    # closed_copy = cuda.local.array(shape=(width, height), dtype=int32)
-    # parents_copy = cuda.local.array(shape=(width, height), dtype=int32)
-    # cost_copy = cuda.local.array(shape=(width, height), dtype=int32)
-    # g_copy =  cuda.local.array(shape=(width, height), dtype=int32)
-    # neighbors_copy = cuda.local.array(shape=(neighbors.shape[0], neighbors.shape[1]), dtype=int32)
+    open_copy = cuda.local.array(dim_glb, int32)
+    closed_copy = cuda.local.array(dim_glb, int32))
+    parents_copy = cuda.local.array(dim_glb, int32))
+    cost_copy = cuda.local.array(dim_glb, int32))
+    g_copy =  cuda.local.array(dim_glb, int32))
+    neighbors_copy = cuda.local.array((4,2), int32)
 
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y

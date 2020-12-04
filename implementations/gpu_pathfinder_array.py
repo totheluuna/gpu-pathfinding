@@ -230,12 +230,12 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
     width, height = grid.shape
 
     # create copies of all arrays expected to have changing values
-    open_copy = cuda.local.array(shape=(width, height), type=int32)
-    closed_copy = cuda.local.array(shape=(width, height), type=int32)
-    parents_copy = cuda.local.array(shape=(width, height), type=int32)
-    cost_copy = cuda.local.array(shape=(width, height), type=int32)
-    g_copy =  cuda.local.array(shape=(width, height), type=int32)
-    neighbors_copy = cuda.local.array(shape=(neighbors.shape[0], neighbors.shape[1]), type=int32)
+    open_copy = cuda.shared.array(shape=(width, height), dtype=int32)
+    # closed_copy = cuda.local.array(shape=(width, height), dtype=int32)
+    # parents_copy = cuda.local.array(shape=(width, height), dtype=int32)
+    # cost_copy = cuda.local.array(shape=(width, height), dtype=int32)
+    # g_copy =  cuda.local.array(shape=(width, height), dtype=int32)
+    # neighbors_copy = cuda.local.array(shape=(neighbors.shape[0], neighbors.shape[1]), dtype=int32)
 
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y

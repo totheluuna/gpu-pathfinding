@@ -15,6 +15,10 @@ OPEN = 1
 CLOSED = 0
 UNEXPLORED = 999999
 
+width_glb = 16
+height_glb = 16
+dim_glb = (width_glb, height_glb)
+
 # from numba import jit
 # from numba.typed import List
 
@@ -227,9 +231,9 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
 @cuda.jit
 def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, TPB):    
     x, y = cuda.grid(2)
-    width = int32(grid.shape[0])
-    height = int32(grid.shape[1])
-    dim = tuple(width, height)
+    # width = int32(grid.shape[0])
+    # height = int32(grid.shape[1])
+    # dim = tuple(width, height)
     # print(typeof(width))
     # TPB = 16
     # print(typeof(TPB))

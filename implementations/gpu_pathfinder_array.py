@@ -236,7 +236,6 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
         # do the search for as many times as number of tiles in the grid
         search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
         cuda.syncthreads() 
-        return
 
 @cuda.jit
 def precomputeHeuristics(grid, start, goal, h):

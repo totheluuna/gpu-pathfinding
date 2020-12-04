@@ -225,7 +225,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         counter += 1
 
 @cuda.jit
-def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):    
+def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, TPB):    
     x, y = cuda.grid(2)
     width = int32(grid.shape[0])
     height = int32(grid.shape[1])
@@ -234,7 +234,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
     # print(typeof(TPB))
 
     # create copies of all arrays expected to have changing values
-    # open_copy = cuda.shared.array((width, height), int32)
+    open_copy = cuda.shared.array((TPB, TPB), int32)
     # closed_copy = cuda.local.array(shape=(width, height), dtype=int32)
     # parents_copy = cuda.local.array(shape=(width, height), dtype=int32)
     # cost_copy = cuda.local.array(shape=(width, height), dtype=int32)
@@ -314,7 +314,7 @@ def main():
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, TPB)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()

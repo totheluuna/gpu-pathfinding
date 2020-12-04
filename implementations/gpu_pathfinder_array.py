@@ -297,11 +297,13 @@ def main():
     counter = 0
     print('before:')
     x,y = goal
-    print(parents[x,y])
+    # print(parents[x,y])
+    print(h)
     GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, counter)
     print('after')
-    print(parents[x,y])
-    print(counter)
+    # print(parents[x,y])
+    print(h)
+    # print(counter)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     # # e = timer()

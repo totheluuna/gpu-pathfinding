@@ -112,15 +112,15 @@ def reconstructPathV2(cameFrom, start, goal, path):
     path.reverse
 
 # functions for pathfinding
-@cuda.jit(device=True)
+# @cuda.jit(device=True)
 def passable(grid, tile):
     x,y = tile
     return grid[x,y] == 1
-@cuda.jit(device=True)
+# @cuda.jit(device=True)
 def inBounds(grid, tile):
     x, y = tile
     return 0 <= x < grid.shape[0] and 0 <= y < grid.shape[1]
-@cuda.jit(device=True)
+# @cuda.jit(device=True)
 def getNeighbors(grid, tile, neighbors):
     # TO DO: modify to use numpy array
     (x, y) = tile
@@ -151,12 +151,12 @@ def getNeighbors(grid, tile, neighbors):
             elif i == 3:
                 neighbors[i,0] = x
                 neighbors[i,1] = y+1
-@cuda.jit(device=True)
+# @cuda.jit(device=True)
 def heuristic(a, b):
     (x1, y1) = a
     (x2, y2) = b
     return abs(x1-x2) + abs(y1-y2)
-@cuda.jit(device=True)
+# @cuda.jit(device=True)
 def getMinIndex(arr):
     width, height = arr.shape
     min = arr[0,0]
@@ -172,7 +172,7 @@ def getMinIndex(arr):
     
     return min_x, min_y
 
-@cuda.jit(device=True)
+# @cuda.jit(device=True)
 def getMin(arr):
     width, height = arr.shape
     min = arr[0,0]
@@ -184,7 +184,7 @@ def getMin(arr):
     return min
 
 
-@cuda.jit(device=True)
+# @cuda.jit(device=True)
 def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):
     width, height = grid.shape
     start_x, start_y = start
@@ -217,7 +217,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
                     parents[next_x, next_y, 0] = current_x
                     parents[next_x, next_y, 1] = current_y
                     g[next_x, next_y] = new_g
-                    h[next_x, next_y] = heuristic(next, goal)
+                    # h[next_x, next_y] = heuristic(next, goal) # omit this step since H is precomputed on GPU
                     cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
                     open[next_x, next_y] = cost[next_x, next_y]
                 closed[current_x, current_y] = cost[current_x, current_y]
@@ -282,7 +282,7 @@ def main():
     print(start)
     print(goal)
 
-    # search for path
+    print('----- Initializing Variables -----')
     width, height = grid.shape
     open = np.empty((width, height), dtype=np.int32) # open or closed
     open[:] = UNEXPLORED
@@ -301,22 +301,17 @@ def main():
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
-    counter = 0
-    print('before:')
-    print(h)
+    print('----- Precomputing Heuristics -----')
     precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h)
-    print('after')
-    print(h)
 
-
-    # print(counter)
-    # path = []
-    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    # # e = timer()
-    # # print('(Post-compilation) Path found in ', e-s, 's')
-    # print(path)
-    
-
+    print("----- Searching for Path -----")
+    s = timer()
+    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    x,y = start
+    path = []
+    reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    e = timer()
+    print('Path found in ', e-s, 's')
 
 if __name__ == "__main__":
     main()

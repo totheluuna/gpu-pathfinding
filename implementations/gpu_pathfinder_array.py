@@ -229,7 +229,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         counter += 1
 
 @cuda.jit
-def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, TPB):    
+def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):    
     x, y = cuda.grid(2)
     glb_x, glb_y = dim_glb
     print(glb_x, glb_y) 
@@ -318,7 +318,7 @@ def main():
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     print('FUVK numba: ', typeof(dim_glb))
     print('FUvK NuMbA: ', typeof(grid.shape))
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, dim_glb)
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()

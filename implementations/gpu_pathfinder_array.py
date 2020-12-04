@@ -229,7 +229,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLOR
     x, y = cuda.grid(2)
     width = int32(grid.shape[0])
     height = int32(grid.shape[1])
-    dim = (width, height)
+    dim = tuple(width, height)
     # print(typeof(width))
     # TPB = 16
     # print(typeof(TPB))

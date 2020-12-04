@@ -319,6 +319,8 @@ def main():
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
+    print('FUVK numba: ', typeof(dim_glb))
+    print('FUvK NuMbA: ', typeof(grid.shape))
     GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, TPB)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)

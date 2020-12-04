@@ -173,6 +173,18 @@ def getMinIndex(arr):
     return min_x, min_y
 
 @cuda.jit(device=True)
+def getMin(arr):
+    width, height = arr.shape
+    min = arr[0,0]
+    for i in range(width):
+        for j in range(height):
+            if arr[i,j] < min:
+                min = arr[i,j]
+    
+    return min
+
+
+@cuda.jit(device=True)
 def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):
     width, height = grid.shape
     start_x, start_y = start
@@ -184,7 +196,8 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
     cost[start_x, start_y] = g[start_x, start_y] + h[start_x, start_y]
 
     counter = 0
-    while np.amin(open) < UNEXPLORED:
+    # while np.amin(open) < UNEXPLORED:
+    while getMin(open) < UNEXPLORED
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         if current_x == goal_x and current_y == goal_y:

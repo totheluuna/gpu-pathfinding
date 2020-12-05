@@ -232,7 +232,7 @@ def test_func(arr):
             arr[i,j] = 69
     
 @cuda.jit
-def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbors, parents_arr):    
+def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbors):    
     x, y = cuda.grid(2)
     glb_x, glb_y = dim
     # print(glb_x, glb_y) 
@@ -343,7 +343,7 @@ def main():
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed, parents, cost, g, h, neighbors, parents_arr)
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()

@@ -14,9 +14,10 @@ from numba import cuda, int32, typeof
 OPEN = 1
 CLOSED = 0
 
-scale_factor = 2 # scales to a power of 2
+scale_factor = 3 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
+TPB = 8
 
 
 seed(42069)
@@ -311,7 +312,6 @@ def main():
     g = np.zeros((width, height), dtype=np.int32)
     h = np.zeros((width, height), dtype=np.int32)
 
-    TPB = 16
     path = []
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])

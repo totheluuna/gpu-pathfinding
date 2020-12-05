@@ -187,7 +187,7 @@ def getMin(arr):
 
 
 @cuda.jit(device=True)
-def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors):
+def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -227,7 +227,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors):
         counter += 1
 
 @cuda.jit
-def GPUPathfinder(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors, parents_arr):    
+def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbors, parents_arr):    
     x, y = cuda.grid(2)
     glb_x, glb_y = dim
     # print(glb_x, glb_y) 

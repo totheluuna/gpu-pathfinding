@@ -257,7 +257,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
         neighbors_copy[i, 1] = neighbors[i, 1]
             
     # print(bpg)
-    if x >= grid.shape[0] and y >= grid.shape[1]:
+    if x < grid.shape[0] and y < grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
         search(x, y, grid, start, goal, open_copy, closed_copy, parents, cost_copy, g_copy, h, neighbors_copy)
         parents_arr[x,y,0] = x

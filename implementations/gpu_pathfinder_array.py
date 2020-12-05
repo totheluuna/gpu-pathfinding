@@ -216,8 +216,8 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors):
                     if new_g < g[next_x, next_y]:
                         closed[next_x, next_y] = UNEXPLORED
                 if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
-                    parents[next_x, next_y, 0] = current_x
-                    parents[next_x, next_y, 1] = current_y
+                    parents[x, y, next_x, next_y, 0] = current_x
+                    parents[x, y, next_x, next_y, 1] = current_y
                     g[next_x, next_y] = new_g
                     # h[next_x, next_y] = heuristic(next, goal) # omit this step since H is precomputed on GPU
                     cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
@@ -227,7 +227,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors):
         counter += 1
 
 @cuda.jit
-def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbors, parents_arr):    
+def GPUPathfinder(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors, parents_arr):    
     x, y = cuda.grid(2)
     glb_x, glb_y = dim
     # print(glb_x, glb_y) 
@@ -259,7 +259,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
     # print(bpg)
     if x >= grid.shape[0] and y >= grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
-        search(grid, start, goal, open_copy, closed_copy, parents[x,y], cost_copy, g_copy, h, neighbors_copy)
+        search(x, y, grid, start, goal, open_copy, closed_copy, parents_arr, cost_copy, g_copy, h, neighbors_copy)
         cuda.syncthreads()
         # parents_arr[x,y] = parents_copy
         # cuda.syncthreads()

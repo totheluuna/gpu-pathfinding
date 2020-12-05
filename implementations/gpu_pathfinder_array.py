@@ -340,7 +340,8 @@ def main():
     print("----- Searching for Path -----")
     s = timer()
     x,y = goal
-    print('Before: ', parents[x,y])
+    print('Before')
+    print(open_arr[x,y])
     # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
@@ -356,9 +357,8 @@ def main():
     e = timer()
     print('Kernel Launch done in (after compilation) ', e-s, 's')
     # print(path)
-    print('After: ', parents[x,y])
-    print('Parents Array')
-    print(parents_arr[x,y])
+    print('After')
+    print(open_arr[x,y])
 
 if __name__ == "__main__":
     main()

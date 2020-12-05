@@ -237,12 +237,12 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
     glb_x, glb_y = dim
     # print(glb_x, glb_y) 
     # create copies of all arrays expected to have changing values
-    open_copy = cuda.local.array(dim, int32)
-    closed_copy = cuda.local.array(dim, int32)
-    parents_copy = cuda.local.array((glb_x, glb_y, 2), int32)
-    cost_copy = cuda.local.array(dim, int32)
-    g_copy =  cuda.local.array(dim, int32)
-    neighbors_copy = cuda.local.array((4,2), int32)
+    # open_copy = cuda.local.array(dim, int32)
+    # closed_copy = cuda.local.array(dim, int32)
+    # parents_copy = cuda.local.array((glb_x, glb_y, 2), int32)
+    # cost_copy = cuda.local.array(dim, int32)
+    # g_copy =  cuda.local.array(dim, int32)
+    # neighbors_copy = cuda.local.array((4,2), int32)
 
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
@@ -262,11 +262,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
     # print(bpg)
     if x < grid.shape[0] and y < grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
-        # search(x, y, grid, start, goal, open_copy, closed_copy, parents, cost_copy, g_copy, h, neighbors_copy)
-        test_func(open)
-        # cuda.syncthreads()
-        # parents_arr[x,y] = parents_copy
-        # cuda.syncthreads()
+        search(x, y, grid, start, goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y])
 
         
 
@@ -353,7 +349,7 @@ def main():
     e = timer()
     print('Kernel Launch done in (before compilation) ', e-s, 's')
     s = timer()
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed, parents, cost, g, h, neighbors, parents_arr)
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr)
     e = timer()
     print('Kernel Launch done in (after compilation) ', e-s, 's')
     # print(path)

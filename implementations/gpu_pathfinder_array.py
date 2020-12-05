@@ -260,7 +260,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
         # do the search for as many times as number of tiles in the grid
         search(grid, start, goal, open_copy, closed_copy, parents_copy, cost_copy, g_copy, h, neighbors_copy)
         cuda.syncthreads()
-        parents_arr[x,y] = parents_copy
+        parents_arr[x,y] += 1
         cuda.syncthreads()
 
         
@@ -303,7 +303,7 @@ def main():
     closed[:] = UNEXPLORED
     parents = np.empty((width, height, 2), dtype=np.int32)
     parents[:] = np.array([-1,-1])
-    parents_arr = np.empty((width, height, width, height, 2), dtype=np.int32)
+    parents_arr = np.ones((width, height), dtype=np.int32)
     cost = np.zeros((width, height), dtype=np.int32)
     g = np.zeros((width, height), dtype=np.int32)
     h = np.zeros((width, height), dtype=np.int32)
@@ -337,6 +337,8 @@ def main():
     print('Kernel Launch done in (after compilation) ', e-s, 's')
     # print(path)
     print('After: ', parents[x,y])
+    print('Parents Array')
+    print(parents_arr)
 
 if __name__ == "__main__":
     main()

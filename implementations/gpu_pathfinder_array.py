@@ -262,7 +262,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
         search(x, y, grid, start, goal, open_copy, closed_copy, parents, cost_copy, g_copy, h, neighbors_copy)
         parents_arr[x,y,0] = x
         parents_arr[x,y,1] = y
-        cuda.syncthreads()
+        # cuda.syncthreads()
         # parents_arr[x,y] = parents_copy
         # cuda.syncthreads()
 

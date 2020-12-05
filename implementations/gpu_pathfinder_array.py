@@ -14,10 +14,10 @@ from numba import cuda, int32, typeof
 OPEN = 1
 CLOSED = 0
 
-scale_factor = 4 # scales to a power of 2
+scale_factor = 7 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
-TPB = 8
+TPB = 16
 
 
 seed(42069)
@@ -355,6 +355,9 @@ def main():
     # print(path)
     print('After')
     print(parents_arr[:,:,x,y])
+    path = []
+    reconstructPathV2(parents[x,y], tuple(start), tuple(goal), path)
+    print(path)
 
 if __name__ == "__main__":
     main()

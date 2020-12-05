@@ -342,7 +342,7 @@ def main():
     # print(path)
     print('After: ', parents[x,y])
     print('Parents Array')
-    print(parents_arr)
+    print(parents_arr[x,y])
 
 if __name__ == "__main__":
     main()

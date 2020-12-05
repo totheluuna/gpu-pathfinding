@@ -354,7 +354,7 @@ def main():
     print('Kernel Launch done in (after compilation) ', e-s, 's')
     # print(path)
     print('After')
-    print(parents_arr[x,y,x,y])
+    print(parents_arr[:,:,x,y])
 
 if __name__ == "__main__":
     main()

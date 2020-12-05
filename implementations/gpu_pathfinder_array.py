@@ -14,7 +14,7 @@ from numba import cuda, int32, typeof
 OPEN = 1
 CLOSED = 0
 
-scale_factor = 7 # scales to a power of 2
+scale_factor = 5 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 TPB = 16
@@ -235,29 +235,10 @@ def test_func(arr):
 def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbors):    
     x, y = cuda.grid(2)
     glb_x, glb_y = dim
-    # print(glb_x, glb_y) 
-    # create copies of all arrays expected to have changing values
-    # open_copy = cuda.local.array(dim, int32)
-    # closed_copy = cuda.local.array(dim, int32)
-    # parents_copy = cuda.local.array((glb_x, glb_y, 2), int32)
-    # cost_copy = cuda.local.array(dim, int32)
-    # g_copy =  cuda.local.array(dim, int32)
-    # neighbors_copy = cuda.local.array((4,2), int32)
 
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid
-
-    # for i in range(x):
-    #     for j in range(y):
-    #         open_copy[i, j] = open[i, j]
-    #         closed_copy[i, j] = open[i, j]
-    #         parents_copy[i, j] = open[i, j]
-    #         cost_copy[i, j] = open[i, j]
-    #         g_copy[i, j] = open[i, j]
-    # for i in range(4):
-    #     neighbors_copy[i, 0] = neighbors[i, 0]
-    #     neighbors_copy[i, 1] = neighbors[i, 1]
             
     # print(bpg)
     if x < grid.shape[0] and y < grid.shape[1]:

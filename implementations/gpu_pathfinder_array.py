@@ -303,7 +303,9 @@ def main():
     closed[:] = UNEXPLORED
     parents = np.empty((width, height, 2), dtype=np.int32)
     parents[:] = np.array([-1,-1])
-    parents_arr = np.ones((width, height, width, height, 2), dtype=np.int32)
+    parents_arr = np.empty((width, height, width, height, 2), dtype=np.int32)
+    parents_arr[:] = parents
+
     cost = np.zeros((width, height), dtype=np.int32)
     g = np.zeros((width, height), dtype=np.int32)
     h = np.zeros((width, height), dtype=np.int32)

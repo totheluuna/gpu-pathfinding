@@ -306,7 +306,8 @@ def main():
     parents[:] = np.array([-1,-1])
     parents_arr = np.empty((width, height, width, height, 2), dtype=np.int32)
     parents_arr[:] = parents
-    print(parents_arr[0,0])
+    print('FROM parents_arr')
+    print(parents_arr[0,0] == parents)
 
     cost = np.zeros((width, height), dtype=np.int32)
     g = np.zeros((width, height), dtype=np.int32)

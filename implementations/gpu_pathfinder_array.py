@@ -258,10 +258,10 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
     # print(bpg)
     if x >= grid.shape[0] and y >= grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
-        search(grid, start, goal, open_copy, closed_copy, parents_copy, cost_copy, g_copy, h, neighbors_copy)
+        search(grid, start, goal, open_copy, closed_copy, parents[x,y], cost_copy, g_copy, h, neighbors_copy)
         cuda.syncthreads()
-        parents_arr[x,y] = parents_copy
-        cuda.syncthreads()
+        # parents_arr[x,y] = parents_copy
+        # cuda.syncthreads()
 
         
 

@@ -337,7 +337,7 @@ def main():
     print('After')
     print(parents_arr[:,:,x,y])
     path = []
-    reconstructPathV2(parents[x,y], tuple(start), tuple(goal), path)
+    reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
     print(path)
 
 if __name__ == "__main__":

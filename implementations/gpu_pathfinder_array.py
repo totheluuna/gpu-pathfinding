@@ -216,7 +216,7 @@ def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors
                     if new_g < g[next_x, next_y]:
                         closed[next_x, next_y] = UNEXPLORED
                 if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
-                    parents[x, y, next_x, next_y, 0] = current_x
+                    parents[next_x, next_y, 0] = current_x
                     parents[x, y, next_x, next_y, 1] = current_y
                     g[next_x, next_y] = new_g
                     # h[next_x, next_y] = heuristic(next, goal) # omit this step since H is precomputed on GPU
@@ -259,7 +259,9 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
     # print(bpg)
     if x >= grid.shape[0] and y >= grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
-        search(x, y, grid, start, goal, open_copy, closed_copy, parents_arr, cost_copy, g_copy, h, neighbors_copy)
+        search(x, y, grid, start, goal, open_copy, closed_copy, parents, cost_copy, g_copy, h, neighbors_copy)
+        parents_arr[x,y,0] = x
+        parents_arr[x,y,1] = y
         cuda.syncthreads()
         # parents_arr[x,y] = parents_copy
         # cuda.syncthreads()
@@ -304,10 +306,11 @@ def main():
     closed[:] = UNEXPLORED
     parents = np.empty((width, height, 2), dtype=np.int32)
     parents[:] = np.array([-1,-1])
-    parents_arr = np.empty((width, height, width, height, 2), dtype=np.int32)
-    parents_arr[:] = parents
-    print('FROM parents_arr')
-    print(parents_arr[0,0] == parents)
+    parents_arr = np.empty((width, height, 2), dtype=np.int32)
+    # parents_arr[:] = parents
+    parents_arr[:] = np.array([-1,-1])
+    # print('FROM parents_arr')
+    # print(parents_arr[0,0] == parents)
 
     cost = np.zeros((width, height), dtype=np.int32)
     g = np.zeros((width, height), dtype=np.int32)

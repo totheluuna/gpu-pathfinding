@@ -3,6 +3,7 @@ TPB = 4
 from numba import cuda, int32
 import numpy as np
 import cupy as cp
+import math
 
 @cuda.jit
 def gpu_memory_test(arr):

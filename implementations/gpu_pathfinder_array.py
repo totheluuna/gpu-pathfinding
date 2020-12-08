@@ -246,7 +246,20 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
         # do the search for as many times as number of tiles in the grid
         search(x, y, grid, start, goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y])
 
-        
+@cuda.jit
+def GridDecompPath(grid, start, goal, open, closed, parents, cost, g, h, neighbors):
+    x, y = cuda.grid(2)
+    width, height = grid.shape
+    tx = cuda.threadIdx.x
+    ty = cuda.threadIdx.y
+    bpg = cuda.gridDim.x
+
+    shared_h = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
+
+    # load the heuristics into shared memory
+    for i in range(bpg):
+        shared_h[tx, ty] = h[tx + i * TPB, ty + i * TPB]
+
 
 @cuda.jit
 def precomputeHeuristics(grid, start, goal, h):

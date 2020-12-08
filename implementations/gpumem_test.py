@@ -16,7 +16,7 @@ def gpu_memory_test(arr):
     shared_arr = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
 
     for i in range(bpg):
-        arr[tx + i * TPB, ty + i * TPB] = i+1
+        arr[tx + i, ty + i] = i+1
         shared_arr[tx, ty] = arr[tx + i, ty + i]
 
 

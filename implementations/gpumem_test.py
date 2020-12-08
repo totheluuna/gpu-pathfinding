@@ -14,7 +14,7 @@ def gpu_memory_test(arr):
     bx = cuda.blockIdx.x
     by = cuda.blockIdx.y
     dim_x = cuda.blockDim.x
-    dim_y = cuda.blockDun.y
+    dim_y = cuda.blockDim.y
     bpg = cuda.gridDim.x
 
     print(bpg)

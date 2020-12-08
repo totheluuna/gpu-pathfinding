@@ -24,7 +24,11 @@ def main():
     arr = np.zeros(shape=(8,8), dtype=np.int32)
     arr_gpu = cp.zeros(shape=(8,8), dtype=cp.int32)
 
-    gpu_memory_test(arr)
+    threadsperblock = (TPB, TPB)
+    blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
+    blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
+    blockspergrid = (blockspergrid_x, blockspergrid_y)
+    gpu_memory_test[blockspergrid, threadsperblock](arr)
 
     print(arr)
     # print(arr_gpu)

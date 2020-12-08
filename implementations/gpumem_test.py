@@ -1,4 +1,4 @@
-TPB = 4
+TPB = 2
 
 from numba import cuda, int32
 import numpy as np
@@ -20,8 +20,6 @@ def gpu_memory_test(arr):
     for i in range(bpg):
         arr[tx + i, ty + i] = i+1
         shared_arr[tx, ty] = arr[tx + i, ty + i]
-
-
 
 def main():
     arr = np.zeros(shape=(8,8), dtype=np.int32)

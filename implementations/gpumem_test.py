@@ -17,7 +17,7 @@ def gpu_memory_test(arr):
     dim_y = cuda.blockDim.y
     bpg = cuda.gridDim.x
 
-    print(bx)
+    print(bpg)
 
     shared_arr = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
     arr[tx + (bx * dim_x) , ty + (by * dim_y)] = by

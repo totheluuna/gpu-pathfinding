@@ -1,7 +1,7 @@
 TPB = 4
 
 from numba import cuda, int32
-import numpa as np
+import numpy as np
 import cupy as cp
 
 @cuda.jit

@@ -1,4 +1,4 @@
-TPB = 4
+TPB = 8
 
 from numba import cuda, int32
 import numpy as np

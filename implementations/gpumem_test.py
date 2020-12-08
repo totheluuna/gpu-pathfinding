@@ -17,7 +17,7 @@ def gpu_memory_test(arr):
 
     for i in range(bpg):
         arr[tx + i * TPB, ty + i * TPB] = i+1
-        shared_arr[tx, ty] = arr[tx + i * TPB, ty + i * TPB]
+        shared_arr[tx, ty] = arr[tx + i, ty + i]
 
 
 

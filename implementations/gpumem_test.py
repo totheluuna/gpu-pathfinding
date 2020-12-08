@@ -21,10 +21,10 @@ def gpu_memory_test(arr):
 
 def main():
     arr = np.zeros(shape=(8,8), dtype=np.int32)
-    arr_gpu = cp.zeros(shape=(8,8), dtype)
+    arr_gpu = cp.zeros(shape=(8,8), dtype=cp.int32)
 
     print(arr)
     print(arr_gpu)
-    
+
 if __name__ == "__main__":
     main()

@@ -11,15 +11,17 @@ def gpu_memory_test(arr):
     width, height = arr.shape
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
+    bx = cuda.blockIdx.x
+    by = cuda.blockIdx.y
+    dim_x = cuda.blockDim.x
+    dim_y = cuda.blockDun.y
     bpg = cuda.gridDim.x
 
     print(bpg)
 
     shared_arr = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
-
-    for i in range(bpg):
-        arr[tx + (i * TPB), ty + (i * TPB)] = i+1
-        shared_arr[tx + (i * TPB), ty + (i * TPB)] = arr[tx + i * TPB, ty + i * TPB]
+    arr[tx + bx * dim_x , shared_arr + bx * dim_x] = bx
+    shared_arr[tx + bx * dim_x , shared_arr + bx * dim_x] = arr[tx + bx * dim_x , shared_arr + bx * dim_x]
 
 def main():
     arr = np.zeros(shape=(8,8), dtype=np.int32)

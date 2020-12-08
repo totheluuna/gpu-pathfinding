@@ -13,6 +13,8 @@ def gpu_memory_test(arr):
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x
 
+    print(bpg)
+
     shared_arr = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
 
     for i in range(bpg):

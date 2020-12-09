@@ -19,24 +19,22 @@ def gpu_memory_test(arr):
     bpg_y = cuda.gridDim.y
     bpg = bpg_x
 
-    # print(bpg)
+    print(bpg)
 
     shared_arr = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
 
-    # arr[tx + (bx * bpg) , ty + (by * bpg)] = bpg+1
-    # cuda.syncthreads()
-    # shared_arr[tx + (bx * bpg) , ty + (by * bpg)] = arr[tx + (bx * bpg) , ty + (by * bpg)]
-    # cuda.syncthreads()
-
-    for i in range(bpg*bpg):
-        arr[tx + (bx * i) , ty + (by * i)] = i
-        # cuda.syncthreads()
+    for i in range(bpg):
+        # arr[tx + (bx * i) , ty + (by * i)] = 69
         shared_arr[tx + (bx * i) , ty + (by * i)] = arr[tx + (bx * i) , ty + (by * i)]
-        # cuda.syncthreads()
 
 def main():
     arr = np.zeros(shape=(8,8), dtype=np.int32)
     arr_gpu = cp.zeros(shape=(8,8), dtype=cp.int32)
+
+    w, h = arr.shape
+    for i in range(w):
+        for j in range(h):
+            arr[i,j] = i * w + j
 
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(arr.shape[0] / threadsperblock[0])

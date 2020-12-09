@@ -36,7 +36,7 @@ def main():
     arr = np.zeros(shape=(8,8,2), dtype=np.int32)
     arr_gpu = cp.zeros(shape=(8,8,2), dtype=cp.int32)
 
-    w, h = arr.shape
+    w, h, _temp = arr.shape
     for i in range(w):
         for j in range(h):
             arr[i,j] = np.array([i,j])

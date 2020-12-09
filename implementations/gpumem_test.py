@@ -8,7 +8,7 @@ import math
 @cuda.jit
 def gpu_memory_test(arr):
     x, y = cuda.grid(2)
-    width, height, temp = arr.shape
+    width, height = arr.shape
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bx = cuda.blockIdx.x
@@ -29,17 +29,16 @@ def gpu_memory_test(arr):
     # arr[tx,ty] = shared_arr[tx, ty]*2
     # cuda.syncthreads()
 
-    arr[x, y, 0] = bx
-    arr[x, y, 1] = by
+    arr[x , y] = bx
 
 def main():
-    arr = np.zeros(shape=(8,8,2), dtype=np.int32)
-    arr_gpu = cp.zeros(shape=(8,8,2), dtype=cp.int32)
+    arr = np.zeros(shape=(8,8), dtype=np.int32)
+    arr_gpu = cp.zeros(shape=(8,8), dtype=cp.int32)
 
-    w, h, _temp = arr.shape
+    w, h = arr.shape
     for i in range(w):
         for j in range(h):
-            arr[i,j] = np.array([i,j])
+            arr[i,j] = i * w + j
 
     print(arr)
 

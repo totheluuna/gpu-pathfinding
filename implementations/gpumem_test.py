@@ -32,8 +32,8 @@ def gpu_memory_test(arr):
     arr[x , y] = bx * dim_x + by
 
 def main():
-    arr = np.zeros(shape=(8,8), dtype=np.int32)
-    arr_gpu = cp.zeros(shape=(8,8), dtype=cp.int32)
+    arr = np.zeros(shape=(16,16), dtype=np.int32)
+    arr_gpu = cp.zeros(shape=(16,16), dtype=cp.int32)
 
     w, h = arr.shape
     for i in range(w):

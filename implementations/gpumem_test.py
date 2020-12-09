@@ -19,7 +19,7 @@ def gpu_memory_test(arr):
     bpg_y = cuda.gridDim.y
     bpg = bpg_x
 
-    print(bpg)
+    # print(bpg)
 
     shared_arr = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
 
@@ -35,6 +35,8 @@ def main():
     for i in range(w):
         for j in range(h):
             arr[i,j] = i * w + j
+
+    print(arr)
 
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(arr.shape[0] / threadsperblock[0])

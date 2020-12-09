@@ -32,8 +32,11 @@ def gpu_memory_test(arr):
         # cuda.syncthreads()
         shared_arr[tx + (bx * i) , ty + (by * i)] = arr[tx + (bx * i) , ty + (by * i)]
         cuda.syncthreads()
-        arr[tx + (bx * i) , ty + (by * i)] = shared_arr[tx + (bx * i) , ty + (by * i)] + 1
-        cuda.syncthreads()
+        # arr[tx + (bx * i) , ty + (by * i)] = shared_arr[tx + (bx * i) , ty + (by * i)] + 1
+        # cuda.syncthreads()
+
+    arr[tx, ty] = shared_arr[tx, ty] + 1
+    cuda.syncthreads()
 
 def main():
     arr = np.zeros(shape=(8,8), dtype=np.int32)

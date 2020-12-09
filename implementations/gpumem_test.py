@@ -20,6 +20,8 @@ def gpu_memory_test(arr):
     bpg = bpg_x
 
     # print(bpg)
+    if x >= grid.shape[0] and y >= grid.shape[1]:
+        return
 
     # shared_arr = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
     # shared_arr[tx,ty] = arr[tx, ty]
@@ -28,7 +30,7 @@ def gpu_memory_test(arr):
     # cuda.syncthreads()
 
     for i in range(bpg):
-        arr[tx + (bx * i) , ty + (by * i)] = bx * bpg + by
+        arr[tx + (bx * i) , ty + (by * i)] = by * bpg + bx
         # cuda.syncthreads()
     cuda.syncthreads()
 

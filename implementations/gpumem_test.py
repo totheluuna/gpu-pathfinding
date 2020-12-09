@@ -46,6 +46,7 @@ def main():
     blockspergrid_x = math.ceil(arr.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(arr.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
+    print('blocks per grid: ', blockspergrid, '\nthreads per block: ', threadsperblock)
     gpu_memory_test[blockspergrid, threadsperblock](arr)
 
     print(arr)

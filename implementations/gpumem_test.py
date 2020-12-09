@@ -8,7 +8,7 @@ import math
 @cuda.jit
 def gpu_memory_test(arr):
     x, y = cuda.grid(2)
-    width, height = arr.shape
+    width, height, temp = arr.shape
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bx = cuda.blockIdx.x

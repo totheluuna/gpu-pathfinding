@@ -25,7 +25,7 @@ def gpu_memory_test(arr):
 
     for i in range(bpg):
         arr[tx + (bx * i) , ty + (by * i)] = 69
-        shared_arr[tx + (bx * i) , ty + (by * i)] = arr[tx + (bx * i) , ty + (by * i)] + 
+        shared_arr[tx + (bx * i) , ty + (by * i)] = arr[tx + (bx * i) , ty + (by * i)]
 
 def main():
     arr = np.zeros(shape=(8,8), dtype=np.int32)

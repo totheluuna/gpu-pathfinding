@@ -249,7 +249,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
         if passable(grid, (x,y)) and (x != goal_x and y != goal_y):
             if (x == goal_x and y == goal_y):
                 print(x, y)
-            search(x, y, grid, start, goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y])
+            search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y])
 
 @cuda.jit
 def GridDecompPath(grid, start, goal, open, closed, parents, cost, g, h, neighbors):

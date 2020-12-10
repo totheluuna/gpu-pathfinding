@@ -324,6 +324,12 @@ def main():
     print(start)
     print(goal)
 
+    for i in range(guide.shape[0]):
+        for j in range(guide.shape[1]):
+            guide[i,j] = i * guide.shape[0] + j
+            if (i,j) == (start[0], start[1]) or (i,j) == (goal[0], goal[1]):
+                guide[i,j] = 696
+
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
     width, height = grid.shape

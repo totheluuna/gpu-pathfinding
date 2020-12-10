@@ -279,12 +279,17 @@ def passable_cpu(grid, tile):
 def inBounds_cpu(grid, tile):
     x, y = tile
     return 0 <= x < grid.shape[0] and 0 <= y < grid.shape[1]
+
+def heuristic_cpu(a, b):
+    (x1, y1) = a
+    (x2, y2) = b
+    return abs(x1-x2) + abs(y1-y2)
 def precomputeHeuristics_cpu(grid, start, goal, h):
     width, height = grid.shape
     for i in range(width):
         for j in range(height):
             if passable_cpu(grid, (i,j)) and inBounds_cpu(grid, (i,j)):
-                h[i,j] = heuristic((i,j), goal)
+                h[i,j] = heuristic_cpu((i,j), goal)
 
 def main():
     # create grid from image dataset

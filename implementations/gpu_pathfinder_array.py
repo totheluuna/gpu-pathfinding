@@ -272,11 +272,18 @@ def precomputeHeuristics(grid, start, goal, h):
             h[x,y] = heuristic((x,y), goal)
         cuda.syncthreads()
 
+def passable_cpu(grid, tile):
+    x,y = tile
+    return grid[x,y] == 1
+
+def inBounds_cpu(grid, tile):
+    x, y = tile
+    return 0 <= x < grid.shape[0] and 0 <= y < grid.shape[1]
 def precomputeHeuristics_cpu(grid, start, goal, h):
     width, height = grid.shape
     for i in range(width):
         for j in range(height):
-            if passable(grid, (i,j)) and inBounds(grid, (i,j)):
+            if passable_cpu(grid, (i,j)) and inBounds_cpu(grid, (i,j)):
                 h[i,j] = heuristic((i,j), goal)
 
 def main():

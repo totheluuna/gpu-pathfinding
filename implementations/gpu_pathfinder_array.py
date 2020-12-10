@@ -217,8 +217,9 @@ def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors
                     if new_g < g[next_x, next_y]:
                         closed[next_x, next_y] = UNEXPLORED
                 if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
-                    parents[next_x, next_y, 0] = current_x
-                    parents[next_x, next_y, 1] = current_y
+                    # parents[next_x, next_y, 0] = current_x
+                    # parents[next_x, next_y, 1] = current_y
+                    parents[next_x, next_y] = current_x * width + current_y
                     g[next_x, next_y] = new_g
                     # h[next_x, next_y] = heuristic(next, goal) # omit this step since H is precomputed on GPU
                     cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
@@ -308,8 +309,10 @@ def main():
     open[:] = UNEXPLORED
     closed = cp.empty((width, height), dtype=cp.int32)
     closed[:] = UNEXPLORED
-    parents = cp.empty((width, height, 2), dtype=cp.int32)
-    parents[:] = cp.array([-1,-1])
+    # parents = cp.empty((width, height, 2), dtype=cp.int32)
+    # parents[:] = cp.array([-1,-1])
+    parents = cp.empty((width, height), dtype=cp.int32)
+    parents[:] = -1
     # parents_arr[:] = cp.array([-1,-1])
     # print('FROM parents_arr')
     # print(parents_arr[0,0] == parents)
@@ -325,7 +328,7 @@ def main():
     open_arr[:] = open
     closed_arr = cp.empty((width, height, width, height), dtype=cp.int32)
     closed_arr[:] = closed
-    parents_arr = cp.empty((width, height, width, height, 2), dtype=cp.int32)
+    parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
     parents_arr[:] = parents
     cost_arr = cp.empty((width, height, width, height), dtype=cp.int32)
     cost_arr[:] = cost

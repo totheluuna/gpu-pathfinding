@@ -245,7 +245,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
     if x < grid.shape[0] and y < grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
         if passable(grid, (x,y)):
-            search(x, y, grid, start, goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y])
+            search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y])
 
 @cuda.jit
 def GridDecompPath(grid, start, goal, open, closed, parents, cost, g, h, neighbors):

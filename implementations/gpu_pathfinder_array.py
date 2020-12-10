@@ -351,8 +351,8 @@ def main():
     # print(path)
     print('After')
     # parents_cpu = parents_arr.get()
-    parents_arr_cpu = cp.asnumpy(parents_arr)
-    print(parents_arr_cpu[x,y,x,y])
+    # parents_arr_cpu = cp.asnumpy(parents_arr)
+    print(parents_arr[x,y,x,y])
     # path = []
     # reconstructPathV2(parents_cpu[x,y], tuple(start), tuple(goal), path)
     # print(path)

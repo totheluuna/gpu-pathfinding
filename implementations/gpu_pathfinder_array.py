@@ -392,7 +392,11 @@ def main():
     parents_arr_cpu = cp.asnumpy(parents_arr)
     print(guide)
     print()
-    print(parents_arr[x,y])
+    # print(parents_arr[x,y])
+    for i in range(parents_arr.shape[0]):
+        for j in range(parents_arr.shape[1]):
+            print('tile: ', (i,j))
+            print(parents_arr[i, j])
     # path = []
     # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
     # print(path)

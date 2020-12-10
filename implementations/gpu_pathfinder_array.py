@@ -335,7 +335,7 @@ def main():
     print(h)
     print("----- Searching for Path -----")
     s = timer()
-    x,y = goal
+    x,y = start
     print('Before')
     print(parents_arr[x,y,x,y])
     # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)

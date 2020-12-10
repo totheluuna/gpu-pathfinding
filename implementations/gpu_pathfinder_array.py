@@ -343,7 +343,7 @@ def main():
     s = timer()
     x,y = start
     print('Before')
-    print(parents_arr[x,y,x,y])
+    print(parents_arr[x,y])
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
@@ -355,7 +355,7 @@ def main():
     print('Kernel Launch done in ', e-s, 's')
     parents_cpu = parents_arr.get()
     parents_arr_cpu = cp.asnumpy(parents_arr)
-    print(parents_arr[x,y,goal[0],goal[1]])
+    print(parents_arr[x,y])
     # path = []
     # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
     # print(path)

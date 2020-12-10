@@ -15,7 +15,7 @@ from numba import cuda, int32, typeof
 OPEN = 1
 CLOSED = 0
 
-scale_factor = 5 # scales to a power of 2
+scale_factor = 4 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 TPB = 8
@@ -299,9 +299,10 @@ def precomputeHeuristics(grid, start, goal, h, blocking):
 def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    grid = cp.zeros(dim, dtype=cp.int32)
+    # grid = cp.zeros(dim, dtype=cp.int32)
+    grid = cp.ones(dim, dtype=cp.int32)
     guide = np.empty(dim, dtype=np.int32)
-    createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
 
     for i in range(guide.shape[0]):
@@ -311,13 +312,13 @@ def main():
 
     
     # generate random start and goal
-    start = [-1, -1]
-    goal = [-1, -1]
-    # start = [0, 0]
-    # goal = [grid.shape[0]-1, grid.shape[1]-1]
+    # start = [-1, -1]
+    # goal = [-1, -1]
+    start = [0, 0]
+    goal = [grid.shape[0]-1, grid.shape[1]-1]
     neighbors = cp.empty((4,2), dtype=cp.int32)
     neighbors[:] = cp.array([0,0])
-    randomStartGoal(grid, start, goal)
+    # randomStartGoal(grid, start, goal)
     start = cp.array(start)
     goal = cp.array(goal)
     print(start)

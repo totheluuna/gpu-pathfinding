@@ -350,9 +350,9 @@ def main():
     print('Kernel Launch done in (after compilation) ', e-s, 's')
     # print(path)
     print('After')
-    goal_parents = parents_arr[x,y].get()
+    parents_cpu = parents_arr.get()
     path = []
-    reconstructPathV2(goal_parents, tuple(start), tuple(goal), path)
+    reconstructPathV2(parents_cpu[x,y], tuple(start), tuple(goal), path)
     print(path)
 
 if __name__ == "__main__":

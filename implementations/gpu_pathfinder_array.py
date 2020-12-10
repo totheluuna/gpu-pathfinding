@@ -354,7 +354,7 @@ def main():
     # parents_arr_cpu = cp.asnumpy(parents_arr)
     print(parents_arr[x,y,x,y])
     # path = []
-    # reconstructPathV2(parents_cpu[x,y], tuple(start), tuple(goal), path)
+    reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
     # print(path)
 
 if __name__ == "__main__":

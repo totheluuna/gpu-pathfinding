@@ -15,7 +15,7 @@ from numba import cuda, int32, typeof
 OPEN = 1
 CLOSED = 0
 
-scale_factor = 7 # scales to a power of 2
+scale_factor = 4 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 TPB = 4
@@ -278,7 +278,7 @@ def precomputeHeuristics(grid, start, goal, h, blocking):
     if x < grid.shape[0] and y < grid.shape[1]:
         if passable(grid, (x,y)) and inBounds(grid, (x,y)):
             h[x,y] = heuristic((x,y), goal)
-            blocking[x,y] = bx * dim_x + by
+        blocking[x,y] = bx * dim_x + by
         cuda.syncthreads()
 
 def main():

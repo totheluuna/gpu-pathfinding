@@ -371,6 +371,7 @@ def main():
     parents_cpu = parents_arr.get()
     parents_arr_cpu = cp.asnumpy(parents_arr)
     print(guide)
+    print()
     print(parents_arr[x,y])
     # path = []
     # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)

@@ -350,8 +350,9 @@ def main():
     print('Kernel Launch done in (after compilation) ', e-s, 's')
     # print(path)
     print('After')
-    parents_cpu = parents_arr.get()
-    print(parents_cpu[x,y,x,y])
+    # parents_cpu = parents_arr.get()
+    parents_arr_cpu = cp.asnumpy(parents_arr)
+    print(parents_arr_cpu[x,y,x,y])
     # path = []
     # reconstructPathV2(parents_cpu[x,y], tuple(start), tuple(goal), path)
     # print(path)

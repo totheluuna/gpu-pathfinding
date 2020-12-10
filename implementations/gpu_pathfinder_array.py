@@ -344,7 +344,6 @@ def main():
     x,y = start
     print('Before')
     print(parents_arr[x,y,x,y])
-    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])

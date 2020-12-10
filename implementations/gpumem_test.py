@@ -23,7 +23,7 @@ def gpu_memory_test(arr):
     if x >= arr.shape[0] and y >= arr.shape[1]:
         return
 
-    # # shared_arr = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
+    # shared_arr = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
     # shared_arr[tx,ty] = arr[tx, ty]
     # cuda.syncthreads()
     # arr[tx,ty] = shared_arr[tx, ty]*2

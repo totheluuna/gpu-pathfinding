@@ -203,7 +203,8 @@ def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors
     while getMin(open) < UNEXPLORED:
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
-        if (current_x == goal_x and current_y == goal_y) or (block[current_x, current_y] != block[start_x, start_y]):
+        if (current_x == goal_x and current_y == goal_y):
+        # or (block[current_x, current_y] != block[start_x, start_y]):
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:

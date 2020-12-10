@@ -15,10 +15,10 @@ from numba import cuda, int32, typeof
 OPEN = 1
 CLOSED = 0
 
-scale_factor = 2 # scales to a power of 2
+scale_factor = 4 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
-TPB = 16
+TPB = 4
 
 
 seed(42069)
@@ -257,8 +257,7 @@ def GridDecompPath(grid, start, goal, open, closed, parents, cost, g, h, neighbo
     shared_h = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
 
     # load the heuristics into shared memory
-    for i in range(bpg):
-        shared_h[tx, ty] = h[tx + i * TPB, ty + i * TPB]
+    shared_h[tx, ty] = h[tx + i * TPB, ty + i * TPB]
 
 
 @cuda.jit
@@ -271,7 +270,14 @@ def precomputeHeuristics(grid, start, goal, h):
     if x < grid.shape[0] and y < grid.shape[1]:
         if passable(grid, (x,y)) and inBounds(grid, (x,y)):
             h[x,y] = heuristic((x,y), goal)
-        cuda.syncthreads() 
+        cuda.syncthreads()
+
+def precomputeHeuristics_cpu(grid, start, goal, h):
+    width, height = grid.shape
+    for i in range(width):
+        for j in range(height):
+            if passable(grid, (i,j)) and inBounds(grid, (i,j)):
+                h[i,j] = heuristic((i,j), goal)
 
 def main():
     # create grid from image dataset
@@ -326,33 +332,35 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     print('----- Precomputing Heuristics -----')
+    precomputeHeuristics_cpu(grid, start, goal, h)
+    print(h)
     precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h)
     print(h)
-    print("----- Searching for Path -----")
-    s = timer()
-    x,y = goal
-    print('Before')
-    print(parents_arr[x,y,x,y])
-    # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-    threadsperblock = (TPB, TPB)
-    blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
-    blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
-    blockspergrid = (blockspergrid_x, blockspergrid_y)
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr)
+    # print("----- Searching for Path -----")
+    # s = timer()
+    # x,y = goal
+    # print('Before')
+    # print(parents_arr[x,y,x,y])
+    # # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    # threadsperblock = (TPB, TPB)
+    # blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
+    # blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
+    # blockspergrid = (blockspergrid_x, blockspergrid_y)
+    # GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr)
+    # # path = []
+    # # reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    # e = timer()
+    # print('Kernel Launch done in (before compilation) ', e-s, 's')
+    # s = timer()
+    # GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr)
+    # e = timer()
+    # print('Kernel Launch done in (after compilation) ', e-s, 's')
+    # # print(path)
+    # print('After')
+    # print(parents_arr[:,:,x,y])
     # path = []
-    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    e = timer()
-    print('Kernel Launch done in (before compilation) ', e-s, 's')
-    s = timer()
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr)
-    e = timer()
-    print('Kernel Launch done in (after compilation) ', e-s, 's')
+    # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
     # print(path)
-    print('After')
-    print(parents_arr[:,:,x,y])
-    path = []
-    reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
-    print(path)
 
 if __name__ == "__main__":
     main()

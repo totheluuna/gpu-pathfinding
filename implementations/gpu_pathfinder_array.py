@@ -325,8 +325,6 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     print('----- Precomputing Heuristics -----')
-    precomputeHeuristics_cpu(grid, start, goal, h)
-    print(h)
     precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h)
     print(h)
     print("----- Searching for Path -----")

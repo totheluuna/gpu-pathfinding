@@ -350,7 +350,7 @@ def main():
     print('After')
     goal_parents = cp.asnumpy(parents_arr[x,y])
     path = []
-    reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
+    reconstructPathV2(goal_parents, tuple(start), tuple(goal), path)
     print(path)
 
 if __name__ == "__main__":

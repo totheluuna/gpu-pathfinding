@@ -188,7 +188,7 @@ def getMin(arr):
 
 
 @cuda.jit(device=True)
-def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors):
+def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -203,7 +203,7 @@ def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors
     while getMin(open) < UNEXPLORED:
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
-        if current_x == goal_x and current_y == goal_y:
+        if (current_x == goal_x and current_y == goal_y) or (block[current_x, current_y] != block[start_x, start_y]):
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:
@@ -233,7 +233,7 @@ def test_func(arr):
             arr[i,j] = 69
     
 @cuda.jit
-def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbors):    
+def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):    
     x, y = cuda.grid(2)
     glb_x, glb_y = dim
     goal_x, goal_y = goal
@@ -248,7 +248,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
         # do the search for as many times as number of tiles in the grid
         # if passable(grid, (x,y)) and (x != goal_x and y != goal_y):
         #     print(x, y)
-        search(x, y, grid, start, goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y])
+        search(x, y, grid, start, goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
 @cuda.jit
 def GridDecompPath(grid, start, goal, open, closed, parents, cost, g, h, neighbors):
@@ -339,30 +339,24 @@ def main():
     precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h, blocking)
     print(h)
     print(blocking)
-    # print("----- Searching for Path -----")
-    # s = timer()
-    # x,y = start
-    # print('Before')
-    # print(parents_arr[x,y,x,y])
-    # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-    # threadsperblock = (TPB, TPB)
-    # blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
-    # blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
-    # blockspergrid = (blockspergrid_x, blockspergrid_y)
-    # GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr)
-    # # path = []
-    # # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    # e = timer()
-    # print('Kernel Launch done in (before compilation) ', e-s, 's')
-    # s = timer()
-    # GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr)
-    # e = timer()
-    # print('Kernel Launch done in (after compilation) ', e-s, 's')
-    # # print(path)
-    # print('After')
-    # # parents_cpu = parents_arr.get()
-    # # parents_arr_cpu = cp.asnumpy(parents_arr)
-    # print(parents_arr[x,y,goal[0],goal[1]])
+    print("----- Searching for Path -----")
+    s = timer()
+    x,y = start
+    print('Before')
+    print(parents_arr[x,y,x,y])
+    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    threadsperblock = (TPB, TPB)
+    blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
+    blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
+    blockspergrid = (blockspergrid_x, blockspergrid_y)
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr, blocking)
+    # path = []
+    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    e = timer()
+    print('Kernel Launch done in ', e-s, 's')
+    parents_cpu = parents_arr.get()
+    parents_arr_cpu = cp.asnumpy(parents_arr)
+    print(parents_arr[x,y,goal[0],goal[1]])
     # path = []
     # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
     # print(path)

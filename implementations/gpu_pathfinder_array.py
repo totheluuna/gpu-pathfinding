@@ -351,9 +351,10 @@ def main():
     # print(path)
     print('After')
     parents_cpu = parents_arr.get()
-    path = []
-    reconstructPathV2(parents_cpu[x,y], tuple(start), tuple(goal), path)
-    print(path)
+    print(parents_cpu[x,y,x,y])
+    # path = []
+    # reconstructPathV2(parents_cpu[x,y], tuple(start), tuple(goal), path)
+    # print(path)
 
 if __name__ == "__main__":
     main()

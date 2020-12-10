@@ -273,38 +273,39 @@ def precomputeHeuristics(grid, start, goal, h):
         cuda.syncthreads()
 
 def main():
+    print('----- Preparing Grid -----')
     # create grid from image dataset
-    grid = np.zeros(dim, dtype=np.int32)
+    grid = cp.zeros(dim, dtype=cp.int32)
     createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
     
     # generate random start and goal
     start = [-1, -1]
     goal = [-1, -1]
-    neighbors = np.empty((4,2), dtype=np.int32)
-    neighbors[:] = np.array([0,0])
+    neighbors = cp.empty((4,2), dtype=cp.int32)
+    neighbors[:] = cp.array([0,0])
     randomStartGoal(grid, start, goal)
-    start = np.array(start)
-    goal = np.array(goal)
+    start = cp.array(start)
+    goal = cp.array(goal)
     print(start)
     print(goal)
 
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
     width, height = grid.shape
-    open = np.empty((width, height), dtype=np.int32)
+    open = cp.empty((width, height), dtype=cp.int32)
     open[:] = UNEXPLORED
-    closed = np.empty((width, height), dtype=np.int32)
+    closed = cp.empty((width, height), dtype=cp.int32)
     closed[:] = UNEXPLORED
-    parents = np.empty((width, height, 2), dtype=np.int32)
-    parents[:] = np.array([-1,-1])
+    parents = cp.empty((width, height, 2), dtype=cp.int32)
+    parents[:] = cp.array([-1,-1])
     # parents_arr[:] = cp.array([-1,-1])
     # print('FROM parents_arr')
     # print(parents_arr[0,0] == parents)
 
-    cost = np.zeros((width, height), dtype=np.int32)
-    g = np.zeros((width, height), dtype=np.int32)
-    h = np.zeros((width, height), dtype=np.int32)
+    cost = cp.zeros((width, height), dtype=cp.int32)
+    g = cp.zeros((width, height), dtype=cp.int32)
+    h = cp.zeros((width, height), dtype=cp.int32)
 
     open_arr = cp.empty((width, height, width, height), dtype=cp.int32)
     open_arr[:] = open

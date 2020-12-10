@@ -350,7 +350,7 @@ def main():
     print('Kernel Launch done in (after compilation) ', e-s, 's')
     # print(path)
     print('After')
-    goal_parents = cp.asnumpy(parents_arr[x,y])
+    goal_parents = parents_arr[x,y].get()
     path = []
     reconstructPathV2(goal_parents, tuple(start), tuple(goal), path)
     print(path)

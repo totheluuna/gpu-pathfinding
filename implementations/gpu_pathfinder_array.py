@@ -314,7 +314,9 @@ def main():
 
     cost = cp.zeros((width, height), dtype=cp.int32)
     g = cp.zeros((width, height), dtype=cp.int32)
-    h = cp.zeros((width, height), dtype=cp.int32)
+    # h = cp.zeros((width, height), dtype=cp.int32)
+    h = cp.empty((width, height), dtype=cp.int32)
+    h[:] = -1
     blocking = cp.zeros((width, height), dtype=cp.int32)
 
     open_arr = cp.empty((width, height, width, height), dtype=cp.int32)

@@ -128,46 +128,46 @@ def getNeighbors(grid, tile, neighbors):
     # TO DO: modify to use numpy array
     (x, y) = tile
     for i in range(neighbors.size):
-        # if (x+y)%2 == 0:
-        #     if i == 0:
-        #         neighbors[i,0] = x
-        #         neighbors[i,1] = y+1
-        #     elif i == 1:
-        #         neighbors[i,0] = x-1
-        #         neighbors[i,1] = y
-        #     elif i == 2:
-        #         neighbors[i,0] = x
-        #         neighbors[i,1] = y-1
-        #     elif i == 3:
-        #         neighbors[i,0] = x+1
-        #         neighbors[i,1] = y
-        # else:
-        #     if i == 0:
-        #         neighbors[i,0] = x+1
-        #         neighbors[i,1] = y
-        #     elif i == 1:
-        #         neighbors[i,0] = x
-        #         neighbors[i,1] = y-1
-        #     elif i == 2:
-        #         neighbors[i,0] = x-1
-        #         neighbors[i,1] = y
-        #     elif i == 3:
-        #         neighbors[i,0] = x
-        #         neighbors[i,1] = y+1
+        if (x+y)%2 == 0:
+            if i == 0:
+                neighbors[i,0] = x
+                neighbors[i,1] = y+1
+            elif i == 1:
+                neighbors[i,0] = x-1
+                neighbors[i,1] = y
+            elif i == 2:
+                neighbors[i,0] = x
+                neighbors[i,1] = y-1
+            elif i == 3:
+                neighbors[i,0] = x+1
+                neighbors[i,1] = y
+        else:
+            if i == 0:
+                neighbors[i,0] = x+1
+                neighbors[i,1] = y
+            elif i == 1:
+                neighbors[i,0] = x
+                neighbors[i,1] = y-1
+            elif i == 2:
+                neighbors[i,0] = x-1
+                neighbors[i,1] = y
+            elif i == 3:
+                neighbors[i,0] = x
+                neighbors[i,1] = y+1
 
         
-        if i == 0:
-            neighbors[i,0] = x
-            neighbors[i,1] = y+1
-        elif i == 1:
-            neighbors[i,0] = x-1
-            neighbors[i,1] = y
-        elif i == 2:
-            neighbors[i,0] = x
-            neighbors[i,1] = y-1
-        elif i == 3:
-            neighbors[i,0] = x+1
-            neighbors[i,1] = y
+        # if i == 0:
+        #     neighbors[i,0] = x
+        #     neighbors[i,1] = y+1
+        # elif i == 1:
+        #     neighbors[i,0] = x-1
+        #     neighbors[i,1] = y
+        # elif i == 2:
+        #     neighbors[i,0] = x
+        #     neighbors[i,1] = y-1
+        # elif i == 3:
+        #     neighbors[i,0] = x+1
+        #     neighbors[i,1] = y
 @cuda.jit(device=True)
 def heuristic(a, b):
     (x1, y1) = a
@@ -300,9 +300,9 @@ def precomputeHeuristics(grid, start, goal, h, blocking):
 def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    grid = cp.ones(dim, dtype=cp.int32)
+    grid = cp.zeros(dim, dtype=cp.int32)
     guide = np.empty(dim, dtype=np.int32)
-    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
 
     for i in range(guide.shape[0]):

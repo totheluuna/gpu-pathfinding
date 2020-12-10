@@ -237,6 +237,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
     x, y = cuda.grid(2)
     glb_x, glb_y = dim
     goal_x, goal_y = goal
+    print(goal_x, goal_y)    
 
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y

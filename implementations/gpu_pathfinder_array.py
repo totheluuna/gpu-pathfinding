@@ -287,8 +287,15 @@ def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
     grid = cp.ones(dim, dtype=cp.int32)
+    guide = np.empty(dim, dtype=np.int32)
     # createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
+
+    for i in range(guide.shape[0]):
+        for j in range(guide.shape[1]):
+            guide[i,j] = i * guide.shape[0] + j
+
+
     
     # generate random start and goal
     # start = [-1, -1]
@@ -363,6 +370,7 @@ def main():
     print('Kernel Launch done in ', e-s, 's')
     parents_cpu = parents_arr.get()
     parents_arr_cpu = cp.asnumpy(parents_arr)
+    print(guide)
     print(parents_arr[x,y])
     # path = []
     # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)

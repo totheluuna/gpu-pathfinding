@@ -311,8 +311,7 @@ def GridDecompPath(grid, start, goal, parents, h, block):
         # do the search for as many times as number of tiles in the grid
         if passable(grid, (x,y)) and (x != goal_x and y != goal_y):
             # print(x, y)
-            
-            search(x, y, grid, (x,y), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
+            search(x, y, grid, (x,y), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
             # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
 
@@ -401,7 +400,7 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     # GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr, blocking)
-    GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, blocking)
+    GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents, h, blocking)
     # GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents_arr, cost, g, h, neighbors, blocking)
     # parents_cpu = parents_arr.get()
     # parents_arr_cpu = cp.asnumpy(parents_arr)

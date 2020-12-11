@@ -429,6 +429,7 @@ def main():
     # path = []
     # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
     # print(path)
+    print(parents)
     e = timer()
     print('Kernel Launch done in ', e-s, 's')
 

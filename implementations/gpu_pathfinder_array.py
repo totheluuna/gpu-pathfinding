@@ -276,7 +276,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
             search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
 @cuda.jit
-def GridDecompPath(grid, start, goal, parents, h, neighbors, block):
+def GridDecompPath(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block)):
     x, y = cuda.grid(2)
     glb_x, glb_y = dim
     goal_x, goal_y = goal
@@ -310,8 +310,8 @@ def GridDecompPath(grid, start, goal, parents, h, neighbors, block):
         # do the search for as many times as number of tiles in the grid
         if passable(grid, (x,y)) and (x != goal_x and y != goal_y):
             # print(x, y)
-            # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
-            search(x, y, grid, (x,y), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
+            search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
+            # search(x, y, grid, (x,y), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
 
 
 

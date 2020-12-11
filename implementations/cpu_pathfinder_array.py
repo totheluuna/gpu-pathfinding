@@ -113,7 +113,10 @@ def reconstructPathV2(cameFrom, start, goal, path):
 # @jit
 def passable(grid, tile):
     x,y = tile
-    return grid[x,y] == 1
+    try:
+        return grid[x,y] == 1
+    except IndexError:
+        return 0
 # @jit
 def inBounds(grid, tile):
     (x, y) = tile

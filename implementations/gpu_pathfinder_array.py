@@ -420,7 +420,7 @@ def main():
     # parents_arr_cpu = cp.asnumpy(parents_arr)
     print(guide)
     print()
-    print(parents))
+    print(parents)
     # for i in range(parents_arr.shape[0]):
     #     for j in range(parents_arr.shape[1]):
     #         print('tile: ', (i,j))

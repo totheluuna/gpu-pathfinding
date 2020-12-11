@@ -209,10 +209,12 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
             print("\riterations: {}".format(counter), end='')
             break
         getNeighbors(grid, current, neighbors, direction)
-        for next in getNeighbors(grid, current, neighbors):
-        # for next in neighbors:
-            if passable(grid, next) and inBounds(grid, next):
-                next_x, next_y = next
+        for next in neighbors:
+        # for next in getNeighbors(grid, current, neighbors):
+            next_x = (next-(next%width))/width)
+            next_y = next%width
+            if passable(grid, (next_x, next_y)) and inBounds(grid, (next_x, next_y)):
+                # next_x, next_y = next
                 new_g = g[current_x, current_y] + 1
                 if open[next_x, next_y] != UNEXPLORED:
                     if new_g < g[next_x, next_y]:

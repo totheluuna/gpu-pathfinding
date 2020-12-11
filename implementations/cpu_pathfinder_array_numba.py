@@ -157,7 +157,7 @@ def heuristic(a, b):
     (x2, y2) = b
     # return abs(x1-x2) + abs(y1-y2)
 
-    return int(sqrt(math.pow((x1-x2),2) + math.pow((y1-y2),2)))
+    return int(math.sqrt(math.pow((x1-x2),2) + math.pow((y1-y2),2)))
 @njit
 def getMinIndex(arr):
     width, height = arr.shape

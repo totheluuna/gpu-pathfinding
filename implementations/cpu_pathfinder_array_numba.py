@@ -265,6 +265,7 @@ def main():
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()
+    print(h)
     print(parents)
     print('(Search + compilation) Path found in ', e-s, 's')
     # s = timer()

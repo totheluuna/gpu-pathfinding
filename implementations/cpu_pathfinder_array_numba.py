@@ -203,7 +203,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
                     if new_g < g[next_x, next_y]:
                         closed[next_x, next_y] = UNEXPLORED
                 if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
-                    parents[next_x, next_y] = np.array([current_x, current_y])
+                    parents[next_x, next_y] = current_x * width + current_y
                     g[next_x, next_y] = new_g
                     h[next_x, next_y] = heuristic(next, goal)
                     cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
@@ -250,8 +250,9 @@ def main():
     open[:] = UNEXPLORED
     closed = np.empty((width, height), dtype=np.int32) # open or closed
     closed[:] = UNEXPLORED
-    parents = np.empty((width, height, 2), dtype=np.int32)
-    parents[:] = np.array([-1,-1])
+    parents = np.empty((width, height), dtype=np.int32)
+    # parents[:] = np.array([-1,-1])
+    parents[:] = -1
     cost = np.zeros((width, height), dtype=np.int32)
     g = np.zeros((width, height), dtype=np.int32)
     h = np.zeros((width, height), dtype=np.int32)

@@ -209,7 +209,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
                     cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
                     open[next_x, next_y] = cost[next_x, next_y]
                 closed[current_x, current_y] = cost[current_x, current_y]
-                open[current_x, current_y] = UNEXPLORED
+            open[current_x, current_y] = UNEXPLORED
         counter += 1
         open_min = np.amin(open)
 

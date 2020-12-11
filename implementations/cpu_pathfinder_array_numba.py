@@ -215,8 +215,9 @@ def main():
     scale_factor = 4 # scales to a power of 2
     dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
     UNEXPLORED = int(math.pow(2, (scale_factor*2)))
-    grid = np.zeros(dim, dtype=np.int32)
-    createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    # grid = np.zeros(dim, dtype=np.int32)
+    grid = np.ones(dim, dtype=np.int32)
+    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
     
     # generate random start and goal

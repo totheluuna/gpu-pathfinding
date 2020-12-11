@@ -268,8 +268,10 @@ def main():
     s = timer()
     search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
     x,y = start
-    path = []
-    reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    print(h)
+    print(parents)
+    # path = []
+    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()
     print('\nPath found in ', e-s, 's')
     print(path)

@@ -188,7 +188,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
     while open_min < UNEXPLORED:
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
-        print(current)
+        print(current, ' : ', open[current] )
         if current_x == goal_x and current_y == goal_y:
             break
         getNeighbors(grid, current, neighbors)

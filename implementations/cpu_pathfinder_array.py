@@ -158,8 +158,7 @@ def getNeighbors(grid, tile, neighbors):
         # if inBounds(grid, tile) and passable(grid, tile):
         #     results.append(tile)
     if (x + y)%2 == 0: results.reverse()
-
-    # return results
+    return results
 # @jit
 def heuristic(a, b):
     (x1, y1) = a
@@ -206,8 +205,8 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
             print("\riterations: {}".format(counter), end='')
             break
         getNeighbors(grid, current, neighbors)
-        # for next in getNeighbors(grid, current, neighbors):
-        for next in neighbors:
+        for next in getNeighbors(grid, current, neighbors):
+        # for next in neighbors:
             if passable(grid, next) and inBounds(grid, next):
                 next_x, next_y = next
                 new_g = g[current_x, current_y] + 1

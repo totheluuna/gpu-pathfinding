@@ -298,10 +298,13 @@ def GridDecompPath(grid, start, goal, parents, h, neighbors, block):
             local_closed[i,j] = UNEXPLORED
             local_cost[i,j] = 0
             local_g[i,j] = 0
+    cuda.syncthreads()
     
     for i in range(8):
         neighbors[i, 0] = 0
         neighbors[i, 1] = 0
+    cuda.syncthreads()
+    
 
     if x < grid.shape[0] and y < grid.shape[1]:
         # do the search for as many times as number of tiles in the grid

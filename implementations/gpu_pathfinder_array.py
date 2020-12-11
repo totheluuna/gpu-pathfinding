@@ -384,20 +384,16 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr, blocking)
-    # path = []
-    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    e = timer()
-    print('Kernel Launch done in ', e-s, 's')
     parents_cpu = parents_arr.get()
     parents_arr_cpu = cp.asnumpy(parents_arr)
     # print(guide)
     # print()
     # print(parents_arr[x,y])
-    # for i in range(parents_arr.shape[0]):
-    #     for j in range(parents_arr.shape[1]):
-    #         print('tile: ', (i,j))
-    #         print(parents_arr[i, j])
-    #         print()
+    for i in range(parents_arr.shape[0]):
+        for j in range(parents_arr.shape[1]):
+            print('tile: ', (i,j))
+            print(open_arr[i, j])
+            print()
     # path = []
     # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
     # print(path)

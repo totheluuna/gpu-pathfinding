@@ -274,7 +274,7 @@ def main():
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()
     print('\nPath found in ', e-s, 's')
-    print(path)
+    # print(path)
 
 if __name__ == "__main__":
     main()

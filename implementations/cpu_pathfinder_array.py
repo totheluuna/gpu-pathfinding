@@ -213,6 +213,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         # for next in getNeighbors(grid, current, neighbors):
             next_x = int((next-(next%width))/width)
             next_y = next%width
+            print(next_x, next_y)
             if passable(grid, (next_x, next_y)) and inBounds(grid, (next_x, next_y)):
                 # next_x, next_y = next
                 new_g = g[current_x, current_y] + 1

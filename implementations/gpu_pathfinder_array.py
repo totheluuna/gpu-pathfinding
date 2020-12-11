@@ -276,7 +276,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
             search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
 @cuda.jit
-def GridDecompPath(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block)):
+def GridDecompPath(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
     x, y = cuda.grid(2)
     glb_x, glb_y = dim
     goal_x, goal_y = goal
@@ -388,18 +388,18 @@ def main():
     h[:] = -1
     blocking = cp.zeros((width, height), dtype=cp.int32)
 
-    # open_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    # open_arr[:] = open
-    # closed_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    # closed_arr[:] = closed
+    open_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    open_arr[:] = open
+    closed_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    closed_arr[:] = closed
     parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
     parents_arr[:] = parents
-    # cost_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    # cost_arr[:] = cost
-    # g_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    # g_arr[:] = g
-    # neighbors_arr = cp.empty((width, height, 8, 2), dtype=cp.int32)
-    # neighbors_arr[:] = neighbors
+    cost_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    cost_arr[:] = cost
+    g_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    g_arr[:] = g
+    neighbors_arr = cp.empty((width, height, 8, 2), dtype=cp.int32)
+    neighbors_arr[:] = neighbors
 
     path = []
     threadsperblock = (TPB, TPB)
@@ -420,7 +420,8 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     # GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr, blocking)
-    GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents, h, neighbors, blocking)
+    # GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents, h, neighbors, blocking)
+    GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr, blocking)
     # parents_cpu = parents_arr.get()
     # parents_arr_cpu = cp.asnumpy(parents_arr)
     # print(guide)

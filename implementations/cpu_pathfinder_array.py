@@ -119,9 +119,10 @@ def inBounds(grid, tile):
     (x, y) = tile
     return 0 <= x < grid.shape[0] and 0 <= y < grid.shape[1]
 # @jit
-def getNeighbors(grid, tile, neighbors):
+def getNeighbors(grid, tile, neighbors, direction):
     # TO DO: modify to use numpy array
-    (x, y) = tile
+    x, y = tile
+    I = x * grid.shape[0] + y
     # for i in range(neighbors.size):
     #     if (x+y)%2 == 0:
     #         if i == 0:
@@ -149,16 +150,19 @@ def getNeighbors(grid, tile, neighbors):
     #         elif i == 3:
     #             neighbors[i,0] = x
     #             neighbors[i,1] = y+1
-    results = []
-    possibleNeighbors = [(x+1,y), (x+1,y-1), (x,y-1), (x-1,y-1), (x-1,y), (x-1,y+1), (x,y+1), (x+1,y+1)]
-    for tile in possibleNeighbors:
-        if inBounds(grid, tile):
-            if passable(grid, tile):
-                results.append(tile)
-        # if inBounds(grid, tile) and passable(grid, tile):
-        #     results.append(tile)
-    # if (x + y)%2 == 0: results.reverse()
-    return results
+    # results = []
+    # possibleNeighbors = [(x+1,y), (x+1,y-1), (x,y-1), (x-1,y-1), (x-1,y), (x-1,y+1), (x,y+1), (x+1,y+1)]
+    # for tile in possibleNeighbors:
+    #     if inBounds(grid, tile):
+    #         if passable(grid, tile):
+    #             results.append(tile)
+    #     # if inBounds(grid, tile) and passable(grid, tile):
+    #     #     results.append(tile)
+    # # if (x + y)%2 == 0: results.reverse()
+    # return results
+
+    for i in range(neighbors.size):
+        neighbors[i] = I + direction[i]
 # @jit
 def heuristic(a, b):
     (x1, y1) = a
@@ -184,7 +188,7 @@ def getMinIndex(arr):
 
 
 # @jit(nopython=True)
-def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):
+def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, direction):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -204,7 +208,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         if current_x == goal_x and current_y == goal_y:
             print("\riterations: {}".format(counter), end='')
             break
-        getNeighbors(grid, current, neighbors)
+        getNeighbors(grid, current, neighbors, direction)
         for next in getNeighbors(grid, current, neighbors):
         # for next in neighbors:
             if passable(grid, next) and inBounds(grid, next):
@@ -241,8 +245,9 @@ def main():
     # goal = [-1, -1]
     start = [0, 0]
     goal = [grid.shape[0]-1, grid.shape[1]-1]
-    neighbors = np.empty((4,2), dtype=np.int32)
-    neighbors[:] = np.array([0,0])
+    direction = np.array([1,4,3,2,0,-1,-4,-3,-2])
+    neighbors = np.empty(8, dtype=np.int32)
+    neighbors[:] = 0
     print(neighbors)
     # randomStartGoal(grid, start, goal)
     start = np.array(start)
@@ -266,7 +271,7 @@ def main():
 
     print("----- Searching for Path -----")
     s = timer()
-    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, direction)
     x,y = start
     print(h)
     print(parents)

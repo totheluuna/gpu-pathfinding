@@ -392,7 +392,7 @@ def main():
     for i in range(parents_arr.shape[0]):
         for j in range(parents_arr.shape[1]):
             print('tile: ', (i,j))
-            print(open_arr[i, j])
+            print(parents_arr[i, j])
             print()
     # path = []
     # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)

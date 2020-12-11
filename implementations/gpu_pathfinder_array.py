@@ -15,7 +15,7 @@ from numba import cuda, int32, typeof
 OPEN = 1
 CLOSED = 0
 
-scale_factor = 8 # scales to a power of 2
+scale_factor = 7 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 TPB = 8
@@ -311,6 +311,25 @@ def GridDecompPath(grid, start, goal, parents, h, block):
         # do the search for as many times as number of tiles in the grid
         if passable(grid, (x,y)) and (x != goal_x and y != goal_y):
             # print(x, y)
+            # initialize local arrays
+            local_open = cuda.local.array(dim, cp.int32)
+            local_closed = cuda.local.array(dim, cp.int32)
+            local_cost = cuda.local.array(dim, cp.int32)
+            local_g = cuda.local.array(dim, cp.int32)
+            local_neighbors = cuda.local.array((8,2), cp.int32)
+
+            for i in range(glb_x):
+                for j in range(glb_y):
+                    local_open[i,j] = UNEXPLORED
+                    local_closed[i,j] = UNEXPLORED
+                    local_cost[i,j] = 0
+                    local_g[i,j] = 0
+            cuda.syncthreads()
+    
+            for i in range(8):
+                local_neighbors[i, 0] = 0
+                local_neighbors[i, 1] = 0
+            cuda.syncthreads()
             search(x, y, grid, (x,y), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
             # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 

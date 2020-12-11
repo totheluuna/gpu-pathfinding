@@ -9,7 +9,7 @@ dim = (8,8)
 @cuda.jit
 def gpu_memory_test(arr):
     x, y = cuda.grid(2)
-    width, height = arr.shape
+    width, height = dim
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bx = cuda.blockIdx.x
@@ -25,8 +25,8 @@ def gpu_memory_test(arr):
         return
 
     local_arr = cuda.local.array(dim, int32)
-    for i in range(int32(dim_x)):
-        for j in range(int32(dim_y)):
+    for i in range(int32(width)):
+        for j in range(int32(height)):
             local_arr[i,j] = bx * dim_x + by
     
     cuda.syncthreads()

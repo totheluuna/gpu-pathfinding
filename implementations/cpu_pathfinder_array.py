@@ -160,9 +160,12 @@ def getNeighbors(grid, tile, neighbors, direction):
     #     #     results.append(tile)
     # # if (x + y)%2 == 0: results.reverse()
     # return results
-
-    for i in range(neighbors.size):
-        neighbors[i] = I + direction[i]
+    if (x+y)%2:
+        for i in range(neighbors.size):
+            neighbors[i] = I + direction[i-7]
+    else: 
+        for i in range(neighbors.size):    
+            neighbors[i] = I + direction[i]
 # @jit
 def heuristic(a, b):
     (x1, y1) = a

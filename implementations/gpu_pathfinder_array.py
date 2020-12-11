@@ -371,10 +371,10 @@ def main():
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
     width, height = grid.shape
-    open = cp.empty((width, height), dtype=cp.int32)
-    open[:] = UNEXPLORED
-    closed = cp.empty((width, height), dtype=cp.int32)
-    closed[:] = UNEXPLORED
+    # open = cp.empty((width, height), dtype=cp.int32)
+    # open[:] = UNEXPLORED
+    # closed = cp.empty((width, height), dtype=cp.int32)
+    # closed[:] = UNEXPLORED
     # parents = cp.empty((width, height, 2), dtype=cp.int32)
     # parents[:] = cp.array([-1,-1])
     parents = cp.empty((width, height), dtype=cp.int32)
@@ -383,8 +383,8 @@ def main():
     # print('FROM parents_arr')
     # print(parents_arr[0,0] == parents)
 
-    cost = cp.zeros((width, height), dtype=cp.int32)
-    g = cp.zeros((width, height), dtype=cp.int32)
+    # cost = cp.zeros((width, height), dtype=cp.int32)
+    # g = cp.zeros((width, height), dtype=cp.int32)
     # h = cp.zeros((width, height), dtype=cp.int32)
     h = cp.empty((width, height), dtype=cp.int32)
     h[:] = -1

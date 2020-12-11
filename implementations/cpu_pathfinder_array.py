@@ -267,7 +267,7 @@ def main():
     # goal = [-1, -1]
     start = [0, 0]
     goal = [grid.shape[0]-1, grid.shape[1]-1]
-    neighbors = np.empty((4,2), dtype=np.int32)
+    neighbors = np.empty((8,2), dtype=np.int32)
     neighbors[:] = np.array([0,0])
     print(neighbors)
     # randomStartGoal(grid, start, goal)

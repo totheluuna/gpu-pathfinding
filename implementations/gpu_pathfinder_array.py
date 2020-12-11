@@ -378,8 +378,8 @@ def main():
     h[:] = -1
     blocking = cp.zeros((width, height), dtype=cp.int32)
 
-    parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    parents_arr[:] = parents
+    # parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    # parents_arr[:] = parents
 
     path = []
     threadsperblock = (TPB, TPB)

@@ -157,7 +157,7 @@ def getNeighbors(grid, tile, neighbors):
                 results.append(tile)
         # if inBounds(grid, tile) and passable(grid, tile):
         #     results.append(tile)
-    if (x + y)%2 == 0: results.reverse()
+    # if (x + y)%2 == 0: results.reverse()
     return results
 # @jit
 def heuristic(a, b):

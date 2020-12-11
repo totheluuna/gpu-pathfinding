@@ -372,7 +372,7 @@ def main():
     cost_arr[:] = cost
     g_arr = cp.empty((width, height, width, height), dtype=cp.int32)
     g_arr[:] = g
-    neighbors_arr = cp.empty((width, height, 4, 2), dtype=cp.int32)
+    neighbors_arr = cp.empty((width, height, 8, 2), dtype=cp.int32)
     neighbors_arr[:] = neighbors
 
     path = []

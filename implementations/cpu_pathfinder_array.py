@@ -122,42 +122,42 @@ def inBounds(grid, tile):
 def getNeighbors(grid, tile, neighbors):
     # TO DO: modify to use numpy array
     (x, y) = tile
-    for i in range(neighbors.size):
-        if (x+y)%2 == 0:
-            if i == 0:
-                neighbors[i,0] = x
-                neighbors[i,1] = y+1
-            elif i == 1:
-                neighbors[i,0] = x-1
-                neighbors[i,1] = y
-            elif i == 2:
-                neighbors[i,0] = x
-                neighbors[i,1] = y-1
-            elif i == 3:
-                neighbors[i,0] = x+1
-                neighbors[i,1] = y
-        else:
-            if i == 0:
-                neighbors[i,0] = x+1
-                neighbors[i,1] = y
-            elif i == 1:
-                neighbors[i,0] = x
-                neighbors[i,1] = y-1
-            elif i == 2:
-                neighbors[i,0] = x-1
-                neighbors[i,1] = y
-            elif i == 3:
-                neighbors[i,0] = x
-                neighbors[i,1] = y+1
-    # results = []
-    # possibleNeighbors = [(x+1,y), (x,y-1), (x-1,y), (x,y+1)]
-    # for tile in possibleNeighbors:
-    #     if inBounds(grid, tile):
-    #         if passable(grid, tile):
-    #             results.append(tile)
-    #     # if inBounds(grid, tile) and passable(grid, tile):
-    #     #     results.append(tile)
-    # if (x + y)%2 == 0: results.reverse()
+    # for i in range(neighbors.size):
+    #     if (x+y)%2 == 0:
+    #         if i == 0:
+    #             neighbors[i,0] = x
+    #             neighbors[i,1] = y+1
+    #         elif i == 1:
+    #             neighbors[i,0] = x-1
+    #             neighbors[i,1] = y
+    #         elif i == 2:
+    #             neighbors[i,0] = x
+    #             neighbors[i,1] = y-1
+    #         elif i == 3:
+    #             neighbors[i,0] = x+1
+    #             neighbors[i,1] = y
+    #     else:
+    #         if i == 0:
+    #             neighbors[i,0] = x+1
+    #             neighbors[i,1] = y
+    #         elif i == 1:
+    #             neighbors[i,0] = x
+    #             neighbors[i,1] = y-1
+    #         elif i == 2:
+    #             neighbors[i,0] = x-1
+    #             neighbors[i,1] = y
+    #         elif i == 3:
+    #             neighbors[i,0] = x
+    #             neighbors[i,1] = y+1
+    results = []
+    possibleNeighbors = [(x+1,y), (x,y-1), (x-1,y), (x,y+1)]
+    for tile in possibleNeighbors:
+        if inBounds(grid, tile):
+            if passable(grid, tile):
+                results.append(tile)
+        # if inBounds(grid, tile) and passable(grid, tile):
+        #     results.append(tile)
+    if (x + y)%2 == 0: results.reverse()
 
     # return results
 # @jit
@@ -165,6 +165,7 @@ def heuristic(a, b):
     (x1, y1) = a
     (x2, y2) = b
     return abs(x1-x2) + abs(y1-y2)
+    return int(math.sqrt(math.pow((x1-x2),2) + math.pow((y1-y2),2)))
 
 def getMinIndex(arr):
     width, height = arr.shape
@@ -217,7 +218,8 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
                     if new_g < g[next_x, next_y]:
                         closed[next_x, next_y] = UNEXPLORED
                 if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
-                    parents[next_x, next_y] = np.array([current_x, current_y])
+                    # parents[next_x, next_y] = np.array([current_x, current_y])
+                    parents[next_x, next_y] = current_x * width + current_y
                     g[next_x, next_y] = new_g
                     h[next_x, next_y] = heuristic(next, goal)
                     cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
@@ -254,8 +256,9 @@ def main():
     open[:] = UNEXPLORED
     closed = np.empty((width, height), dtype=np.int32) # open or closed
     closed[:] = UNEXPLORED
-    parents = np.empty((width, height, 2), dtype=np.int32)
-    parents[:] = np.array([-1,-1])
+    parents = np.empty((width, height), dtype=np.int32)
+    # parents[:] = np.array([-1,-1])
+    parents[:] = -1
     cost = np.zeros((width, height), dtype=np.int32)
     g = np.zeros((width, height), dtype=np.int32)
     h = np.zeros((width, height), dtype=np.int32)

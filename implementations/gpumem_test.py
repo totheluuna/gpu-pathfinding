@@ -5,7 +5,7 @@ import numpy as np
 import cupy as cp
 import math
 
-
+dim = (8,8)
 @cuda.jit
 def gpu_memory_test(arr):
     x, y = cuda.grid(2)
@@ -24,7 +24,7 @@ def gpu_memory_test(arr):
     if x >= arr.shape[0] and y >= arr.shape[1]:
         return
 
-    local_arr = cuda.local.array((TPB, TPB), int32)
+    local_arr = cuda.local.array(dim, int32)
     for i in range(int32(dim_x)):
         for j in range(int32(dim_y)):
             local_arr[i,j] = bx * dim_x + by
@@ -44,7 +44,7 @@ def gpu_memory_test(arr):
     cuda.syncthreads()
 
 def main():
-    arr = np.zeros(shape=(8,8), dtype=np.int32)
+    arr = np.zeros(shape=dim, dtype=np.int32)
     # arr_gpu = cp.zeros(shape=(8,8), dtype=cp.int32)
 
     w, h = arr.shape

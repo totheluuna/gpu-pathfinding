@@ -355,11 +355,11 @@ def precomputeHeuristics(grid, start, goal, h, blocking):
 def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    # grid = cp.zeros(dim, dtype=cp.int32)
-    grid = cp.ones(dim, dtype=cp.int32)
+    grid = cp.zeros(dim, dtype=cp.int32)
+    # grid = cp.ones(dim, dtype=cp.int32)
     guide = np.empty(dim, dtype=np.int32)
-    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
-    # print(grid)
+    createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    print(grid)
 
     for i in range(guide.shape[0]):
         for j in range(guide.shape[1]):
@@ -368,20 +368,15 @@ def main():
 
     
     # generate random start and goal
-    # start = [-1, -1]
-    # goal = [-1, -1]
-    start = [0, 0]
-    goal = [grid.shape[0]-1, grid.shape[1]-1]
+    start = [-1, -1]
+    goal = [-1, -1]
+    # start = [0, 0]
+    # goal = [grid.shape[0]-1, grid.shape[1]-1]
+    randomStartGoal(grid, start, goal)
     start = cp.array(start)
     goal = cp.array(goal)
     print(start)
     print(goal)
-
-    for i in range(guide.shape[0]):
-        for j in range(guide.shape[1]):
-            guide[i,j] = i * guide.shape[0] + j
-            if (i,j) == (start[0], start[1]) or (i,j) == (goal[0], goal[1]):
-                guide[i,j] = 696
 
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')

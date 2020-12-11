@@ -417,7 +417,7 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     # GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr, blocking)
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, neighbors, blocking)
+    GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, neighbors, blocking)
     parents_cpu = parents_arr.get()
     parents_arr_cpu = cp.asnumpy(parents_arr)
     # print(guide)

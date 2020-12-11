@@ -157,11 +157,7 @@ def heuristic(a, b):
     (x2, y2) = b
     # return abs(x1-x2) + abs(y1-y2)
 
-    a = np.array((x1, y1))
-    b = np.array((x2, y2))
-    dist = np.linalg.norm(a-b)
-
-    return int(dist)
+    return math.pow((x1-x2),2) + math.pow((y1-y2),2)
 @njit
 def getMinIndex(arr):
     width, height = arr.shape

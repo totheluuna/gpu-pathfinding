@@ -221,7 +221,7 @@ def main():
     grid = np.zeros(dim, dtype=np.int32)
     # grid = np.ones(dim, dtype=np.int32)
     # createGridFromDatasetImage('dataset/da2-png', grid, dim)
-    print(grid)
+    # print(grid)
     
     # generate random start and goal
     # start = [-1, -1]
@@ -241,6 +241,7 @@ def main():
     grid[x,y] = 1
     x,y = goal
     grid[x,y] = 1
+    print(grid)
 
 
     # search for path

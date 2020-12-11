@@ -5,6 +5,7 @@ import numpy as np
 import cupy as cp
 import math
 
+
 @cuda.jit
 def gpu_memory_test(arr):
     x, y = cuda.grid(2)
@@ -23,7 +24,7 @@ def gpu_memory_test(arr):
     if x >= arr.shape[0] and y >= arr.shape[1]:
         return
 
-    # shared_arr = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
+    local_arr = cuda.local.array(arr)
     # shared_arr[tx,ty] = arr[tx, ty]
     # cuda.syncthreads()
     # arr[tx,ty] = shared_arr[tx, ty]*2

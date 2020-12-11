@@ -234,6 +234,12 @@ def main():
     print(start)
     print(goal)
 
+    x,y = start
+    grid[x,y] = 1
+    x,y = goal
+    grid[x,y] = 1
+
+
     # search for path
     width, height = grid.shape
     open = np.empty((width, height), dtype=np.int32) # open or closed

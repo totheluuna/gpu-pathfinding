@@ -24,7 +24,7 @@ def gpu_memory_test(arr):
     if x >= arr.shape[0] and y >= arr.shape[1]:
         return
 
-    local_arr = cuda.local.array((dim_x, dim_y), int32)
+    local_arr = cuda.local.array((TPB, TPB), int32)
     for i in range(int32(dim_x)):
         for j in range(int32(dim_y)):
             local_arr[i,j] = 1

@@ -227,7 +227,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
                     # parents[next_x, next_y] = np.array([current_x, current_y])
                     parents[next_x, next_y] = current_x * width + current_y
                     g[next_x, next_y] = new_g
-                    h[next_x, next_y] = heuristic(next, goal)
+                    h[next_x, next_y] = heuristic((next_x, next_y), goal)
                     cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
                     open[next_x, next_y] = cost[next_x, next_y]
                 closed[current_x, current_y] = cost[current_x, current_y]

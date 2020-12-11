@@ -262,18 +262,19 @@ def main():
     s = timer()
     search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
     x,y = start
-    path = []
-    reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    # path = []
+    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()
+    print(parents)
     print('(Search + compilation) Path found in ', e-s, 's')
-    s = timer()
-    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-    x,y = start
-    path = []
-    reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    e = timer()
-    print('(Post-compilation) Path found in ', e-s, 's')
-    print(path)
+    # s = timer()
+    # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    # x,y = start
+    # path = []
+    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    # e = timer()
+    # print('(Post-compilation) Path found in ', e-s, 's')
+    # print(path)
 
 if __name__ == "__main__":
     main()

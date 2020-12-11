@@ -276,8 +276,8 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
             search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
 @cuda.jit
-def GridDecompPath(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
-# def GridDecompPath(grid, start, goal, parents, h, block):
+# def GridDecompPath(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
+def GridDecompPath(grid, start, goal, parents, h, block):
     x, y = cuda.grid(2)
     glb_x, glb_y = dim
     goal_x, goal_y = goal
@@ -422,8 +422,8 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     # GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr, blocking)
-    # GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents, h, blocking)
-    GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents_arr, cost, g, h, neighbors, blocking)
+    GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, blocking)
+    # GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents_arr, cost, g, h, neighbors, blocking)
     # parents_cpu = parents_arr.get()
     # parents_arr_cpu = cp.asnumpy(parents_arr)
     # print(guide)

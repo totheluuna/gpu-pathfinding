@@ -278,15 +278,38 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
 @cuda.jit
 def GridDecompPath(grid, start, goal, open, closed, parents, cost, g, h, neighbors):
     x, y = cuda.grid(2)
-    width, height = grid.shape
+    glb_x, glb_y = dim
+    goal_x, goal_y = goal
+
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
-    bpg = cuda.gridDim.x
+    bpg = cuda.gridDim.x    # blocks per grid
 
-    shared_h = cuda.shared.array(shape=(TPB, TPB), dtype=int32)
+    # initialize local arrays
+    local_open = cuda.local.array(dim, int32)
+    local_closed = cuda.local.array(dim, int32)
+    local_cost = cuda.local.array(dim, int32)
+    local_g = cuda.local.array(dim, int32)
+    local_neighbors = cuda.local.array((8,2), int32)
 
-    # load the heuristics into shared memory
-    shared_h[tx, ty] = h[tx + i * TPB, ty + i * TPB]
+    for i in range(glb_x):
+        for j in range(glb_y):
+            local_open[i,j] = UNEXPLORED
+            local_closed[i,j] = UNEXPLORED
+            local_cost[i,j] = 0
+            local_g[i,j] = 0
+    
+    for i in range(8):
+        neighbors[i, 0] = 0
+        neighbors[i, 1] = 0
+
+    if x < grid.shape[0] and y < grid.shape[1]:
+        # do the search for as many times as number of tiles in the grid
+        if passable(grid, (x,y)) and (x != goal_x and y != goal_y):
+            # print(x, y)
+            # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
+            search(x, y, grid, (x,y), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
+
 
 
 @cuda.jit
@@ -362,18 +385,18 @@ def main():
     h[:] = -1
     blocking = cp.zeros((width, height), dtype=cp.int32)
 
-    open_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    open_arr[:] = open
-    closed_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    closed_arr[:] = closed
+    # open_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    # open_arr[:] = open
+    # closed_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    # closed_arr[:] = closed
     parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
     parents_arr[:] = parents
-    cost_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    cost_arr[:] = cost
-    g_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    g_arr[:] = g
-    neighbors_arr = cp.empty((width, height, 8, 2), dtype=cp.int32)
-    neighbors_arr[:] = neighbors
+    # cost_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    # cost_arr[:] = cost
+    # g_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    # g_arr[:] = g
+    # neighbors_arr = cp.empty((width, height, 8, 2), dtype=cp.int32)
+    # neighbors_arr[:] = neighbors
 
     path = []
     threadsperblock = (TPB, TPB)
@@ -393,7 +416,8 @@ def main():
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
-    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr, blocking)
+    # GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open_arr, closed_arr, parents_arr, cost_arr, g_arr, h, neighbors_arr, blocking)
+    GPUPathfinder[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents, cost, g, h, neighbors, blocking)
     parents_cpu = parents_arr.get()
     parents_arr_cpu = cp.asnumpy(parents_arr)
     # print(guide)

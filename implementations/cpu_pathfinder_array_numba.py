@@ -184,9 +184,11 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
     cost[start_x, start_y] = g[start_x, start_y] + h[start_x, start_y]
 
     counter = 0
-    while np.amin(open) < UNEXPLORED:
+    open_min = np.amin(open)
+    while open_min < UNEXPLORED:
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
+        print(current)
         if current_x == goal_x and current_y == goal_y:
             break
         getNeighbors(grid, current, neighbors)
@@ -209,6 +211,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
                 closed[current_x, current_y] = cost[current_x, current_y]
                 open[current_x, current_y] = UNEXPLORED
         counter += 1
+        open_min = np.amin(open)
 
 def main():
     # create grid from image dataset

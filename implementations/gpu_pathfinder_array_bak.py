@@ -354,6 +354,9 @@ def main():
     # goal = [-1, -1]
     start = [0, 0]
     goal = [grid.shape[0]-1, grid.shape[1]-1]
+    # neighbors = cp.empty((8,2), dtype=cp.int32)
+    # neighbors[:] = cp.array([0,0])
+    # randomStartGoal(grid, start, goal)
     start = cp.array(start)
     goal = cp.array(goal)
     print(start)
@@ -368,19 +371,37 @@ def main():
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
     width, height = grid.shape
+    # open = cp.empty((width, height), dtype=cp.int32)
+    # open[:] = UNEXPLORED
+    # closed = cp.empty((width, height), dtype=cp.int32)
+    # closed[:] = UNEXPLORED
+    # parents = cp.empty((width, height, 2), dtype=cp.int32)
+    # parents[:] = cp.array([-1,-1])
     parents = cp.empty((width, height), dtype=cp.int32)
     parents[:] = -1
     # parents_arr[:] = cp.array([-1,-1])
     # print('FROM parents_arr')
     # print(parents_arr[0,0] == parents)
 
+    # cost = cp.zeros((width, height), dtype=cp.int32)
+    # g = cp.zeros((width, height), dtype=cp.int32)
     # h = cp.zeros((width, height), dtype=cp.int32)
     h = cp.empty((width, height), dtype=cp.int32)
     h[:] = -1
     blocking = cp.zeros((width, height), dtype=cp.int32)
 
+    # open_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    # open_arr[:] = open
+    # closed_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    # closed_arr[:] = closed
     parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
     parents_arr[:] = parents
+    # cost_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    # cost_arr[:] = cost
+    # g_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    # g_arr[:] = g
+    # neighbors_arr = cp.empty((width, height, 8, 2), dtype=cp.int32)
+    # neighbors_arr[:] = neighbors
 
     path = []
     threadsperblock = (TPB, TPB)

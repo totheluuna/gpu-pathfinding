@@ -361,12 +361,6 @@ def main():
     createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
 
-    for i in range(guide.shape[0]):
-        for j in range(guide.shape[1]):
-            guide[i,j] = i * guide.shape[0] + j
-
-
-    
     # generate random start and goal
     start = [-1, -1]
     goal = [-1, -1]
@@ -377,6 +371,12 @@ def main():
     goal = cp.array(goal)
     print(start)
     print(goal)
+
+    for i in range(guide.shape[0]):
+        for j in range(guide.shape[1]):
+            guide[i,j] = i * guide.shape[0] + j
+            if (i,j) == (start[0], start[1]) or (i,j) == (goal[0], goal[1]):
+                guide[i,j] = 696
 
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
@@ -418,9 +418,9 @@ def main():
     # GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, open, closed, parents_arr, cost, g, h, neighbors, blocking)
     # parents_cpu = parents_arr.get()
     # parents_arr_cpu = cp.asnumpy(parents_arr)
-    # print(guide)
-    # print()
-    # print(parents_arr[x,y])
+    print(guide)
+    print()
+    print(parents))
     # for i in range(parents_arr.shape[0]):
     #     for j in range(parents_arr.shape[1]):
     #         print('tile: ', (i,j))
@@ -429,7 +429,7 @@ def main():
     # path = []
     # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
     # print(path)
-    print(parents)
+    
     e = timer()
     print('Kernel Launch done in ', e-s, 's')
 

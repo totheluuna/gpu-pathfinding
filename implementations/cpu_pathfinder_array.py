@@ -150,7 +150,7 @@ def getNeighbors(grid, tile, neighbors):
     #             neighbors[i,0] = x
     #             neighbors[i,1] = y+1
     results = []
-    possibleNeighbors = [(x+1,y), (x,y-1), (x-1,y), (x,y+1)]
+    possibleNeighbors = [(x+1,y), (x+1,y-1), (x,y-1), (x-1,y-1), (x-1,y), (x-1,y+1), (x,y+1), (x+1,y+1)]
     for tile in possibleNeighbors:
         if inBounds(grid, tile):
             if passable(grid, tile):

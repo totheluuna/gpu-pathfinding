@@ -302,8 +302,8 @@ def GridDecompPath(grid, start, goal, parents, h, block):
     cuda.syncthreads()
     
     for i in range(8):
-        neighbors[i, 0] = 0
-        neighbors[i, 1] = 0
+        local_neighbors[i, 0] = 0
+        local_neighbors[i, 1] = 0
     cuda.syncthreads()
     
 

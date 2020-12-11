@@ -128,46 +128,56 @@ def getNeighbors(grid, tile, neighbors):
     # TO DO: modify to use numpy array
     (x, y) = tile
     for i in range(neighbors.size):
-        if (x+y)%2 == 0:
-            if i == 0:
-                neighbors[i,0] = x
-                neighbors[i,1] = y+1
-            elif i == 1:
-                neighbors[i,0] = x-1
-                neighbors[i,1] = y
-            elif i == 2:
-                neighbors[i,0] = x
-                neighbors[i,1] = y-1
-            elif i == 3:
-                neighbors[i,0] = x+1
-                neighbors[i,1] = y
-        else:
-            if i == 0:
-                neighbors[i,0] = x+1
-                neighbors[i,1] = y
-            elif i == 1:
-                neighbors[i,0] = x
-                neighbors[i,1] = y-1
-            elif i == 2:
-                neighbors[i,0] = x-1
-                neighbors[i,1] = y
-            elif i == 3:
-                neighbors[i,0] = x
-                neighbors[i,1] = y+1
-
-        
-        # if i == 0:
-        #     neighbors[i,0] = x
-        #     neighbors[i,1] = y+1
-        # elif i == 1:
-        #     neighbors[i,0] = x-1
-        #     neighbors[i,1] = y
-        # elif i == 2:
-        #     neighbors[i,0] = x
-        #     neighbors[i,1] = y-1
-        # elif i == 3:
-        #     neighbors[i,0] = x+1
-        #     neighbors[i,1] = y
+        # if (x+y)%2 == 0:
+        #     if i == 0:
+        #         neighbors[i,0] = x
+        #         neighbors[i,1] = y+1
+        #     elif i == 1:
+        #         neighbors[i,0] = x-1
+        #         neighbors[i,1] = y
+        #     elif i == 2:
+        #         neighbors[i,0] = x
+        #         neighbors[i,1] = y-1
+        #     elif i == 3:
+        #         neighbors[i,0] = x+1
+        #         neighbors[i,1] = y
+        # else:
+        #     if i == 0:
+        #         neighbors[i,0] = x+1
+        #         neighbors[i,1] = y
+        #     elif i == 1:
+        #         neighbors[i,0] = x
+        #         neighbors[i,1] = y-1
+        #     elif i == 2:
+        #         neighbors[i,0] = x-1
+        #         neighbors[i,1] = y
+        #     elif i == 3:
+        #         neighbors[i,0] = x
+        #         neighbors[i,1] = y+1
+        if i == 0:
+            neighbors[i,0] = x+1
+            neighbors[i,1] = y
+        elif i == 1:
+            neighbors[i,0] = x+1
+            neighbors[i,1] = y-1
+        elif i == 2:
+            neighbors[i,0] = x
+            neighbors[i,1] = y-1
+        elif i == 3:
+            neighbors[i,0] = x-1
+            neighbors[i,1] = y-1
+        elif i == 4:
+            neighbors[i,0] = x-1
+            neighbors[i,1] = y
+        elif i == 5:
+            neighbors[i,0] = x-1
+            neighbors[i,1] = y+1
+        elif i == 6:
+            neighbors[i,0] = x
+            neighbors[i,1] = y+1
+        elif i == 7:
+            neighbors[i,0] = x+1
+            neighbors[i,1] = y+1
 @cuda.jit(device=True)
 def heuristic(a, b):
     (x1, y1) = a
@@ -316,7 +326,7 @@ def main():
     goal = [-1, -1]
     # start = [0, 0]
     # goal = [grid.shape[0]-1, grid.shape[1]-1]
-    neighbors = cp.empty((4,2), dtype=cp.int32)
+    neighbors = cp.empty((8,2), dtype=cp.int32)
     neighbors[:] = cp.array([0,0])
     randomStartGoal(grid, start, goal)
     start = cp.array(start)

@@ -218,30 +218,30 @@ def main():
     scale_factor = 4 # scales to a power of 2
     dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
     UNEXPLORED = int(math.pow(2, (scale_factor*2)))
-    grid = np.zeros(dim, dtype=np.int32)
-    # grid = np.ones(dim, dtype=np.int32)
-    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
-    # print(grid)
+    # grid = np.zeros(dim, dtype=np.int32)
+    grid = np.ones(dim, dtype=np.int32)
+    createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    print(grid)
     
     # generate random start and goal
-    # start = [-1, -1]
-    # goal = [-1, -1]
-    start = [0, 0]
-    goal = [grid.shape[0]-1, grid.shape[1]-1]
+    start = [-1, -1]
+    goal = [-1, -1]
+    # start = [0, 0]
+    # goal = [grid.shape[0]-1, grid.shape[1]-1]
     neighbors = np.empty((4,2), dtype=np.int32)
     neighbors[:] = np.array([0,0])
-    print(neighbors)
-    # randomStartGoal(grid, start, goal)
+    # print(neighbors)
+    randomStartGoal(grid, start, goal)
     start = np.array(start)
     goal = np.array(goal)
     print(start)
     print(goal)
 
-    x,y = start
-    grid[x,y] = 1
-    x,y = goal
-    grid[x,y] = 1
-    print(grid)
+    # x,y = start
+    # grid[x,y] = 1
+    # x,y = goal
+    # grid[x,y] = 1
+    # print(grid)
 
 
     # search for path

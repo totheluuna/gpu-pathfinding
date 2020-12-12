@@ -319,7 +319,7 @@ def GridDecompPath(grid, start, goal, parents, h, block):
             # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
 @cuda.jit
-def GridDecompPathV2(grid, start, goal, parents, h, block):
+def GridDecompPathV2(grid, planning_grid, start, goal, parents, h, block):
     x, y = cuda.grid(2)
     glb_x, glb_y = dim
     goal_x, goal_y = goal
@@ -354,7 +354,7 @@ def GridDecompPathV2(grid, start, goal, parents, h, block):
             local_neighbors[i, 1] = 0
 
         # cuda.syncthreads()
-        search(x, y, grid[block[x,y]], (tx, ty), (goal[0]%TPB, goal[1]%TPB), local_open, local_closed, parents[x,y], local_cost, local_g, h[block[x,y]], local_neighbors, block)
+        search(x, y, planning_grid[block[x,y]], (tx, ty), (goal[0]%TPB, goal[1]%TPB), local_open, local_closed, parents[x,y], local_cost, local_g, h[block[x,y]], local_neighbors, block)
 
     
 

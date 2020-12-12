@@ -308,9 +308,10 @@ def GridDecompPath(grid, start, goal, parents, h, block):
 
     # initialize shared copy of planning blocks
     shared_planning_block = cuda.shared.array((TPB, TPB), int32)
-    shared_parents = cuda.shared.array((TPB, TPB), int32)
     shared_planning_block[tx, ty] = grid[x, y]
-    # shared_parents[tx, ty] = parents[x, y]
+    cuda.syncthreads()
+    shared_parents = cuda.shared.array((TPB, TPB), int32)
+    shared_parents[tx, ty] = parents[x, y]
     cuda.syncthreads()
 
     if x < grid.shape[0] and y < grid.shape[1]:

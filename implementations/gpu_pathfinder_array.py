@@ -269,6 +269,7 @@ def GPUPathfinder(grid, start, goal, open, closed, parents, cost, g, h, neighbor
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid
 
+    boundary_check = 
     # print(bpg)
     if x < grid.shape[0] and y < grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
@@ -359,8 +360,8 @@ def GridDecompPath(grid, start, goal, parents, h, block):
                 local_neighbors[i, 1] = 0
             cuda.syncthreads()
 
-            # search(x, y, shared_planning_block, (tx,ty), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
-            search(x, y, grid, (x,y), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
+            search(x, y, shared_planning_block, (tx,ty), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
+            # search(x, y, grid, (x,y), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
             # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
 

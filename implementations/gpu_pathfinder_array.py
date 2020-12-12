@@ -309,7 +309,9 @@ def GridDecompPath(grid, start, goal, parents, h, block):
 
     # initialize shared copy of planning blocks
     shared_planning_block = cuda.shared.array((TPB, TPB), int32)
-    shared_planning_block[tx, ty] = grid[x, y]
+
+    for i in range(bpg)
+        shared_planning_block[tx, ty] = grid[i * bpg + tx, i * bpg + ty]
     cuda.syncthreads()
     # shared_parents = cuda.shared.array((TPB, TPB), int32)
     # shared_parents[tx, ty] = parents[x, y]

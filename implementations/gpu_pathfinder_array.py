@@ -435,6 +435,9 @@ def main():
     parents_arr = cp.empty((width, height, TPB, TPB), dtype=cp.int32)
     parents_arr[:] = parents
 
+    print('PARENTS ARRAY: ')
+    print(parents_arr)
+
     path = []
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])

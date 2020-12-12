@@ -366,7 +366,20 @@ def precomputeHeuristics(grid, start, goal, h, blocking):
             h[x,y] = heuristic((x,y), goal)
         blocking[x,y] = bx * dim_x + by
         cuda.syncthreads()
+def blockshaped(arr, nrows, ncols):
+    """
+    Return an array of shape (n, nrows, ncols) where
+    n * nrows * ncols = arr.size
 
+    If arr is a 2D array, the returned array should look like n subblocks with
+    each subblock preserving the "physical" layout of arr.
+    """
+    h, w = arr.shape
+    assert h % nrows == 0, "{} rows is not evenly divisble by {}".format(h, nrows)
+    assert w % ncols == 0, "{} cols is not evenly divisble by {}".format(w, ncols)
+    return (arr.reshape(h//nrows, nrows, -1, ncols)
+               .swapaxes(1,2)
+               .reshape(-1, nrows, ncols))
 def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
@@ -375,6 +388,11 @@ def main():
     # guide = np.empty(dim, dtype=np.int32)
     createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
+
+    planning_grid = blockshaped(grid, TPB, TPB)
+    print(planning_grid)
+
+
 
     # generate random start and goal
     start = [-1, -1]
@@ -393,63 +411,63 @@ def main():
     #         if (i,j) == (start[0], start[1]) or (i,j) == (goal[0], goal[1]):
     #             guide[i,j] = 696
 
-    # initialize essential arrays for search algorithm
-    print('----- Initializing Variables -----')
-    width, height = grid.shape
-    parents = cp.empty((width, height), dtype=cp.int32)
-    # parents = cp.empty((TPB, TPB), dtype=cp.int32)
-    parents[:] = -1
+    # # initialize essential arrays for search algorithm
+    # print('----- Initializing Variables -----')
+    # width, height = grid.shape
+    # parents = cp.empty((width, height), dtype=cp.int32)
+    # # parents = cp.empty((TPB, TPB), dtype=cp.int32)
+    # parents[:] = -1
 
-    h = cp.zeros((width, height), dtype=cp.int32)
-    # h = cp.empty((width, height), dtype=cp.int32)
-    # h[:] = -1
-    blocking = cp.zeros((width, height), dtype=cp.int32)
+    # h = cp.zeros((width, height), dtype=cp.int32)
+    # # h = cp.empty((width, height), dtype=cp.int32)
+    # # h[:] = -1
+    # blocking = cp.zeros((width, height), dtype=cp.int32)
 
-    parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    parents_arr[:] = parents
+    # parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    # parents_arr[:] = parents
 
-    path = []
-    threadsperblock = (TPB, TPB)
-    blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
-    blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
-    blockspergrid = (blockspergrid_x, blockspergrid_y)
-    print('----- Precomputing Heuristics -----')
-    precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h, blocking)
-    print(h)
-
-    threadsperblock = (TPB, TPB)
-    blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
-    blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
-    blockspergrid = (blockspergrid_x, blockspergrid_y)
-
-    print("----- Searching for Path -----")
-    s = timer()
-    GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, blocking)
-    # for i in range(parents_arr.shape[0]):
-    #     for j in range(parents_arr.shape[1]):
-    #         print('tile: ', (i,j))
-    #         print(parents_arr[i, j])
-    #         print()
     # path = []
-    # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
-    # print(path)
-    print(parents_arr)
-    e = timer()
-    print('Kernel Launch done in ', e-s, 's')
+    # threadsperblock = (TPB, TPB)
+    # blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
+    # blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
+    # blockspergrid = (blockspergrid_x, blockspergrid_y)
+    # print('----- Precomputing Heuristics -----')
+    # precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h, blocking)
+    # print(h)
 
-    time_ave = 0
-    runs = 10
-    for i in range(runs):
-        s = timer()
-        GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, blocking)
-        print(parents)
-        # print(blocking)
-        # TODO: reconstruct path
-        e = timer()
-        time_ave += (e-s)
-        print(i,'th kernel Launch done in ', e-s, 's')
-    time_ave = time_ave/runs
-    print('Average runtime in ', runs, ' runs: ', time_ave)
+    # threadsperblock = (TPB, TPB)
+    # blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
+    # blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
+    # blockspergrid = (blockspergrid_x, blockspergrid_y)
+
+    # print("----- Searching for Path -----")
+    # s = timer()
+    # GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, blocking)
+    # # for i in range(parents_arr.shape[0]):
+    # #     for j in range(parents_arr.shape[1]):
+    # #         print('tile: ', (i,j))
+    # #         print(parents_arr[i, j])
+    # #         print()
+    # # path = []
+    # # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
+    # # print(path)
+    # print(parents_arr)
+    # e = timer()
+    # print('Kernel Launch done in ', e-s, 's')
+
+    # time_ave = 0
+    # runs = 10
+    # for i in range(runs):
+    #     s = timer()
+    #     GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, blocking)
+    #     print(parents)
+    #     # print(blocking)
+    #     # TODO: reconstruct path
+    #     e = timer()
+    #     time_ave += (e-s)
+    #     print(i,'th kernel Launch done in ', e-s, 's')
+    # time_ave = time_ave/runs
+    # print('Average runtime in ', runs, ' runs: ', time_ave)
     
 
 if __name__ == "__main__":

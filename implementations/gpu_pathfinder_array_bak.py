@@ -353,8 +353,8 @@ def main():
     # goal = [-1, -1]
     start = [0, 0]
     goal = [grid.shape[0]-1, grid.shape[1]-1]
-    # neighbors = cp.empty((8,2), dtype=cp.int32)
-    # neighbors[:] = cp.array([0,0])
+    neighbors = cp.empty((8,2), dtype=cp.int32)
+    neighbors[:] = cp.array([0,0])
     # randomStartGoal(grid, start, goal)
     start = cp.array(start)
     goal = cp.array(goal)

@@ -15,7 +15,7 @@ from numba import cuda, int32, typeof
 OPEN = 1
 CLOSED = 0
 
-scale_factor = 4 # scales to a power of 2
+scale_factor = 7 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 TPB = 8
@@ -212,8 +212,8 @@ def getMin(arr):
 
 
 @cuda.jit(device=True)
-# def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
-def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors):
+def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
+# def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -245,8 +245,8 @@ def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors
                 if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
                     # parents[next_x, next_y, 0] = current_x
                     # parents[next_x, next_y, 1] = current_y
-                    parents[next_x, next_y] = current_x * TPB + current_y
-                    # parents[next_x, next_y] = current_x * width + current_y
+                    # parents[next_x, next_y] = current_x * TPB + current_y
+                    parents[next_x, next_y] = current_x * width + current_y
                     g[next_x, next_y] = new_g
                     # h[next_x, next_y] = heuristic(next, goal) # omit this step since H is precomputed on GPU
                     cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
@@ -289,98 +289,63 @@ def GridDecompPath(grid, start, goal, parents, h, block):
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid
 
-    # # initialize local arrays
-    # local_open = cuda.local.array(dim, cp.int32)
-    # local_closed = cuda.local.array(dim, cp.int32)
-    # local_cost = cuda.local.array(dim, cp.int32)
-    # local_g = cuda.local.array(dim, cp.int32)
-    # local_neighbors = cuda.local.array((8,2), cp.int32)
-
-    # for i in range(glb_x):
-    #     for j in range(glb_y):
-    #         local_open[i,j] = UNEXPLORED
-    #         local_closed[i,j] = UNEXPLORED
-    #         local_cost[i,j] = 0
-    #         local_g[i,j] = 0
+    # # initialize shared copy of planning blocks
+    # shared_planning_block = cuda.shared.array((TPB, TPB), int32)
+    # shared_planning_block[tx, ty] = block[x,y]
     # cuda.syncthreads()
-    
-    # for i in range(8):
-    #     local_neighbors[i, 0] = 0
-    #     local_neighbors[i, 1] = 0
+    # shared_parents = cuda.shared.array((TPB, TPB), int32)
+    # shared_parents[tx, ty] = parents[x, y]
     # cuda.syncthreads()
-
-    # initialize shared copy of planning blocks
-    shared_planning_block = cuda.shared.array((TPB, TPB), int32)
-    shared_planning_block[tx, ty] = block[x,y]
-    cuda.syncthreads()
-    shared_parents = cuda.shared.array((TPB, TPB), int32)
-    shared_parents[tx, ty] = parents[x, y]
-    cuda.syncthreads()
-    shared_h = cuda.shared.array((TPB, TPB), int32)
-    shared_h[tx, ty] = h[x, y]
-    cuda.syncthreads()
+    # shared_h = cuda.shared.array((TPB, TPB), int32)
+    # shared_h[tx, ty] = h[x, y]
+    # cuda.syncthreads()
 
     if x < grid.shape[0] and y < grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
         if passable(grid, (x,y)) and (x != goal_x or y != goal_y):
             # print(x, y)
             # initialize local arrays
-            local_open = cuda.local.array((TPB, TPB), int32)
-            local_closed = cuda.local.array((TPB, TPB), int32)
-            local_cost = cuda.local.array((TPB, TPB), int32)
-            local_g = cuda.local.array((TPB, TPB), int32)
-            local_neighbors = cuda.local.array((8,2), int32)
+            # local_open = cuda.local.array((TPB, TPB), int32)
+            # local_closed = cuda.local.array((TPB, TPB), int32)
+            # local_cost = cuda.local.array((TPB, TPB), int32)
+            # local_g = cuda.local.array((TPB, TPB), int32)
+            # local_neighbors = cuda.local.array((8,2), int32)
 
-            for i in range(TPB):
-                for j in range(TPB):
-                    local_open[i,j] = UNEXPLORED
-                    local_closed[i,j] = UNEXPLORED
-                    local_cost[i,j] = 0
-                    local_g[i,j] = 0
-            cuda.syncthreads()
-    
-            for i in range(8):
-                local_neighbors[i, 0] = 0
-                local_neighbors[i, 1] = 0
-            cuda.syncthreads()
-
-            # initialize local arrays
-            # local_open = cuda.local.array(dim, cp.int32)
-            # local_closed = cuda.local.array(dim, cp.int32)
-            # local_cost = cuda.local.array(dim, cp.int32)
-            # local_g = cuda.local.array(dim, cp.int32)
-            # local_neighbors = cuda.local.array((8,2), cp.int32)
-
-            # for i in range(glb_x):
-            #     for j in range(glb_y):
+            # for i in range(TPB):
+            #     for j in range(TPB):
             #         local_open[i,j] = UNEXPLORED
             #         local_closed[i,j] = UNEXPLORED
             #         local_cost[i,j] = 0
             #         local_g[i,j] = 0
             # cuda.syncthreads()
-            
+    
             # for i in range(8):
             #     local_neighbors[i, 0] = 0
             #     local_neighbors[i, 1] = 0
             # cuda.syncthreads()
 
-            # sum = 0
-            # for i in range(TPB):
-            #     for j in range(TPB):
-            #         sum += shared_parents[i,j]
-            # parents[x,y] = sum
-            block_x = tx
-            block_y = ty
+            # initialize local arrays
+            local_open = cuda.local.array(dim, cp.int32)
+            local_closed = cuda.local.array(dim, cp.int32)
+            local_cost = cuda.local.array(dim, cp.int32)
+            local_g = cuda.local.array(dim, cp.int32)
+            local_neighbors = cuda.local.array((8,2), cp.int32)
+
+            for i in range(glb_x):
+                for j in range(glb_y):
+                    local_open[i,j] = UNEXPLORED
+                    local_closed[i,j] = UNEXPLORED
+                    local_cost[i,j] = 0
+                    local_g[i,j] = 0
+            cuda.syncthreads()
+            
+            for i in range(8):
+                local_neighbors[i, 0] = 0
+                local_neighbors[i, 1] = 0
+            cuda.syncthreads()
+
             # search(x, y, shared_planning_block, (block_x,block_y), goal, local_open, local_closed, parents, local_cost, local_g, shared_h, local_neighbors)
-            sum = 0
-            for i in range(TPB):
-                for j in range(TPB):
-                    sum += shared_parents[i,j]
-                    block_x +=1
-                    block_y +=1
-                    
-            parents[x,y] = sum
-            # search(x, y, grid, (x,y), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
+            search(x, y, grid, (x,y), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
             # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
 
@@ -405,40 +370,40 @@ def precomputeHeuristics(grid, start, goal, h, blocking):
 def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    # grid = cp.zeros(dim, dtype=cp.int32)
-    grid = cp.ones(dim, dtype=cp.int32)
-    guide = np.empty(dim, dtype=np.int32)
-    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    grid = cp.zeros(dim, dtype=cp.int32)
+    # grid = cp.ones(dim, dtype=cp.int32)
+    # guide = np.empty(dim, dtype=np.int32)
+    createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
 
     # generate random start and goal
-    # start = [-1, -1]
-    # goal = [-1, -1]
-    start = [0, 0]
-    goal = [grid.shape[0]-1, grid.shape[1]-1]
-    # randomStartGoal(grid, start, goal)
+    start = [-1, -1]
+    goal = [-1, -1]
+    # start = [0, 0]
+    # goal = [grid.shape[0]-1, grid.shape[1]-1]
+    randomStartGoal(grid, start, goal)
     start = cp.array(start)
     goal = cp.array(goal)
     print(start)
     print(goal)
 
-    for i in range(guide.shape[0]):
-        for j in range(guide.shape[1]):
-            guide[i,j] = i * guide.shape[0] + j
-            if (i,j) == (start[0], start[1]) or (i,j) == (goal[0], goal[1]):
-                guide[i,j] = 696
+    # for i in range(guide.shape[0]):
+    #     for j in range(guide.shape[1]):
+    #         guide[i,j] = i * guide.shape[0] + j
+    #         if (i,j) == (start[0], start[1]) or (i,j) == (goal[0], goal[1]):
+    #             guide[i,j] = 696
 
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
     width, height = grid.shape
-    parents = np.empty((width, height), dtype=np.int32)
+    parents = cp.empty((width, height), dtype=cp.int32)
     # parents = cp.empty((TPB, TPB), dtype=cp.int32)
     parents[:] = -1
 
     h = cp.zeros((width, height), dtype=cp.int32)
     # h = cp.empty((width, height), dtype=cp.int32)
     # h[:] = -1
-    blocking = cp.zeros((width, height), dtype=cp.int32)
+    # blocking = cp.zeros((width, height), dtype=cp.int32)
 
     # parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
     # parents_arr[:] = parents
@@ -451,9 +416,9 @@ def main():
     print('----- Precomputing Heuristics -----')
     precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h, blocking)
     print(h)
-    print(blocking)
-    print('Does it work fine here')
-    print(parents)
+    # print(blocking)
+    # print('Does it work fine here')
+    # print(parents)
 
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
@@ -471,15 +436,10 @@ def main():
     # path = []
     # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
     # print(path)
+    print(parents)
     e = timer()
     print('Kernel Launch done in ', e-s, 's')
-    # print(guide)
-    # print()
-    # parents_host = parents.get()
-    # print(blocking)
-    print(parents)
-    # print(grid)
-
+    
     time_ave = 0
     runs = 10
     for i in range(runs):

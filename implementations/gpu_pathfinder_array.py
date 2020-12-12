@@ -437,7 +437,8 @@ def main():
     print('Kernel Launch done in ', e-s, 's')
     # print(guide)
     # print()
-    # # print(parents)
+    parents_host = parents.get()
+    print(parents_host)
     # print(grid)
 
     time_ave = 0

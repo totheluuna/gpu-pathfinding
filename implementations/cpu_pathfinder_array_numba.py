@@ -247,6 +247,8 @@ def main():
 
 
     # search for path
+    print("----- Searching for Path -----")
+    s = timer()
     width, height = grid.shape
     open = np.empty((width, height), dtype=np.int32) # open or closed
     open[:] = UNEXPLORED
@@ -260,8 +262,6 @@ def main():
     h = np.zeros((width, height), dtype=np.int32)
     x,y = start
     # print(parents)
-    print("----- Searching for Path -----")
-    s = timer()
     search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
     x,y = start
     # path = []

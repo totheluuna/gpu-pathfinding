@@ -212,7 +212,8 @@ def getMin(arr):
 
 
 @cuda.jit(device=True)
-def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
+# def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
+def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -227,7 +228,8 @@ def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors
     while getMin(open) < UNEXPLORED:
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
-        if (current_x == goal_x and current_y == goal_y) or (block[current_x, current_y] != block[start_x, start_y]):
+        if (current_x == goal_x and current_y == goal_y):
+        # or (block[current_x, current_y] != block[start_x, start_y]):
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:
@@ -308,11 +310,14 @@ def GridDecompPath(grid, start, goal, parents, h, block):
     # cuda.syncthreads()
 
     # initialize shared copy of planning blocks
-    # shared_planning_block = cuda.shared.array((TPB, TPB), int32)
-    # shared_planning_block[tx, ty] = block[x,y]
-    # cuda.syncthreads()
+    shared_planning_block = cuda.shared.array((TPB, TPB), int32)
+    shared_planning_block[tx, ty] = block[x,y]
+    cuda.syncthreads()
     shared_parents = cuda.shared.array((TPB, TPB), int32)
     shared_parents[tx, ty] = parents[x, y]
+    cuda.syncthreads()
+    shared_h = cuda.shared.array((TPB, TPB), int32)
+    shared_h[tx, ty] = h[x, y]
     cuda.syncthreads()
 
     if x < grid.shape[0] and y < grid.shape[1]:
@@ -359,12 +364,13 @@ def GridDecompPath(grid, start, goal, parents, h, block):
                 local_neighbors[i, 1] = 0
             cuda.syncthreads()
 
-            sum = 0
-            for i in range(TPB):
-                for j in range(TPB):
-                    sum += shared_parents[i,j]
-            parents[x,y] = sum
-            # search(x, y, shared_planning_block, (tx,ty), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
+            # sum = 0
+            # for i in range(TPB):
+            #     for j in range(TPB):
+            #         sum += shared_parents[i,j]
+            # parents[x,y] = sum
+
+            search(x, y, shared_planning_block, (tx,ty), goal, local_open, local_closed, parents, local_cost, local_g, shared_h, local_neighbors)
             # search(x, y, grid, (x,y), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
             # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 

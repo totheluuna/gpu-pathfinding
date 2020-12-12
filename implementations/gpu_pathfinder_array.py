@@ -411,6 +411,8 @@ def main():
     precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h, blocking)
     print(h)
     print(blocking)
+    print('Does it work fine here')
+    print(parents)
 
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])

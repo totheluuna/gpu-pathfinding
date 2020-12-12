@@ -325,11 +325,11 @@ def GridDecompPath(grid, start, goal, parents, h, block):
         if passable(grid, (x,y)) and (x != goal_x or y != goal_y):
             # print(x, y)
             # initialize local arrays
-            local_open = cuda.local.array((TPB, TPB), cp.int32)
-            local_closed = cuda.local.array((TPB, TPB), cp.int32)
-            local_cost = cuda.local.array((TPB, TPB), cp.int32)
-            local_g = cuda.local.array((TPB, TPB), cp.int32)
-            local_neighbors = cuda.local.array((8,2), cp.int32)
+            local_open = cuda.local.array((TPB, TPB), int32)
+            local_closed = cuda.local.array((TPB, TPB), int32)
+            local_cost = cuda.local.array((TPB, TPB), int32)
+            local_g = cuda.local.array((TPB, TPB), int32)
+            local_neighbors = cuda.local.array((8,2), int32)
 
             for i in range(TPB):
                 for j in range(TPB):
@@ -371,11 +371,14 @@ def GridDecompPath(grid, start, goal, parents, h, block):
             # parents[x,y] = sum
             block_x = tx
             block_y = ty
-            search(x, y, shared_planning_block, (block_x,block_y), goal, local_open, local_closed, parents, local_cost, local_g, shared_h, local_neighbors)
+            # search(x, y, shared_planning_block, (block_x,block_y), goal, local_open, local_closed, parents, local_cost, local_g, shared_h, local_neighbors)
             sum = 0
             for i in range(TPB):
                 for j in range(TPB):
                     sum += shared_parents[i,j]
+                    block_x +=1
+                    block_y +=1
+                    
             parents[x,y] = sum
             # search(x, y, grid, (x,y), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
             # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)

@@ -7,7 +7,7 @@ import math
 
 dim = (8,8)
 @cuda.jit
-def gpu_memory_test(arr):
+def gpu_memory_test(arr, thread):
     x, y = cuda.grid(2)
     width, height = dim
     tx = cuda.threadIdx.x
@@ -36,17 +36,18 @@ def gpu_memory_test(arr):
     # arr[tx,ty] = shared_arr[tx, ty]*2
     # cuda.syncthreads()
 
-    # arr[x , y] = bx * dim_x + by
-    sum = 0
-    for i in range(TPB):
-        for j in range(TPB):
-            # sum += local_arr[i,j]
-            # print(shared_arr[i,j])
-            sum += shared_arr[i,j]
-    print('running thread: ', tx, ty)
-    print('grid coordinates: ', x, y)
-    cuda.syncthreads()
-    arr[x,y] = sum
+    arr[x , y] = bx * dim_x + by
+    thread[x, y] = tx * TPB + ty
+    # sum = 0
+    # for i in range(TPB):
+    #     for j in range(TPB):
+    #         # sum += local_arr[i,j]
+    #         # print(shared_arr[i,j])
+    #         sum += shared_arr[i,j]
+    # print('running thread: ', tx, ty)
+    # print('grid coordinates: ', x, y)
+    # cuda.syncthreads()
+    # arr[x,y] = sum
     cuda.syncthreads()
 def blockshaped(arr, nrows, ncols):
     """
@@ -64,6 +65,7 @@ def blockshaped(arr, nrows, ncols):
                .reshape(-1, nrows, ncols))
 def main():
     arr = np.zeros(shape=dim, dtype=np.int32)
+    thread = np.zeros(shape=dim, dtype=np.int32)
     block = np.zeros(shape=dim, dtype=np.int32)
     # arr_gpu = cp.zeros(shape=(8,8), dtype=cp.int32)
 
@@ -82,10 +84,13 @@ def main():
     blockspergrid_y = math.ceil(arr.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     print('blocks per grid: ', blockspergrid, '\nthreads per block: ', threadsperblock)
-    gpu_memory_test[blockspergrid, threadsperblock](arr)
+    gpu_memory_test[blockspergrid, threadsperblock](block, thread)
 
-    print(arr)
+    # print(arr)
     # print(arr_gpu)
+
+    print(block)
+    print(thread)
 
 if __name__ == "__main__":
     main()

@@ -445,7 +445,7 @@ def main():
     for i in range(runs):
         s = timer()
         GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents, h, blocking)
-        print(parents)
+        # print(parents)
         # TODO: reconstruct path
         e = timer()
         time_ave += (e-s)

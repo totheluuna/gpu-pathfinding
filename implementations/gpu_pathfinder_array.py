@@ -340,7 +340,7 @@ def GridDecompPath(grid, start, goal, parents, h, block):
 
 
 @cuda.jit
-def precomputeHeuristics(grid, start, goal, h, blocking):
+def precomputeHeuristics(grid, start, goal, h, block):
     x, y = cuda.grid(2)
     width, height = grid.shape
     tx = cuda.threadIdx.x
@@ -353,7 +353,7 @@ def precomputeHeuristics(grid, start, goal, h, blocking):
     if x < grid.shape[0] and y < grid.shape[1]:
         if passable(grid, (x,y)) and inBounds(grid, (x,y)):
             h[x,y] = heuristic((x,y), goal)
-        blocking[x,y] = bx * dim_x + by
+        block[x,y] = bx * dim_x + by
         cuda.syncthreads()
 def blockshaped(arr, nrows, ncols):
     """
@@ -412,7 +412,7 @@ def main():
     h = cp.zeros((width, height), dtype=cp.int32)
     # h = cp.empty((width, height), dtype=cp.int32)
     # h[:] = -1
-    blocking = cp.zeros((width, height), dtype=cp.int32)
+    block = cp.zeros((width, height), dtype=cp.int32)
 
     parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
     parents_arr[:] = parents
@@ -423,7 +423,7 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     print('----- Precomputing Heuristics -----')
-    precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h, blocking)
+    precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h, block)
     print(h)
 
     threadsperblock = (TPB, TPB)
@@ -437,7 +437,7 @@ def main():
 
     # print("----- Searching for Path -----")
     # s = timer()
-    # GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, blocking)
+    # GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, block)
     # # for i in range(parents_arr.shape[0]):
     # #     for j in range(parents_arr.shape[1]):
     # #         print('tile: ', (i,j))
@@ -454,9 +454,9 @@ def main():
     # runs = 10
     # for i in range(runs):
     #     s = timer()
-    #     GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, blocking)
+    #     GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, block)
     #     print(parents)
-    #     # print(blocking)
+    #     # print(block)
     #     # TODO: reconstruct path
     #     e = timer()
     #     time_ave += (e-s)

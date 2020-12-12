@@ -435,6 +435,7 @@ def main():
     print(guide)
     print()
     print(parents)
+    print(grid)
 
     time_ave = 0
     runs = 10

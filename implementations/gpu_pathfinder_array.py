@@ -310,9 +310,9 @@ def GridDecompPath(grid, start, goal, parents, h, block):
     shared_planning_block = cuda.shared.array((TPB, TPB), int32)
     shared_planning_block[tx, ty] = grid[x, y]
     cuda.syncthreads()
-    shared_parents = cuda.shared.array((TPB, TPB), int32)
-    shared_parents[tx, ty] = parents[x, y]
-    cuda.syncthreads()
+    # shared_parents = cuda.shared.array((TPB, TPB), int32)
+    # shared_parents[tx, ty] = parents[x, y]
+    # cuda.syncthreads()
 
     if x < grid.shape[0] and y < grid.shape[1]:
         # do the search for as many times as number of tiles in the grid

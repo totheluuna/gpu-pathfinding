@@ -435,10 +435,10 @@ def main():
     # print(path)
     e = timer()
     print('Kernel Launch done in ', e-s, 's')
-    print(guide)
-    print()
-    # print(parents)
-    print(grid)
+    # print(guide)
+    # print()
+    # # print(parents)
+    # print(grid)
 
     time_ave = 0
     runs = 10

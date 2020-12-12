@@ -118,7 +118,7 @@ def reconstructPathV2(cameFrom, start, goal, path):
 @cuda.jit(device=True)
 def passable(grid, tile):
     x,y = tile
-    return grid[x,y] == 1
+    return grid[x,y] == int32(1)
 @cuda.jit(device=True)
 def inBounds(grid, tile):
     x, y = tile

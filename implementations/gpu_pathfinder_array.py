@@ -324,7 +324,7 @@ def GridDecompPath(grid, start, goal, parents, h, block):
         # do the search for as many times as number of tiles in the grid
         if passable(grid, (x,y)) and (x != goal_x or y != goal_y):
             # print(x, y)
-            initialize local arrays
+            # initialize local arrays
             local_open = cuda.local.array((TPB, TPB), cp.int32)
             local_closed = cuda.local.array((TPB, TPB), cp.int32)
             local_cost = cuda.local.array((TPB, TPB), cp.int32)

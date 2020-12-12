@@ -125,32 +125,56 @@ def getNeighbors(grid, tile, neighbors):
     # TO DO: modify to use numpy array
     (x, y) = tile
     for i in range(neighbors.size):
-        if (x+y)%2 == 0:
-            if i == 0:
-                neighbors[i,0] = x
-                neighbors[i,1] = y+1
-            elif i == 1:
-                neighbors[i,0] = x-1
-                neighbors[i,1] = y
-            elif i == 2:
-                neighbors[i,0] = x
-                neighbors[i,1] = y-1
-            elif i == 3:
-                neighbors[i,0] = x+1
-                neighbors[i,1] = y
-        else:
-            if i == 0:
-                neighbors[i,0] = x+1
-                neighbors[i,1] = y
-            elif i == 1:
-                neighbors[i,0] = x
-                neighbors[i,1] = y-1
-            elif i == 2:
-                neighbors[i,0] = x-1
-                neighbors[i,1] = y
-            elif i == 3:
-                neighbors[i,0] = x
-                neighbors[i,1] = y+1
+        # if (x+y)%2 == 0:
+        #     if i == 0:
+        #         neighbors[i,0] = x
+        #         neighbors[i,1] = y+1
+        #     elif i == 1:
+        #         neighbors[i,0] = x-1
+        #         neighbors[i,1] = y
+        #     elif i == 2:
+        #         neighbors[i,0] = x
+        #         neighbors[i,1] = y-1
+        #     elif i == 3:
+        #         neighbors[i,0] = x+1
+        #         neighbors[i,1] = y
+        # else:
+        #     if i == 0:
+        #         neighbors[i,0] = x+1
+        #         neighbors[i,1] = y
+        #     elif i == 1:
+        #         neighbors[i,0] = x
+        #         neighbors[i,1] = y-1
+        #     elif i == 2:
+        #         neighbors[i,0] = x-1
+        #         neighbors[i,1] = y
+        #     elif i == 3:
+        #         neighbors[i,0] = x
+        #         neighbors[i,1] = y+1
+        if i == 0:
+            neighbors[i,0] = x+1
+            neighbors[i,1] = y
+        elif i == 1:
+            neighbors[i,0] = x+1
+            neighbors[i,1] = y-1
+        elif i == 2:
+            neighbors[i,0] = x
+            neighbors[i,1] = y-1
+        elif i == 3:
+            neighbors[i,0] = x-1
+            neighbors[i,1] = y-1
+        elif i == 4:
+            neighbors[i,0] = x-1
+            neighbors[i,1] = y
+        elif i == 5:
+            neighbors[i,0] = x-1
+            neighbors[i,1] = y+1
+        elif i == 6:
+            neighbors[i,0] = x
+            neighbors[i,1] = y+1
+        elif i == 7:
+            neighbors[i,0] = x+1
+            neighbors[i,1] = y+1
 @njit
 def heuristic(a, b):
     (x1, y1) = a
@@ -175,6 +199,17 @@ def getMinIndex(arr):
     return min_x, min_y
 
 @njit
+def getMin(arr):
+    width, height = arr.shape
+    min = arr[0,0]
+    for i in range(width):
+        for j in range(height):
+            if arr[i,j] < min:
+                min = arr[i,j]
+    
+    return min
+
+@njit
 def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):
     width, height = grid.shape
     start_x, start_y = start
@@ -186,7 +221,8 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
     cost[start_x, start_y] = g[start_x, start_y] + h[start_x, start_y]
 
     counter = 0
-    open_min = np.amin(open)
+    # open_min = np.amin(open)
+    open_min = getMin(open)
     while open_min < UNEXPLORED:
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
@@ -230,8 +266,8 @@ def main():
     # goal = [-1, -1]
     start = [0, 0]
     goal = [grid.shape[0]-1, grid.shape[1]-1]
-    neighbors = np.empty((4,2), dtype=np.int32)
-    neighbors[:] = np.array([0,0])
+    # neighbors = np.empty((8,2), dtype=np.int32)
+    # neighbors[:] = np.array([0,0])
     # print(neighbors)
     # randomStartGoal(grid, start, goal)
     start = np.array(start)
@@ -250,18 +286,38 @@ def main():
     print("----- Searching for Path -----")
     s = timer()
     width, height = grid.shape
-    open = np.empty((width, height), dtype=np.int32) # open or closed
-    open[:] = UNEXPLORED
-    closed = np.empty((width, height), dtype=np.int32) # open or closed
-    closed[:] = UNEXPLORED
+    # open = np.empty((width, height), dtype=np.int32) # open or closed
+    # open[:] = UNEXPLORED
+    # closed = np.empty((width, height), dtype=np.int32) # open or closed
+    # closed[:] = UNEXPLORED
+    # parents = np.empty((width, height), dtype=np.int32)
+    # # parents[:] = np.array([-1,-1])
+    # parents[:] = -1
+    # cost = np.zeros((width, height), dtype=np.int32)
+    # g = np.zeros((width, height), dtype=np.int32)
+    # h = np.zeros((width, height), dtype=np.int32)
+    # x,y = start
+    # # print(parents)
+    open = np.empty((width, height), dtype=np.int32)
+    closed = np.empty((width, height), dtype=np.int32)
     parents = np.empty((width, height), dtype=np.int32)
-    # parents[:] = np.array([-1,-1])
-    parents[:] = -1
-    cost = np.zeros((width, height), dtype=np.int32)
-    g = np.zeros((width, height), dtype=np.int32)
-    h = np.zeros((width, height), dtype=np.int32)
-    x,y = start
-    # print(parents)
+    cost = np.empty((width, height), dtype=np.int32)
+    g = np.empty((width, height), dtype=np.int32)
+    h = np.empty((width, height), dtype=np.int32)
+    neighbors = np.empty((8,2), dtype=np.int32)
+
+    for i in range(width):
+        for j in range(height):
+            open[i,j] = UNEXPLORED
+            closed[i,j] = UNEXPLORED
+            parents[i,j] = -1
+            cost[i,j] = 0
+            g[i,j] = 0
+            h[i,j] = 0
+    for i in range(8):
+        neighbors[i, 0] = 0
+        neighbors[i, 1] = 0
+        
     search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
     x,y = start
     # path = []

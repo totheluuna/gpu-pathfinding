@@ -294,26 +294,6 @@ def GridDecompPath(grid, start, goal, parents, h, block):
         if passable(grid, (x,y)) and (x != goal_x or y != goal_y):
             # print(x, y)
             # initialize local arrays
-            # local_open = cuda.local.array((TPB, TPB), int32)
-            # local_closed = cuda.local.array((TPB, TPB), int32)
-            # local_cost = cuda.local.array((TPB, TPB), int32)
-            # local_g = cuda.local.array((TPB, TPB), int32)
-            # local_neighbors = cuda.local.array((8,2), int32)
-
-            # for i in range(TPB):
-            #     for j in range(TPB):
-            #         local_open[i,j] = UNEXPLORED
-            #         local_closed[i,j] = UNEXPLORED
-            #         local_cost[i,j] = 0
-            #         local_g[i,j] = 0
-            # cuda.syncthreads()
-    
-            # for i in range(8):
-            #     local_neighbors[i, 0] = 0
-            #     local_neighbors[i, 1] = 0
-            # cuda.syncthreads()
-
-            # initialize local arrays
             local_open = cuda.local.array(dim, cp.int32)
             local_closed = cuda.local.array(dim, cp.int32)
             local_cost = cuda.local.array(dim, cp.int32)
@@ -334,8 +314,48 @@ def GridDecompPath(grid, start, goal, parents, h, block):
             cuda.syncthreads()
 
             # search(x, y, shared_planning_block, (block_x,block_y), goal, local_open, local_closed, parents, local_cost, local_g, shared_h, local_neighbors)
-            search(x, y, grid[block[x,y]], (x,y), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
+            search(x, y, grid, (x,y), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
             # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
+
+@cuda.jit
+def GridDecompPathV2(grid, start, goal, parents, h, block):
+    x, y = cuda.grid(2)
+    glb_x, glb_y = dim
+    goal_x, goal_y = goal
+
+    tx = cuda.threadIdx.x
+    ty = cuda.threadIdx.y
+    bpg = cuda.gridDim.x    # blocks per grid
+
+    if x >= grid.shape[0] and y >= grid.shape[1]:
+        return
+
+    print('running thread: ', tx, ty)
+    print('grid coordinates: ', x, y)
+    if passable(grid, (x,y)) and (x != goal_x or y != goal_y):
+        # initialize local arrays
+        local_open = cuda.local.array((TPB, TPB), int32)
+        local_closed = cuda.local.array((TPB, TPB), int32)
+        local_cost = cuda.local.array((TPB, TPB), int32)
+        local_g = cuda.local.array((TPB, TPB), int32)
+        local_neighbors = cuda.local.array((8,2), int32)
+
+        for i in range(TPB):
+            for j in range(TPB):
+                local_open[i,j] = UNEXPLORED
+                local_closed[i,j] = UNEXPLORED
+                local_cost[i,j] = 0
+                local_g[i,j] = 0
+        # cuda.syncthreads()
+
+        for i in range(8):
+            local_neighbors[i, 0] = 0
+            local_neighbors[i, 1] = 0
+        # cuda.syncthreads()
+        search(x, y, grid[block[x,y]], (tx, ty), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
+
+    
+
 
 
 

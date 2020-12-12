@@ -456,7 +456,7 @@ def main():
     # print(guide)
     # print()
     # parents_host = parents.get()
-    print(parents_host)
+    print(parents)
     # print(grid)
 
     time_ave = 0

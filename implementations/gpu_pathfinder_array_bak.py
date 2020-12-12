@@ -15,10 +15,10 @@ from numba import cuda, int32, typeof
 OPEN = 1
 CLOSED = 0
 
-scale_factor = 7 # scales to a power of 2
+scale_factor = 4 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
-TPB = 8
+TPB = 16
 
 
 seed(42069)
@@ -311,8 +311,8 @@ def GridDecompPath(grid, start, goal, open, closed, parents, cost, g, h, neighbo
         # do the search for as many times as number of tiles in the grid
         if passable(grid, (x,y)) and (x != goal_x and y != goal_y):
             # print(x, y)
-            search(x, y, grid, (x,y), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
-            # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
+            # search(x, y, grid, (x,y), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
+            search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
 
 
@@ -346,8 +346,6 @@ def main():
         for j in range(guide.shape[1]):
             guide[i,j] = i * guide.shape[0] + j
 
-
-    
     # generate random start and goal
     # start = [-1, -1]
     # goal = [-1, -1]
@@ -370,34 +368,34 @@ def main():
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
     width, height = grid.shape
-    open = cp.empty((width, height), dtype=cp.int32)
+    open = cp.empty((TPB, TPB), dtype=cp.int32)
     open[:] = UNEXPLORED
-    closed = cp.empty((width, height), dtype=cp.int32)
+    closed = cp.empty((TPB, TPB), dtype=cp.int32)
     closed[:] = UNEXPLORED
-    parents = cp.empty((width, height, 2), dtype=cp.int32)
-    parents[:] = cp.array([-1,-1])
-    parents = cp.empty((width, height), dtype=cp.int32)
+    # parents = cp.empty((width, height, 2), dtype=cp.int32)
+    # parents[:] = cp.array([-1,-1])
+    parents = cp.empty((TPB, TPB), dtype=cp.int32)
     parents[:] = -1
     # parents_arr[:] = cp.array([-1,-1])
     # print('FROM parents_arr')
     # print(parents_arr[0,0] == parents)
 
-    cost = cp.zeros((width, height), dtype=cp.int32)
-    g = cp.zeros((width, height), dtype=cp.int32)
-    h = cp.zeros((width, height), dtype=cp.int32)
-    h = cp.empty((width, height), dtype=cp.int32)
+    cost = cp.zeros((TPB, TPB), dtype=cp.int32)
+    g = cp.zeros((TPB, TPB), dtype=cp.int32)
+    h = cp.zeros((TPB, TPB), dtype=cp.int32)
+    h = cp.empty((TPB, TPB), dtype=cp.int32)
     h[:] = -1
-    blocking = cp.zeros((width, height), dtype=cp.int32)
+    blocking = cp.zeros((TPB, TPB), dtype=cp.int32)
 
-    open_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    open_arr = cp.empty((width, height, TPB, TPB), dtype=cp.int32)
     open_arr[:] = open
-    closed_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    closed_arr = cp.empty((width, height, TPB, TPB), dtype=cp.int32)
     closed_arr[:] = closed
-    parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    parents_arr = cp.empty((width, height, TPB, TPB), dtype=cp.int32)
     parents_arr[:] = parents
-    cost_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    cost_arr = cp.empty((width, height, TPB, TPB), dtype=cp.int32)
     cost_arr[:] = cost
-    g_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    g_arr = cp.empty((width, height, TPB, TPB), dtype=cp.int32)
     g_arr[:] = g
     neighbors_arr = cp.empty((width, height, 8, 2), dtype=cp.int32)
     neighbors_arr[:] = neighbors

@@ -345,7 +345,7 @@ def GridDecompPath(grid, start, goal, parents, h, block):
             cuda.syncthreads()
 
             # search(x, y, shared_planning_block, (block_x,block_y), goal, local_open, local_closed, parents, local_cost, local_g, shared_h, local_neighbors)
-            search(x, y, grid, (x,y), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
+            search(x, y, grid, (x,y), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
             # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
 
@@ -405,8 +405,8 @@ def main():
     # h[:] = -1
     blocking = cp.zeros((width, height), dtype=cp.int32)
 
-    # parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    # parents_arr[:] = parents
+    parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    parents_arr[:] = parents
 
     path = []
     threadsperblock = (TPB, TPB)
@@ -416,9 +416,6 @@ def main():
     print('----- Precomputing Heuristics -----')
     precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h, blocking)
     print(h)
-    # print(blocking)
-    # print('Does it work fine here')
-    # print(parents)
 
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
@@ -427,12 +424,12 @@ def main():
 
     print("----- Searching for Path -----")
     s = timer()
-    GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents, h, blocking)
-    # for i in range(parents_arr.shape[0]):
-    #     for j in range(parents_arr.shape[1]):
-    #         print('tile: ', (i,j))
-    #         print(parents_arr[i, j])
-    #         print()
+    GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, blocking)
+    for i in range(parents_arr.shape[0]):
+        for j in range(parents_arr.shape[1]):
+            print('tile: ', (i,j))
+            print(parents_arr[i, j])
+            print()
     # path = []
     # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
     # print(path)
@@ -440,19 +437,19 @@ def main():
     e = timer()
     print('Kernel Launch done in ', e-s, 's')
 
-    time_ave = 0
-    runs = 10
-    for i in range(runs):
-        s = timer()
-        GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents, h, blocking)
-        print(parents)
-        # print(blocking)
-        # TODO: reconstruct path
-        e = timer()
-        time_ave += (e-s)
-        print(i,'th kernel Launch done in ', e-s, 's')
-    time_ave = time_ave/runs
-    print('Average runtime in ', runs, ' runs: ', time_ave)
+    # time_ave = 0
+    # runs = 10
+    # for i in range(runs):
+    #     s = timer()
+    #     GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents, h, blocking)
+    #     print(parents)
+    #     # print(blocking)
+    #     # TODO: reconstruct path
+    #     e = timer()
+    #     time_ave += (e-s)
+    #     print(i,'th kernel Launch done in ', e-s, 's')
+    # time_ave = time_ave/runs
+    # print('Average runtime in ', runs, ' runs: ', time_ave)
     
 
 if __name__ == "__main__":

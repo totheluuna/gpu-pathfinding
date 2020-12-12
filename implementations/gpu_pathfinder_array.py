@@ -352,7 +352,7 @@ def GridDecompPathV2(grid, start, goal, parents, h, block):
             local_neighbors[i, 0] = 0
             local_neighbors[i, 1] = 0
         # cuda.syncthreads()
-        search(x, y, grid[block[x,y]], (tx, ty), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
+        search(x, y, grid[block[x,y]], (tx, ty), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h[block[x,y]], local_neighbors, block)
 
     
 
@@ -402,9 +402,6 @@ def main():
     print('PLANNING BLOCKS: ')
     print(planning_grid)
 
-
-
-
     # generate random start and goal
     start = [-1, -1]
     goal = [-1, -1]
@@ -425,8 +422,8 @@ def main():
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
     width, height = grid.shape
-    parents = cp.empty((width, height), dtype=cp.int32)
-    # parents = cp.empty((TPB, TPB), dtype=cp.int32)
+    # parents = cp.empty((width, height), dtype=cp.int32)
+    parents = cp.empty((TPB, TPB), dtype=cp.int32)
     parents[:] = -1
 
     h = cp.zeros((width, height), dtype=cp.int32)
@@ -434,7 +431,8 @@ def main():
     # h[:] = -1
     block = cp.zeros((width, height), dtype=cp.int32)
 
-    parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    # parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    parents_arr = cp.empty((width, height, TPB, TPB), dtype=cp.int32)
     parents_arr[:] = parents
 
     path = []
@@ -459,6 +457,10 @@ def main():
     print('start -> block ', goal_block)
     print(planning_grid[start_block])
     print(planning_grid[start_block])
+
+    planning_h = blockshaped(h, TPB, TPB)
+    print('RESHAPED H: ')
+    print(planning_h)
 
     print("----- Searching for Path -----")
     s = timer()

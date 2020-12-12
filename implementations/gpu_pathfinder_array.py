@@ -470,7 +470,8 @@ def main():
     print("----- Searching for Path -----")
     s = timer()
     # GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, block)
-    local_goal = (goal[0]%TPB, goal[1]%TPB)
+    local_goal = np.array([goal[0]%TPB, goal[1]%TPB])
+    print('LOCAL GOAL: ', local_goal)
     GridDecompPathV2[blockspergrid, threadsperblock](planning_grid, start, local_goal, parents_arr, h, block)
     # for i in range(parents_arr.shape[0]):
     #     for j in range(parents_arr.shape[1]):

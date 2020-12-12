@@ -460,20 +460,21 @@ def main():
     print(planning_grid[start_block])
     print(planning_grid[start_block])
 
-    # print("----- Searching for Path -----")
-    # s = timer()
+    print("----- Searching for Path -----")
+    s = timer()
     # GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, block)
-    # # for i in range(parents_arr.shape[0]):
-    # #     for j in range(parents_arr.shape[1]):
-    # #         print('tile: ', (i,j))
-    # #         print(parents_arr[i, j])
-    # #         print()
-    # # path = []
-    # # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
-    # # print(path)
-    # print(parents_arr)
-    # e = timer()
-    # print('Kernel Launch done in ', e-s, 's')
+    GridDecompPathV2[blockspergrid, threadsperblock](planning_grid, start, goal, parents_arr, h, block)
+    # for i in range(parents_arr.shape[0]):
+    #     for j in range(parents_arr.shape[1]):
+    #         print('tile: ', (i,j))
+    #         print(parents_arr[i, j])
+    #         print()
+    # path = []
+    # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
+    # print(path)
+    print(parents_arr)
+    e = timer()
+    print('Kernel Launch done in ', e-s, 's')
 
     # time_ave = 0
     # runs = 10

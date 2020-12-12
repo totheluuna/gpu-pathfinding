@@ -324,11 +324,31 @@ def GridDecompPath(grid, start, goal, parents, h, block):
         # do the search for as many times as number of tiles in the grid
         if passable(grid, (x,y)) and (x != goal_x or y != goal_y):
             # print(x, y)
+            initialize local arrays
+            local_open = cuda.local.array((TPB, TPB), cp.int32)
+            local_closed = cuda.local.array((TPB, TPB), cp.int32)
+            local_cost = cuda.local.array((TPB, TPB), cp.int32)
+            local_g = cuda.local.array((TPB, TPB), cp.int32)
+            local_neighbors = cuda.local.array((8,2), cp.int32)
+
+            for i in range(TPB):
+                for j in range(TPB):
+                    local_open[i,j] = UNEXPLORED
+                    local_closed[i,j] = UNEXPLORED
+                    local_cost[i,j] = 0
+                    local_g[i,j] = 0
+            cuda.syncthreads()
+    
+            for i in range(8):
+                local_neighbors[i, 0] = 0
+                local_neighbors[i, 1] = 0
+            cuda.syncthreads()
+
             # initialize local arrays
-            # local_open = cuda.local.array((TPB, TPB), cp.int32)
-            # local_closed = cuda.local.array((TPB, TPB), cp.int32)
-            # local_cost = cuda.local.array((TPB, TPB), cp.int32)
-            # local_g = cuda.local.array((TPB, TPB), cp.int32)
+            # local_open = cuda.local.array(dim, cp.int32)
+            # local_closed = cuda.local.array(dim, cp.int32)
+            # local_cost = cuda.local.array(dim, cp.int32)
+            # local_g = cuda.local.array(dim, cp.int32)
             # local_neighbors = cuda.local.array((8,2), cp.int32)
 
             # for i in range(glb_x):
@@ -338,31 +358,11 @@ def GridDecompPath(grid, start, goal, parents, h, block):
             #         local_cost[i,j] = 0
             #         local_g[i,j] = 0
             # cuda.syncthreads()
-    
+            
             # for i in range(8):
             #     local_neighbors[i, 0] = 0
             #     local_neighbors[i, 1] = 0
             # cuda.syncthreads()
-
-            # initialize local arrays
-            local_open = cuda.local.array(dim, cp.int32)
-            local_closed = cuda.local.array(dim, cp.int32)
-            local_cost = cuda.local.array(dim, cp.int32)
-            local_g = cuda.local.array(dim, cp.int32)
-            local_neighbors = cuda.local.array((8,2), cp.int32)
-
-            for i in range(glb_x):
-                for j in range(glb_y):
-                    local_open[i,j] = UNEXPLORED
-                    local_closed[i,j] = UNEXPLORED
-                    local_cost[i,j] = 0
-                    local_g[i,j] = 0
-            cuda.syncthreads()
-            
-            for i in range(8):
-                local_neighbors[i, 0] = 0
-                local_neighbors[i, 1] = 0
-            cuda.syncthreads()
 
             # sum = 0
             # for i in range(TPB):

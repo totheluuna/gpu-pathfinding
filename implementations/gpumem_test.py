@@ -45,7 +45,20 @@ def gpu_memory_test(arr):
             sum += shared_arr[i,j]
     arr[x,y] = sum
     cuda.syncthreads()
+def blockshaped(arr, nrows, ncols):
+    """
+    Return an array of shape (n, nrows, ncols) where
+    n * nrows * ncols = arr.size
 
+    If arr is a 2D array, the returned array should look like n subblocks with
+    each subblock preserving the "physical" layout of arr.
+    """
+    h, w = arr.shape
+    assert h % nrows == 0, "{} rows is not evenly divisble by {}".format(h, nrows)
+    assert w % ncols == 0, "{} cols is not evenly divisble by {}".format(w, ncols)
+    return (arr.reshape(h//nrows, nrows, -1, ncols)
+               .swapaxes(1,2)
+               .reshape(-1, nrows, ncols))
 def main():
     arr = np.zeros(shape=dim, dtype=np.int32)
     block = np.zeros(shape=dim, dtype=np.int32)
@@ -55,6 +68,8 @@ def main():
     for i in range(w):
         for j in range(h):
             arr[i,j] = i * w + j
+
+    print(blockshaped(arr, 4,4))
 
 
     print(arr)

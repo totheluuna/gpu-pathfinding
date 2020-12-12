@@ -305,17 +305,23 @@ def GridDecompPath(grid, start, goal, parents, h, block):
     #     local_neighbors[i, 0] = 0
     #     local_neighbors[i, 1] = 0
     # cuda.syncthreads()
-    
+
+    # initialize shared copy of planning blocks
+    shared_planning_block = cuda.shared.array((TPB, TPB), int32)
+    shared_parents = cuda.shared.array((TPB, TPB), int32)
+    shared_planning_block[tx, ty] = grid[x, y]
+    shared_parents[tx, ty] = parents[x, y]
+    cuda.syncthreads()
 
     if x < grid.shape[0] and y < grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
         if passable(grid, (x,y)) and (x != goal_x and y != goal_y):
             # print(x, y)
             # initialize local arrays
-            local_open = cuda.local.array(dim, cp.int32)
-            local_closed = cuda.local.array(dim, cp.int32)
-            local_cost = cuda.local.array(dim, cp.int32)
-            local_g = cuda.local.array(dim, cp.int32)
+            local_open = cuda.local.array((TPB, TPB), cp.int32)
+            local_closed = cuda.local.array((TPB, TPB), cp.int32)
+            local_cost = cuda.local.array((TPB, TPB), cp.int32)
+            local_g = cuda.local.array((TPB, TPB), cp.int32)
             local_neighbors = cuda.local.array((8,2), cp.int32)
 
             for i in range(glb_x):
@@ -330,7 +336,8 @@ def GridDecompPath(grid, start, goal, parents, h, block):
                 local_neighbors[i, 0] = 0
                 local_neighbors[i, 1] = 0
             cuda.syncthreads()
-            search(x, y, grid, (x,y), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
+            search(x, y, shared_planning_block, (x,y), goal, local_open, local_closed, shared_parents, local_cost, local_g, h, local_neighbors, block)
+            # search(x, y, grid, (x,y), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
             # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
 

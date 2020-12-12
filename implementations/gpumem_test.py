@@ -45,6 +45,7 @@ def gpu_memory_test(arr):
             sum += shared_arr[i,j]
     print('running thread: ', tx, ty)
     print('grid coordinates: ', x, y)
+    cuda.syncthreads()
     arr[x,y] = sum
     cuda.syncthreads()
 def blockshaped(arr, nrows, ncols):

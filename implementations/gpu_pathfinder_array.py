@@ -289,17 +289,6 @@ def GridDecompPath(grid, start, goal, parents, h, block):
     ty = cuda.threadIdx.y
     bpg = cuda.gridDim.x    # blocks per grid
 
-    # # initialize shared copy of planning blocks
-    # shared_planning_block = cuda.shared.array((TPB, TPB), int32)
-    # shared_planning_block[tx, ty] = block[x,y]
-    # cuda.syncthreads()
-    # shared_parents = cuda.shared.array((TPB, TPB), int32)
-    # shared_parents[tx, ty] = parents[x, y]
-    # cuda.syncthreads()
-    # shared_h = cuda.shared.array((TPB, TPB), int32)
-    # shared_h[tx, ty] = h[x, y]
-    # cuda.syncthreads()
-
     if x < grid.shape[0] and y < grid.shape[1]:
         # do the search for as many times as number of tiles in the grid
         if passable(grid, (x,y)) and (x != goal_x or y != goal_y):
@@ -345,7 +334,7 @@ def GridDecompPath(grid, start, goal, parents, h, block):
             cuda.syncthreads()
 
             # search(x, y, shared_planning_block, (block_x,block_y), goal, local_open, local_closed, parents, local_cost, local_g, shared_h, local_neighbors)
-            search(x, y, grid, (x,y), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
+            search(x, y, grid[block[x,y]], (x,y), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h, local_neighbors, block)
             # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
 
@@ -394,6 +383,7 @@ def main():
 
 
 
+
     # generate random start and goal
     start = [-1, -1]
     goal = [-1, -1]
@@ -411,34 +401,37 @@ def main():
     #         if (i,j) == (start[0], start[1]) or (i,j) == (goal[0], goal[1]):
     #             guide[i,j] = 696
 
-    # # initialize essential arrays for search algorithm
-    # print('----- Initializing Variables -----')
-    # width, height = grid.shape
-    # parents = cp.empty((width, height), dtype=cp.int32)
-    # # parents = cp.empty((TPB, TPB), dtype=cp.int32)
-    # parents[:] = -1
+    # initialize essential arrays for search algorithm
+    print('----- Initializing Variables -----')
+    width, height = grid.shape
+    parents = cp.empty((width, height), dtype=cp.int32)
+    # parents = cp.empty((TPB, TPB), dtype=cp.int32)
+    parents[:] = -1
 
-    # h = cp.zeros((width, height), dtype=cp.int32)
-    # # h = cp.empty((width, height), dtype=cp.int32)
-    # # h[:] = -1
-    # blocking = cp.zeros((width, height), dtype=cp.int32)
+    h = cp.zeros((width, height), dtype=cp.int32)
+    # h = cp.empty((width, height), dtype=cp.int32)
+    # h[:] = -1
+    blocking = cp.zeros((width, height), dtype=cp.int32)
 
-    # parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    # parents_arr[:] = parents
+    parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
+    parents_arr[:] = parents
 
-    # path = []
-    # threadsperblock = (TPB, TPB)
-    # blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
-    # blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
-    # blockspergrid = (blockspergrid_x, blockspergrid_y)
-    # print('----- Precomputing Heuristics -----')
-    # precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h, blocking)
-    # print(h)
+    path = []
+    threadsperblock = (TPB, TPB)
+    blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
+    blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
+    blockspergrid = (blockspergrid_x, blockspergrid_y)
+    print('----- Precomputing Heuristics -----')
+    precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h, blocking)
+    print(h)
 
-    # threadsperblock = (TPB, TPB)
-    # blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
-    # blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
-    # blockspergrid = (blockspergrid_x, blockspergrid_y)
+    threadsperblock = (TPB, TPB)
+    blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
+    blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
+    blockspergrid = (blockspergrid_x, blockspergrid_y)
+
+    print(planning_grid[block[start[0], start[1]]])
+    print(planning_grid[block[goal[0], goal[1]]])
 
     # print("----- Searching for Path -----")
     # s = timer()

@@ -369,8 +369,9 @@ def GridDecompPath(grid, start, goal, parents, h, block):
             #     for j in range(TPB):
             #         sum += shared_parents[i,j]
             # parents[x,y] = sum
-
-            search(x, y, shared_planning_block, (tx,ty), goal, local_open, local_closed, parents, local_cost, local_g, shared_h, local_neighbors)
+            block_x = tx
+            block_y = ty
+            search(x, y, shared_planning_block, (block_x,block_y), goal, local_open, local_closed, parents, local_cost, local_g, shared_h, local_neighbors)
             sum = 0
             for i in range(TPB):
                 for j in range(TPB):

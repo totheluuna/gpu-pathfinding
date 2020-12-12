@@ -403,7 +403,7 @@ def main():
     h = cp.zeros((width, height), dtype=cp.int32)
     # h = cp.empty((width, height), dtype=cp.int32)
     # h[:] = -1
-    # blocking = cp.zeros((width, height), dtype=cp.int32)
+    blocking = cp.zeros((width, height), dtype=cp.int32)
 
     # parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
     # parents_arr[:] = parents
@@ -439,7 +439,7 @@ def main():
     print(parents)
     e = timer()
     print('Kernel Launch done in ', e-s, 's')
-    
+
     time_ave = 0
     runs = 10
     for i in range(runs):

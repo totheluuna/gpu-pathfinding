@@ -388,7 +388,7 @@ def main():
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
     width, height = grid.shape
-    parents = cp.empty((width, height), dtype=cp.int32)
+    parents = np.empty((width, height), dtype=np.int32)
     parents[:] = -1
     # parents_arr[:] = cp.array([-1,-1])
     # print('FROM parents_arr')

@@ -310,9 +310,8 @@ def GridDecompPath(grid, start, goal, parents, h, block):
     # initialize shared copy of planning blocks
     shared_planning_block = cuda.shared.array((TPB, TPB), int32)
 
-    for i in range(bpg):
-        shared_planning_block[tx, ty] = grid[i * bpg + tx, i * bpg + ty]
-        cuda.syncthreads()
+    shared_planning_block[tx, ty] = block[x,y]
+    cuda.syncthreads()
     # shared_parents = cuda.shared.array((TPB, TPB), int32)
     # shared_parents[tx, ty] = parents[x, y]
     # cuda.syncthreads()
@@ -361,7 +360,12 @@ def GridDecompPath(grid, start, goal, parents, h, block):
                 local_neighbors[i, 1] = 0
             cuda.syncthreads()
 
-            search(x, y, shared_planning_block, (tx,ty), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
+            sum = 0
+            for i in range(TPB):
+                for j in range(TPB):
+                    sum += shared_planning_block[i,j]
+            block[x,y] = sum
+            # search(x, y, shared_planning_block, (tx,ty), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
             # search(x, y, grid, (x,y), goal, local_open, local_closed, parents, local_cost, local_g, h, local_neighbors, block)
             # search(x, y, grid, (x,y), goal, open[x,y], closed[x,y], parents[x,y], cost[x,y], g[x,y], h, neighbors[x,y], block)
 
@@ -458,7 +462,7 @@ def main():
     # print(guide)
     # print()
     # parents_host = parents.get()
-    print(parents)
+    print(blocking)
     # print(grid)
 
     time_ave = 0
@@ -467,6 +471,7 @@ def main():
         s = timer()
         GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents, h, blocking)
         # print(parents)
+        print(blocking)
         # TODO: reconstruct path
         e = timer()
         time_ave += (e-s)

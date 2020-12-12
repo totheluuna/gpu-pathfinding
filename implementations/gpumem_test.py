@@ -25,10 +25,10 @@ def gpu_memory_test(arr):
         return
 
     local_arr = cuda.local.array(dim, int32)
-    # for i in range(int32(width)):
-    #     for j in range(int32(height)):
-    #         local_arr[i,j] = 1
-    local_arr[x,y] = 1
+    for i in range(TPB):
+        for j in range(TPB):
+            local_arr[i,j] = 1
+    # local_arr[x,y] = 1
     cuda.syncthreads()
     # shared_arr[tx,ty] = arr[tx, ty]
     # cuda.syncthreads()

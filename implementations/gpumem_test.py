@@ -24,22 +24,26 @@ def gpu_memory_test(arr):
     if x >= arr.shape[0] and y >= arr.shape[1]:
         return
 
+    # using local memory
     local_arr = cuda.local.array(dim, int32)
     for i in range(int32(width)):
         for j in range(int32(height)):
             local_arr[i,j] = 1
     
     cuda.syncthreads()
-    # shared_arr[tx,ty] = arr[tx, ty]
+
+    # using shared memory
+    shared_arr[tx,ty] = bx *dim_x + by
     # cuda.syncthreads()
     # arr[tx,ty] = shared_arr[tx, ty]*2
     # cuda.syncthreads()
 
     # arr[x , y] = bx * dim_x + by
     sum = 0
-    for i in range(width):
-        for j in range(height):
-            sum += local_arr[i,j]
+    for i in range(TPB):
+        for j in range(TPB):
+            # sum += local_arr[i,j]
+            sum += shared_arr[i,j]
     arr[x,y] = sum
     cuda.syncthreads()
 

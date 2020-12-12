@@ -233,24 +233,25 @@ def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:
-            if passable(grid, next) and inBounds(grid, next):
-                next_x, next_y = next
-                new_g = g[current_x, current_y] + 1
-                if open[next_x, next_y] != UNEXPLORED:
-                    if new_g < g[next_x, next_y]:
-                        open[next_x, next_y] = UNEXPLORED
-                if closed[next_x, next_y] != UNEXPLORED:
-                    if new_g < g[next_x, next_y]:
-                        closed[next_x, next_y] = UNEXPLORED
-                if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
-                    # parents[next_x, next_y, 0] = current_x
-                    # parents[next_x, next_y, 1] = current_y
-                    # parents[next_x, next_y] = current_x * TPB + current_y
-                    parents[next_x, next_y] = current_x * width + current_y
-                    g[next_x, next_y] = new_g
-                    # h[next_x, next_y] = heuristic(next, goal) # omit this step since H is precomputed on GPU
-                    cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
-                    open[next_x, next_y] = cost[next_x, next_y]
+            if inBounds(grid, next):
+                if passable(grid, next):
+                    next_x, next_y = next
+                    new_g = g[current_x, current_y] + 1
+                    if open[next_x, next_y] != UNEXPLORED:
+                        if new_g < g[next_x, next_y]:
+                            open[next_x, next_y] = UNEXPLORED
+                    if closed[next_x, next_y] != UNEXPLORED:
+                        if new_g < g[next_x, next_y]:
+                            closed[next_x, next_y] = UNEXPLORED
+                    if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
+                        # parents[next_x, next_y, 0] = current_x
+                        # parents[next_x, next_y, 1] = current_y
+                        # parents[next_x, next_y] = current_x * TPB + current_y
+                        parents[next_x, next_y] = current_x * width + current_y
+                        g[next_x, next_y] = new_g
+                        # h[next_x, next_y] = heuristic(next, goal) # omit this step since H is precomputed on GPU
+                        cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
+                        open[next_x, next_y] = cost[next_x, next_y]
         closed[current_x, current_y] = cost[current_x, current_y]
         open[current_x, current_y] = UNEXPLORED
         counter += 1

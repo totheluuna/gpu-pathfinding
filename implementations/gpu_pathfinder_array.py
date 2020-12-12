@@ -455,7 +455,7 @@ def main():
     print('Kernel Launch done in ', e-s, 's')
     # print(guide)
     # print()
-    parents_host = parents.get()
+    # parents_host = parents.get()
     print(parents_host)
     # print(grid)
 

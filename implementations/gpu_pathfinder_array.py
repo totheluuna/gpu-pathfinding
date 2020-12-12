@@ -379,6 +379,7 @@ def main():
     print(grid)
 
     planning_grid = blockshaped(grid, TPB, TPB)
+    print('PLANNING BLOCKS: ')
     print(planning_grid)
 
 
@@ -430,6 +431,7 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
 
+    print('BLOCKS INCLUDING START AND GOAL: ')
     print(planning_grid[block[start[0], start[1]]])
     print(planning_grid[block[goal[0], goal[1]]])
 

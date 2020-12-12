@@ -41,8 +41,8 @@ def gpu_memory_test(arr):
 
     # arr[x , y] = bx * dim_x + by
     sum = 0
-    for i in range(TPB):
-        for j in range(TPB):
+    for i in range(width):
+        for j in range(height):
             sum += local_arr[i,j]
             # sum += shared_arr[i,j]
     arr[x,y] = sum

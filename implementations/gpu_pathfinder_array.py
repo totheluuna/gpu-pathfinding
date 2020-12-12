@@ -441,7 +441,7 @@ def main():
     runs = 10
     for i in range(runs):
         s = timer()
-        GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents, h, blocking)
+        GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, blocking)
         print(parents)
         # print(blocking)
         # TODO: reconstruct path

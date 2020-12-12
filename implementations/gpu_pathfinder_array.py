@@ -354,7 +354,7 @@ def GridDecompPathV2(grid, start, goal, parents, h, block):
             local_neighbors[i, 1] = 0
 
         # cuda.syncthreads()
-        search(x, y, grid[block[x,y]], (tx, ty), goal, local_open, local_closed, parents[x,y], local_cost, local_g, h[block[x,y]], local_neighbors, block)
+        search(x, y, grid[block[x,y]], (tx, ty), (goal[0]%TPB, goal[1]%TPB), local_open, local_closed, parents[x,y], local_cost, local_g, h[block[x,y]], local_neighbors, block)
 
     
 
@@ -470,9 +470,9 @@ def main():
     print("----- Searching for Path -----")
     s = timer()
     # GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, block)
-    local_goal = np.array([goal[0]%TPB, goal[1]%TPB])
-    print('LOCAL GOAL: ', local_goal)
-    GridDecompPathV2[blockspergrid, threadsperblock](planning_grid, start, local_goal, parents_arr, h, block)
+    # local_goal = np.array([goal[0]%TPB, goal[1]%TPB])
+    # print('LOCAL GOAL: ', local_goal)
+    GridDecompPathV2[blockspergrid, threadsperblock](planning_grid, start, goal, parents_arr, h, block)
     # for i in range(parents_arr.shape[0]):
     #     for j in range(parents_arr.shape[1]):
     #         print('tile: ', (i,j))

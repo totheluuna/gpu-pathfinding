@@ -42,7 +42,7 @@ def gpu_memory_test(arr):
     for i in range(TPB):
         for j in range(TPB):
             # sum += local_arr[i,j]
-            print(shared_arr[i,j])
+            # print(shared_arr[i,j])
             sum += shared_arr[i,j]
     arr[x,y] = sum
     cuda.syncthreads()

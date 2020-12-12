@@ -431,9 +431,13 @@ def main():
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
 
+    start_block = block[start[0], start[1]]
+    goal_block = block[goal[0], goal[1]]
     print('BLOCKS INCLUDING START AND GOAL: ')
-    print(planning_grid[block[start[0], start[1]]])
-    print(planning_grid[block[goal[0], goal[1]]])
+    print('start -> block ', start_block)
+    print('start -> block ', goal_block)
+    print(planning_grid[start_block])
+    print(planning_grid[start_block])
 
     # print("----- Searching for Path -----")
     # s = timer()

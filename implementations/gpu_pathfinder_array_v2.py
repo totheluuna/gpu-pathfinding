@@ -428,7 +428,7 @@ def main():
     blocked_H_start = blockshaped(H_start, TPB, TPB)
     blocked_H_goal = blockshaped(H_goal, TPB, TPB)
     blocked_guide = blockshaped(guide, TPB, TPB)
-    blocked_block = blockshaped(guide, TPB, TPB)
+    blocked_block = blockshaped(block, TPB, TPB)
 
     start_block = block[start[0], start[1]]
     goal_block = block[goal[0], goal[1]]

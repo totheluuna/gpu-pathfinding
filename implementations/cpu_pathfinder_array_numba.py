@@ -376,6 +376,8 @@ def main():
             neighbors[i, 0] = 0
             neighbors[i, 1] = 0
         search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+        e = timer()
+        time_ave += (e-s)
         print('%dth search done in '%(run), e-s, 's')
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
@@ -383,8 +385,7 @@ def main():
     print(parents)
     path = []
     reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    e = timer()
-    time_ave += (e-s)
+    
 
 if __name__ == "__main__":
     main()

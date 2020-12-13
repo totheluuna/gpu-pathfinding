@@ -485,12 +485,12 @@ def main():
     for i in range(local_parents.shape[0]):
         MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
     parents = unblockshaped(local_parents, dim[0], dim[1])
+    print(guide)
+    print()
     print(parents)
+    print()
     for i in range(local_parents.shape[0]):
         MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
-        
-    
-    print(guide)
     print(parents)
     # TODO: Reconstruct path
 

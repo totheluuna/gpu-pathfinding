@@ -429,81 +429,81 @@ def main():
     blocked_H_goal = blockshaped(H_goal, TPB, TPB)
     blocked_guide = blockshaped(guide, TPB, TPB)
 
-    # start_block = block[start[0], start[1]]
-    # goal_block = block[goal[0], goal[1]]
+    start_block = block[start[0], start[1]]
+    goal_block = block[goal[0], goal[1]]
     print(block)
-    print('BLOCKS INCLUDING START AND GOAL: ')
-    print('start block: ', start_block)
-    print(blocked_guide[start_block])
-    print('goal block: ', goal_block)
-    print(blocked_guide[goal_block])
-    print('BLOCKED SHAPE: ' , blocked_guide.shape)
+    # print('BLOCKS INCLUDING START AND GOAL: ')
+    # print('start block: ', start_block)
+    # print(blocked_guide[start_block])
+    # print('goal block: ', goal_block)
+    # print(blocked_guide[goal_block])
+    # print('BLOCKED SHAPE: ' , blocked_guide.shape)
 
-    # print('GRID BLOCKS: ')
-    # print(blocked_grid)
-    # print()
-    # print('H_start BLOCKS: ')
-    # print(blocked_H_start)
-    # print()
-    # print('H_goal BLOCKS: ')
-    # print(blocked_H_goal)
+    # # print('GRID BLOCKS: ')
+    # # print(blocked_grid)
+    # # print()
+    # # print('H_start BLOCKS: ')
+    # # print(blocked_H_start)
+    # # print()
+    # # print('H_goal BLOCKS: ')
+    # # print(blocked_H_goal)
 
-    # parents array contains info where tiles came from
-    local_parents = np.empty(blocked_grid.shape, np.int32)
-    local_parents[:] = -1
+    # # parents array contains info where tiles came from
+    # local_parents = np.empty(blocked_grid.shape, np.int32)
+    # local_parents[:] = -1
 
-    # determine local starts and local goals for all blocks
-    print('----- Determining local starts and goals for all blocks -----')
-    local_start = np.zeros((blocked_grid.shape[0], 2), np.int32)
-    local_goal = np.zeros((blocked_grid.shape[0], 2), np.int32)
-    for i in range(blocked_grid.shape[0]):
-        # find the (x,y) index of the min value in each H_start and H_goal block
-        local_goal[i] = np.array(np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
-        local_start[i] = np.array(np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape))
-        x, y = local_start[i]
-        local_parents[i, x, y] = blocked_guide[i, x, y]
-        x, y = local_goal[i]
-        local_parents[i, x, y] = blocked_guide[i, x, y]
+    # # determine local starts and local goals for all blocks
+    # print('----- Determining local starts and goals for all blocks -----')
+    # local_start = np.zeros((blocked_grid.shape[0], 2), np.int32)
+    # local_goal = np.zeros((blocked_grid.shape[0], 2), np.int32)
+    # for i in range(blocked_grid.shape[0]):
+    #     # find the (x,y) index of the min value in each H_start and H_goal block
+    #     local_goal[i] = np.array(np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
+    #     local_start[i] = np.array(np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape))
+    #     x, y = local_start[i]
+    #     local_parents[i, x, y] = blocked_guide[i, x, y]
+    #     x, y = local_goal[i]
+    #     local_parents[i, x, y] = blocked_guide[i, x, y]
 
-        # print('-- %dth block --' %(i))
-        # print('local goal: ', local_goal[i])
-        # print('local start: ', local_start[i])
+    #     # print('-- %dth block --' %(i))
+    #     # print('local goal: ', local_goal[i])
+    #     # print('local start: ', local_start[i])
+    # # print(local_parents)
+    # parents = unblockshaped(local_parents, dim[0], dim[1])
+    # print(guide)
+    # print(parents)
+
+    # # Simultaneous local search
+    # s = timer()
+    # SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
     # print(local_parents)
-    parents = unblockshaped(local_parents, dim[0], dim[1])
-    print(guide)
-    print(parents)
+    # e = timer()
+    # print('kernel launch (+ compilation) done in ', e-s, 's')
 
-    # Simultaneous local search
-    s = timer()
-    SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
-    print(local_parents)
-    e = timer()
-    print('kernel launch (+ compilation) done in ', e-s, 's')
+    # # time_ave = 0
+    # # runs = 10
+    # # for run in range(runs):
+    # #     s = timer()
+    # #     SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
+    # #     print(local_parents[local_parents.shape[0]-1])
+    # #     # print(block)
+    # #     e = timer()
+    # #     time_ave += (e-s)
+    # #     print('%dth kernel launch done in ' %(run), e-s, 's')
+    # # time_ave = time_ave/runs
+    # # print('Average runtime in ', runs, ' runs: ', time_ave)
 
-    # time_ave = 0
-    # runs = 10
-    # for run in range(runs):
-    #     s = timer()
-    #     SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
-    #     print(local_parents[local_parents.shape[0]-1])
-    #     # print(block)
-    #     e = timer()
-    #     time_ave += (e-s)
-    #     print('%dth kernel launch done in ' %(run), e-s, 's')
-    # time_ave = time_ave/runs
-    # print('Average runtime in ', runs, ' runs: ', time_ave)
-
-    # TODO: reconstruct path
-    for i in range(local_parents.shape[0]):
-        MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
-    parents = unblockshaped(local_parents, dim[0], dim[1])
-    for i in range(local_parents.shape[0]):
-        MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
-    print(guide)
-    print(parents)
-    path = []
-    reconstructPathV2(parents, start, goal, path)
-    print(path)
+    # # TODO: reconstruct path
+    # for i in range(local_parents.shape[0]):
+    #     MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
+    # parents = unblockshaped(local_parents, dim[0], dim[1])
+    # for i in range(local_parents.shape[0]):
+    #     MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
+    # print(guide)
+    # print(parents)
+    # path = []
+    # reconstructPathV2(parents, start, goal, path)
+    # print(path)
     
 
 

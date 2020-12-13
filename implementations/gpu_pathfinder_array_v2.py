@@ -108,14 +108,24 @@ def randomStartGoal(grid, start, goal):
 
 # function for reconstructing found path
 def reconstructPathV2(parents, start, goal, path):
+    width, height = dim
     # currentX, currentY = goal
-    goal_1d_index = goal[0] * dim[0] + goal[1]
-    print('GOAL: (%d, %d) -> %d'%(goal[0], goal[1], goal_1d_index))
     # while (currentX, currentY) != start:
     #     path.append((currentX, currentY))
     #     currentX, currentY = parents[currentX, currentY]
     # path.append(start)
     # path.reverse
+    start_x, start_y = start
+    start_1d_index = start_x * width + start_y
+    current_x, current_y = goal
+    current_1d_index = current_x * width + current_y
+    
+    while current_1d_index != start_1d_index:
+        path.append(current_1d_index)
+        parent_1d_index = parents[current_x, current_y]
+        current_x = int((parent_1d_index-(parent_1d_index%width))/width)
+        current_y = parent_1d_index%width 
+        current_1d_index = current_x * width + current_y
 
 # functions for pathfinding
 @cuda.jit(device=True)
@@ -488,6 +498,7 @@ def main():
     # TODO: reconstruct path 
     path = []
     reconstructPathV2(parents, start, goal, path)
+    print(path)
     
 
 

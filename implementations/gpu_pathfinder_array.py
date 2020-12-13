@@ -15,7 +15,7 @@ from numba import cuda, int32, typeof
 OPEN = 1
 CLOSED = 0
 
-scale_factor = 10 # scales to a power of 2
+scale_factor = 4 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 TPB = 4
@@ -473,33 +473,33 @@ def main():
     # local_goal = np.array([goal[0]%TPB, goal[1]%TPB])
     # print('LOCAL GOAL: ', local_goal)
     GridDecompPathV2[blockspergrid, threadsperblock](grid, planning_grid, start, goal, parents_arr, planning_h, block)
-    # for i in range(parents_arr.shape[0]):
-    #     for j in range(parents_arr.shape[1]):
-    #         print('tile: ', (i,j))
-    #         print(parents_arr[i, j])
-    #         print()
+    for i in range(parents_arr.shape[0]):
+        for j in range(parents_arr.shape[1]):
+            print('tile: ', (i,j))
+            print(parents_arr[i, j])
+            print()
     # path = []
     # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
     # print(path)
     # print(parents_arr)
-    parents_host = parents_arr.get()
+    # parents_host = parents_arr.get()
     print(parents_arr[start[0], start[1]])
     e = timer()
     print('Kernel Launch done in ', e-s, 's')
 
-    time_ave = 0
-    runs = 10
-    for i in range(runs):
-        s = timer()
-        GridDecompPathV2[blockspergrid, threadsperblock](grid, planning_grid, start, goal, parents_arr, planning_h, block)
-        parents_host = parents_arr.get()
-        # print(block)
-        # TODO: reconstruct path
-        e = timer()
-        time_ave += (e-s)
-        print('%dth kernel Launch done in ' %(i), e-s, 's')
-    time_ave = time_ave/runs
-    print('Average runtime in ', runs, ' runs: ', time_ave)
+    # time_ave = 0
+    # runs = 10
+    # for i in range(runs):
+    #     s = timer()
+    #     GridDecompPathV2[blockspergrid, threadsperblock](grid, planning_grid, start, goal, parents_arr, planning_h, block)
+    #     parents_host = parents_arr.get()
+    #     # print(block)
+    #     # TODO: reconstruct path
+    #     e = timer()
+    #     time_ave += (e-s)
+    #     print('%dth kernel Launch done in ' %(i), e-s, 's')
+    # time_ave = time_ave/runs
+    # print('Average runtime in ', runs, ' runs: ', time_ave)
     
 
 if __name__ == "__main__":

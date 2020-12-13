@@ -12,7 +12,7 @@ from timeit import default_timer as timer
 
 from numba import cuda, int32, typeof
 
-scale_factor = 4 # scales to a power of 2
+scale_factor = 8 # scales to a power of 2
 dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
 TPB = 4
 
@@ -378,17 +378,17 @@ def unblockshaped(arr, h, w):
                .reshape(h, w))
 
 def main():
-    global scale_factor
-    global TPB
-    global dim
+    # global scale_factor
+    # global TPB
+    # global dim
 
-    parser = argparse.ArgumentParser(description='GPU Pathfinding')
-    parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')
-    parser.add_argument('TPB', type=int, help='Block width')
-    args = parser.parse_args()
-    scale_factor = args.scale_factor
-    TPB = args.TPB
-    dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
+    # parser = argparse.ArgumentParser(description='GPU Pathfinding')
+    # parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')
+    # parser.add_argument('TPB', type=int, help='Block width')
+    # args = parser.parse_args()
+    # scale_factor = args.scale_factor
+    # TPB = args.TPB
+    # dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
     
 
     print('----- Preparing Grid -----')

@@ -530,12 +530,6 @@ def main():
     for run in range(runs):
         s = timer()
         SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
-        for i in range(local_parents.shape[0]):
-            MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
-        parents = unblockshaped(local_parents, dim[0], dim[1])
-        MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
-        path = []
-        reconstructPathV2(parents, start, goal, path)
         e = timer()
         time_ave += (e-s)
         print('%dth kernel launch done in ' %(run), e-s, 's')
@@ -548,6 +542,16 @@ def main():
     #     print(local_parents[i])
     #     print()
 
+    for i in range(local_parents.shape[0]):
+        MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
+    parents = unblockshaped(local_parents, dim[0], dim[1])
+    MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
+    path = []
+    reconstructPathV2(parents, start, goal, path)
+    
+    print(guide)
+    print(parents)
+    print(path)
     
     # # # TODO: reconstruct path
     # print(local_parents.shape)
@@ -565,8 +569,8 @@ def main():
     # #     print()
 
     # parents = unblockshaped(local_parents, dim[0], dim[1])
-    print(guide)
-    print(parents)
+    # print(guide)
+    # print(parents)
 
     # # # neighbors = cp.zeros((dim[0], dim[1], 8, 2), cp.int32)
     # MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
@@ -574,7 +578,7 @@ def main():
     # print(parents)
     # path = []
     # reconstructPathV2(parents, start, goal, path)
-    print(path)
+    # print(path)
 
 if __name__ == "__main__":
     main()

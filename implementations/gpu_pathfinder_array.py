@@ -496,7 +496,7 @@ def main():
         # TODO: reconstruct path
         e = timer()
         time_ave += (e-s)
-        print(i,'th kernel Launch done in ', e-s, 's')
+        print(i+'th kernel Launch done in ', e-s, 's')
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
     

@@ -288,6 +288,19 @@ def blockshaped(arr, nrows, ncols):
                .swapaxes(1,2)
                .reshape(-1, nrows, ncols))
 
+def unblockshaped(arr, h, w):
+    """
+    Return an array of shape (h, w) where
+    h * w = arr.size
+
+    If arr is of shape (n, nrows, ncols), n sublocks of shape (nrows, ncols),
+    then the returned array preserves the "physical" layout of the sublocks.
+    """
+    n, nrows, ncols = arr.shape
+    return (arr.reshape(h//nrows, -1, nrows, ncols)
+               .swapaxes(1,2)
+               .reshape(h, w))
+
 def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
@@ -398,6 +411,8 @@ def main():
         print('%dth kernel launch done in ' %(i), e-s, 's')
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
+
+    print(unblockshaped(parents, dim[0], dim[1]))
 
 if __name__ == "__main__":
     main()

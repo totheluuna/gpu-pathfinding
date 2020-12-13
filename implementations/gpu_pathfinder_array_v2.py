@@ -345,7 +345,7 @@ def MapBlocks2(guide, parents, h):
                 min_x, min_y = (_x, _y)
 
         parents[x,y] = min_x * width + min_y
-        cuda.syncthreads()
+        # cuda.syncthreads()
 
 def blockshaped(arr, nrows, ncols):
     """
@@ -552,9 +552,9 @@ def main():
     print(parents)
 
     # # neighbors = cp.zeros((dim[0], dim[1], 8, 2), cp.int32)
-    # MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
+    MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
     # print(guide)
-    # print(parents)
+    print(parents)
     # path = []
     # reconstructPathV2(parents, start, goal, path)
     # print(path)

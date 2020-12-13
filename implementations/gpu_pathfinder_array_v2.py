@@ -288,9 +288,7 @@ def MapBlocks(guide, parents):
         return
 
     if parents[x,y] > -1:
-        if parents[x,y] == guide[x,y]:
-            parents[x,y] = 69
-        else:
+        if parents[x,y] != guide[x,y]:
             index = parents[x,y]
             _x = int((index-(index%width))/width)
             _y = index%width

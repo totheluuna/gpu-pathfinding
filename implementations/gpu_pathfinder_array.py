@@ -465,7 +465,8 @@ def main():
 
     planning_h = blockshaped(h, TPB, TPB)
     print('RESHAPED H: ')
-    print(planning_h)
+    for i in range(planning_h.shape[0]):
+        print(planning_h[i])
 
     # print("----- Searching for Path -----")
     # s = timer()

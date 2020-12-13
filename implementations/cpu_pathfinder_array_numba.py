@@ -104,7 +104,7 @@ def randomStartGoal(grid, start, goal):
 
 # function for reconstructing found path
 def reconstructPathV2(parents, start, goal, path):
-    width, height = dim
+    width, height = parents.shape
     # currentX, currentY = goal
     # while (currentX, currentY) != start:
     #     path.append((currentX, currentY))

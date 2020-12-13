@@ -287,7 +287,7 @@ def MapBlocks(guide, parents):
     if x >= width and y >= height:
         return
 
-    if parents[x,y] > -1:
+    if dim[0]*dim[1] > parents[x,y] > -1:
         index = parents[x,y]
         _x = int((index-(index%width))/width)
         _y = index%width
@@ -410,9 +410,9 @@ def main():
         local_goal[i] = np.array(np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
         local_start[i] = np.array(np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape))
         x, y = local_start[i]
-        local_parents[i, x, y] = TPB*TPB
+        local_parents[i, x, y] = dim[0]*dim[1]
         x, y = local_goal[i]
-        local_parents[i, x, y] = TPB*TPB
+        local_parents[i, x, y] = dim[0]*dim[1]
 
         # print('-- %dth block --' %(i))
         # print('local goal: ', local_goal[i])

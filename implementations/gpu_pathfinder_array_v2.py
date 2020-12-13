@@ -220,8 +220,8 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bloc
                     if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
                         # parents[next_x, next_y, 0] = current_x
                         # parents[next_x, next_y, 1] = current_y
-                        parents[next_x, next_y] = current_x * TPB + current_y
-                        # parents[next_x, next_y] = current_x * width + current_y
+                        # parents[next_x, next_y] = current_x * TPB + current_y
+                        parents[next_x, next_y] = current_x * width + current_y
                         g[next_x, next_y] = new_g
                         # h[next_x, next_y] = heuristic(next, goal) # omit this step since H is precomputed on GPU
                         cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]

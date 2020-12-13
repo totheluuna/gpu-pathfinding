@@ -263,9 +263,14 @@ def computeHeuristics(grid, start, goal, h_start, h_goal, block):
 
 @cuda.jit
 def SimultaneousLocalSearch(blocked_grid, local_start, local_goal, blocked_h_goal, blocked_h_start, local_parents, block):
-    pos = cuda.grid(1)
+    # pos = cuda.grid(1)
+    # if pos >= blocked_grid.shape[0]:
+    #     return
+    x, y = cuda.grid(2)
+    bpg = cuda.gridDim.x    # blocks per grid
+    pos = x * bpg + y
     if pos >= blocked_grid.shape[0]:
-        return
+        return 
     
     # if passable(blocked_grid[pos], local_start[pos]) and inBounds(blocked_grid[pos], local_start[pos]):
     # initialize essential local arrays

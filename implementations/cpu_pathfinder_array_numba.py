@@ -335,6 +335,18 @@ def main():
     # print('(Post-compilation) Path found in ', e-s, 's')
     # print(path)
 
+    time_ave = 0
+    runs = 10
+    for i in range(runs):
+        s = timer()
+        search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors))
+        print(parents)
+        e = timer()
+        time_ave += (e-s)
+        print('%dth search done in '%(i), e-s, 's')
+    time_ave = time_ave/runs
+    print('Average runtime in ', runs, ' runs: ', time_ave)
+
 if __name__ == "__main__":
     main()
 

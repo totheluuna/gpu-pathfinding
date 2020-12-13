@@ -365,10 +365,12 @@ def main():
     blocked_grid = blockshaped(grid, TPB, TPB)
     blocked_H_start = blockshaped(H_start, TPB, TPB)
     blocked_H_goal = blockshaped(H_goal, TPB, TPB)
-    print('PLANNING BLOCKS: ')
-    print(blocked_grid.shape)
-    print(blocked_H_start.shape)
-    print(blocked_H_start.shape)
+    print('GRID BLOCKS: ')
+    print(blocked_grid)
+    print('H_start BLOCKS: ')
+    print(blocked_H_start)
+    print('H_goal BLOCKS: ')
+    print(blocked_H_goal)
 
     
 

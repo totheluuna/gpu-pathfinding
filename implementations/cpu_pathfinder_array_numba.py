@@ -103,13 +103,30 @@ def randomStartGoal(grid, start, goal):
 
 
 # function for reconstructing found path
-def reconstructPathV2(cameFrom, start, goal, path):
-    currentX, currentY = goal
-    while (currentX, currentY) != start:
-        path.append((currentX, currentY))
-        currentX, currentY = cameFrom[currentX, currentY]
-    path.append(start)
-    path.reverse
+def reconstructPathV2(parents, start, goal, path):
+    width, height = dim
+    # currentX, currentY = goal
+    # while (currentX, currentY) != start:
+    #     path.append((currentX, currentY))
+    #     currentX, currentY = parents[currentX, currentY]
+    # path.append(start)
+    # path.reverse
+    start_x, start_y = start
+    start_1d_index = start_x * width + start_y
+    current_x, current_y = goal
+    current_1d_index = current_x * width + current_y
+    print('START: (%d, %d) -> %d' %(start_x, start_y, start_1d_index))
+    # print('CURRENT (GOAL): (%d, %d) -> %d' %(current_x, current_y, current_1d_index))
+    
+    while current_1d_index != start_1d_index:
+        print('CURRENT (GOAL): (%d, %d) -> %d' %(current_x, current_y, current_1d_index))
+        path.append(current_1d_index)
+        parent_1d_index = parents[current_x, current_y]
+        current_x = int((parent_1d_index-(parent_1d_index%width))/width)
+        current_y = parent_1d_index%width 
+        current_1d_index = current_x * width + current_y
+    path.append(start_1d_index)
+    path.reversee
 
 # functions for pathfinding
 @njit
@@ -360,6 +377,8 @@ def main():
             neighbors[i, 1] = 0
         search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
         print(parents)
+        path = []
+        reconstructPathV2(parents, tuple(start), tuple(goal), path)
         e = timer()
         time_ave += (e-s)
         print('%dth search done in '%(run), e-s, 's')

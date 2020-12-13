@@ -410,9 +410,9 @@ def main():
         local_goal[i] = np.array(np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
         local_start[i] = np.array(np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape))
         x, y = local_start[i]
-        local_parents[i, x, y] = dim[0]*dim[1]
+        local_parents[i, x, y] = blocked_guide[i, x, y]
         x, y = local_goal[i]
-        local_parents[i, x, y] = dim[0]*dim[1]
+        local_parents[i, x, y] = blocked_guide[i, x, y]]
 
         # print('-- %dth block --' %(i))
         # print('local goal: ', local_goal[i])

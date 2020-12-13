@@ -315,8 +315,8 @@ def main():
     # start = [0, 0]
     # goal = [grid.shape[0]-1, grid.shape[1]-1]
     randomStartGoal(grid, start, goal)
-    start = cp.array(start)
-    goal = cp.array(goal)
+    start = np.array(start)
+    goal = np.array(goal)
     print(start)
     print(goal)
 

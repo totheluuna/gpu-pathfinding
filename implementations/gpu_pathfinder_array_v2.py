@@ -291,17 +291,17 @@ def blockshaped(arr, nrows, ncols):
 def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    grid = np.zeros(dim, dtype=np.int32)
-    # grid = np.ones(dim, dtype=np.int32)
+    # grid = np.zeros(dim, dtype=np.int32)
+    grid = np.ones(dim, dtype=np.int32)
     createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
 
     # generate random start and goal
-    start = [-1, -1]
-    goal = [-1, -1]
-    # start = [0, 0]
-    # goal = [grid.shape[0]-1, grid.shape[1]-1]
-    randomStartGoal(grid, start, goal)
+    # start = [-1, -1]
+    # goal = [-1, -1]
+    start = [0, 0]
+    goal = [grid.shape[0]-1, grid.shape[1]-1]
+    # randomStartGoal(grid, start, goal)
     start = np.array(start)
     goal = np.array(goal)
     print(start)
@@ -398,104 +398,6 @@ def main():
         print('%dth kernel launch done in ' %(i), e-s, 's')
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
-
-
-    
-
-
-    
-
-    
-
-    
-
-
-
-    # width, height = grid.shape
-    # # parents = cp.empty((width, height), dtype=cp.int32)
-    # parents = cp.empty((TPB, TPB), dtype=cp.int32)
-    # parents[:] = -1
-
-    # # h = cp.zeros((width, height), dtype=cp.int32)
-    # h = cp.empty((width, height), dtype=cp.int32)
-    # h[:] = UNEXPLORED
-    # block = cp.zeros((width, height), dtype=cp.int32)
-
-    # # parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)
-    # parents_arr = cp.empty((width, height, TPB, TPB), dtype=cp.int32)
-    # parents_arr[:] = parents
-
-    # print('PARENTS ARRAY: ')
-    # print(parents_arr)
-
-    # path = []
-    # threadsperblock = (TPB, TPB)
-    # blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
-    # blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
-    # blockspergrid = (blockspergrid_x, blockspergrid_y)
-    # print('----- Precomputing Heuristics -----')
-    # precomputeHeuristics[blockspergrid, threadsperblock](grid, start, goal, h, block)
-    # print("GUIDE:")
-    # print(guide)
-    # print("H:")
-    # print(h)
-    # print("BLOCKING:")
-    # print(block)
-
-    # # threadsperblock = (TPB, TPB)
-    # # blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
-    # # blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
-    # # blockspergrid = (blockspergrid_x, blockspergrid_y)
-
-    # start_block = block[start[0], start[1]]
-    # goal_block = block[goal[0], goal[1]]
-    # print('BLOCKS INCLUDING START AND GOAL: ')
-    # print('start block: ', start_block)
-    # print(planning_grid[start_block])
-    # print('goal block ', goal_block)
-    # print(planning_grid[goal_block])
-
-    # planning_h = blockshaped(h, TPB, TPB)
-    # print('RESHAPED H: ')
-    # for i in range(planning_h.shape[0]):
-    #     print(' BLOCK %d: '%(i))
-    #     print(planning_h[i])
-    #     print()
-
-    # # print("----- Searching for Path -----")
-    # # s = timer()
-    # # # GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, block)
-    # # # local_goal = np.array([goal[0]%TPB, goal[1]%TPB])
-    # # # print('LOCAL GOAL: ', local_goal)
-    # # GridDecompPathV2[blockspergrid, threadsperblock](grid, planning_grid, start, goal, parents_arr, planning_h, block)
-    # # for i in range(parents_arr.shape[0]):
-    # #     for j in range(parents_arr.shape[1]):
-    # #         print('tile: ', (i,j))
-    # #         print(parents_arr[i, j])
-    # #         print()
-    # # # path = []
-    # # # reconstructPathV2(parents_arr[x,y], tuple(start), tuple(goal), path)
-    # # # print(path)
-    # # # print(parents_arr)
-    # # # parents_host = parents_arr.get()
-    # # print(parents_arr[start[0], start[1]])
-    # # e = timer()
-    # # print('Kernel Launch done in ', e-s, 's')
-
-    # # time_ave = 0
-    # # runs = 10
-    # # for i in range(runs):
-    # #     s = timer()
-    # #     GridDecompPathV2[blockspergrid, threadsperblock](grid, planning_grid, start, goal, parents_arr, planning_h, block)
-    # #     parents_host = parents_arr.get()
-    # #     # print(block)
-    # #     # TODO: reconstruct path
-    # #     e = timer()
-    # #     time_ave += (e-s)
-    # #     print('%dth kernel Launch done in ' %(i), e-s, 's')
-    # # time_ave = time_ave/runs
-    # # print('Average runtime in ', runs, ' runs: ', time_ave)
-    
 
 if __name__ == "__main__":
     main()

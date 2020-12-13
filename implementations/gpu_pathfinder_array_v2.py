@@ -435,7 +435,7 @@ def main():
     print(blocked_block.shape)
     for i in range(blocked_block.shape[0]):
         print('%dth block: '%(i))
-        print(blocked_guide[i])
+        print(blocked_grid[i])
         print()
     # print('BLOCKS INCLUDING START AND GOAL: ')
     # print('start block: ', start_block)

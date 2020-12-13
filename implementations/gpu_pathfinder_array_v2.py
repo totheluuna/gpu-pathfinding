@@ -18,7 +18,7 @@ CLOSED = 0
 scale_factor = 10 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
-TPB = 8
+TPB = 16
 
 # seed(42042042069)
 seed(42069)

@@ -495,6 +495,12 @@ def main():
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
 
+    print(local_parents.shape)
+    for i in range(local_parents.shape[0]):
+        print('%dth block: '%(i))
+        print(local_parents[i])
+        print()
+
     # # time_ave = 0
     # # runs = 10
     # # for run in range(runs):

@@ -331,8 +331,8 @@ def GridDecompPathV2(grid, planning_grid, start, goal, parents, h, block):
     if x >= grid.shape[0] and y >= grid.shape[1]:
         return
 
-    print('running thread: ', tx, ty)
-    print('grid coordinates: ', x, y)
+    # print('running thread: ', tx, ty)
+    # print('grid coordinates: ', x, y)
     if passable(grid, (x,y)) and (x != goal_x or y != goal_y):
         # initialize local arrays
         local_open = cuda.local.array((TPB, TPB), int32)

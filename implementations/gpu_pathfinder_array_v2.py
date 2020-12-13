@@ -361,17 +361,17 @@ def unblockshaped(arr, h, w):
 def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    grid = np.zeros(dim, dtype=np.int32)
-    # grid = np.ones(dim, dtype=np.int32)
-    createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    # grid = np.zeros(dim, dtype=np.int32)
+    grid = np.ones(dim, dtype=np.int32)
+    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
 
     # generate random start and goal
-    start = [-1, -1]
-    goal = [-1, -1]
-    # start = [0, 0]
-    # goal = [grid.shape[0]-1, grid.shape[1]-1]
-    randomStartGoal(grid, start, goal)
+    # start = [-1, -1]
+    # goal = [-1, -1]
+    start = [0, 0]
+    goal = [grid.shape[0]-1, grid.shape[1]-1]
+    # randomStartGoal(grid, start, goal)
     start = np.array(start)
     goal = np.array(goal)
     print(start)
@@ -488,13 +488,6 @@ def main():
     print('Average runtime in ', runs, ' runs: ', time_ave)
     print(local_parents)
     
-    # for i in range(local_parents.shape[0]):
-    #     MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
-    # parents = unblockshaped(local_parents, dim[0], dim[1])
-    # for i in range(local_parents.shape[0]):
-    #     MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
-    # print(parents)
-    # # TODO: Reconstruct path
 
 
 if __name__ == "__main__":

@@ -530,8 +530,6 @@ def main():
     for run in range(runs):
         s = timer()
         SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
-        blocked_guide_gpu = cp.array(blocked_guide)
-        local_parents_gpu = cp.array(local_parents)
         for i in range(local_parents.shape[0]):
             MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
         parents = unblockshaped(local_parents, dim[0], dim[1])

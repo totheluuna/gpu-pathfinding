@@ -359,11 +359,16 @@ def main():
     print(guide)
 
     # determine local starts 
+    # 
 
-    # reshape grid into separate blocks
-    planning_grid = blockshaped(grid, TPB, TPB)
+    # reshape grid, H_start, H_goal into separate blocks
+    blocked_grid = blockshaped(grid, TPB, TPB)
+    blocked_H_start = blockshaped(H_start, TPB, TPB)
+    blocked_H_goal = blockshaped(H_goal, TPB, TPB)
     print('PLANNING BLOCKS: ')
-    print(planning_grid)
+    print(blocked_grid.shape)
+    print(blocked_H_start.shape)
+    print(blocked_H_start.shape)
 
     
 

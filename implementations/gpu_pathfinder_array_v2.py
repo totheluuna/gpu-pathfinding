@@ -327,7 +327,7 @@ def main():
     #         guide[i,j] = i * guide.shape[0] + j
     #         if (i,j) == (start[0], start[1]) or (i,j) == (goal[0], goal[1]):
     #             guide[i,j] = 696
-    guide = np.arange(dim[0]*dim[1]).astype(np.int32)
+    guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
     x, y = start
     guide[x,y] = 696
     x, y = goal

@@ -21,7 +21,7 @@ UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 TPB = 4
 
 
-seed(69)
+seed(6969)
 # functions for converting images to grids
 def getListOfFiles(dirName, allFiles):
     # create a list of file and sub directories 

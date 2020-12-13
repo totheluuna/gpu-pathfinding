@@ -281,13 +281,14 @@ def SimultaneousLocalSearch(blocked_grid, local_start, local_goal, blocked_h_goa
             local_closed[i,j] = UNEXPLORED
             local_cost[i,j] = 0
             local_g[i,j] = 0
-    # cuda.syncthreads()
+    cuda.syncthreads()
     for i in range(8):
         local_neighbors[i, 0] = 0
         local_neighbors[i, 1] = 0
+    cuda.syncthreads()
 
     search(blocked_grid[pos], local_start[pos], local_goal[pos], local_open, local_closed, local_parents[pos], local_cost, local_g, blocked_h_goal[pos], local_neighbors, block)
-
+    cuda.syncthreads()
 @cuda.jit
 def MapBlocks(guide, parents):
     x, y = cuda.grid(2)

@@ -558,6 +558,7 @@ def main():
     
 
     parents = unblockshaped(local_parents, dim[0], dim[1])
+    print(guide)
     print(parents)
 
     # # # neighbors = cp.zeros((dim[0], dim[1], 8, 2), cp.int32)

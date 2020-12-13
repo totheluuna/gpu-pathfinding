@@ -120,7 +120,7 @@ def reconstructPathV2(parents, start, goal, path):
     current_x, current_y = goal
     current_1d_index = current_x * width + current_y
     print('START: (%d, %d) -> %d' %(start_x, start_y, start_1d_index))
-    print('CURRENT (GOAL): (%d, %d) -> %d' %(goal_x, goal_y, goal_1d_index))
+    print('CURRENT (GOAL): (%d, %d) -> %d' %(current_x, current_y, current_1d_index))
     
     # while current_1d_index != start_1d_index:
     #     path.append(current_1d_index)

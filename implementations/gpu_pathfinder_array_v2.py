@@ -539,9 +539,9 @@ def main():
     
     # # TODO: reconstruct path
     print(local_parents.shape)
-    # for i in range(local_parents.shape[0]):
-    #     # print(i)
-    #     MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
+    for i in range(local_parents.shape[0]):
+        # print(i)
+        MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
 
     # parents = unblockshaped(local_parents, dim[0], dim[1])
     # print(parents)

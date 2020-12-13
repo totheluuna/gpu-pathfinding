@@ -470,6 +470,7 @@ def main():
     planning_h = blockshaped(h, TPB, TPB)
     print('RESHAPED H: ')
     for i in range(planning_h.shape[0]):
+        print(' BLOCK %d: '%(i))
         print(planning_h[i])
         print()
 

@@ -385,6 +385,7 @@ def main():
     print(parents)
     path = []
     reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    print(path)
     
 
 if __name__ == "__main__":

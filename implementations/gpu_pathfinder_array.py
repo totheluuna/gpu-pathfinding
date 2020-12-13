@@ -483,6 +483,7 @@ def main():
     # print(path)
     # print(parents_arr)
     parents_host = parents_arr.get()
+    print(parents_host[start[0], start[1]])
     e = timer()
     print('Kernel Launch done in ', e-s, 's')
 

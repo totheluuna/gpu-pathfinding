@@ -475,6 +475,12 @@ def main():
         print(local_parents[0])
         # print(block)
         # TODO: reconstruct path
+        for i in range(local_parents.shape[0]):
+            MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
+        parents = unblockshaped(local_parents, dim[0], dim[1])
+        for i in range(local_parents.shape[0]):
+            MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
+        print(parents)
         e = timer()
         time_ave += (e-s)
         print('%dth kernel launch done in ' %(i), e-s, 's')
@@ -485,10 +491,6 @@ def main():
     for i in range(local_parents.shape[0]):
         MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
     parents = unblockshaped(local_parents, dim[0], dim[1])
-    print(guide)
-    print()
-    print(parents)
-    print()
     for i in range(local_parents.shape[0]):
         MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
     print(parents)

@@ -431,8 +431,9 @@ def main():
     blocked_block = blockshaped(block, TPB, TPB)
 
     start_block = block[start[0], start[1]]
-    goal_block = block[goal[0], goal[1]]
-    print(blocked_block.shape)
+    goal_block = block[goal[0], goal[1]]\
+
+    print(blocked_grid.shape)
     for i in range(blocked_block.shape[0]):
         print('%dth block: '%(i))
         print(blocked_grid[i])

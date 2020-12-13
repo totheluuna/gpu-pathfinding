@@ -339,7 +339,7 @@ def main():
     runs = 10
     for i in range(runs):
         s = timer()
-        search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors))
+        search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
         print(parents)
         e = timer()
         time_ave += (e-s)

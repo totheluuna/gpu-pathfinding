@@ -417,36 +417,37 @@ def main():
         # print('-- %dth block --' %(i))
         # print('local goal: ', local_goal[i])
         # print('local start: ', local_start[i])
-    
-    
-
-    # Simultaneous local search
-    s = timer()
-    SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
     print(local_parents)
-    e = timer()
-    print('kernel launch (+ compilation) done in ', e-s, 's')
-
-    time_ave = 0
-    runs = 10
-    for i in range(runs):
-        s = timer()
-        SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
-        print(local_parents[0])
-        # print(block)
-        # TODO: reconstruct path
-        e = timer()
-        time_ave += (e-s)
-        print('%dth kernel launch done in ' %(i), e-s, 's')
-    time_ave = time_ave/runs
-    print('Average runtime in ', runs, ' runs: ', time_ave)
     
-    for i in range(local_parents.shape[0]):
-        MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
-    parents = unblockshaped(local_parents, dim[0], dim[1])
-    print(guide)
-    print(parents)
-    # TODO: Reconstruct path
+    
+
+    # # Simultaneous local search
+    # s = timer()
+    # SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
+    # print(local_parents)
+    # e = timer()
+    # print('kernel launch (+ compilation) done in ', e-s, 's')
+
+    # time_ave = 0
+    # runs = 10
+    # for i in range(runs):
+    #     s = timer()
+    #     SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
+    #     print(local_parents[0])
+    #     # print(block)
+    #     # TODO: reconstruct path
+    #     e = timer()
+    #     time_ave += (e-s)
+    #     print('%dth kernel launch done in ' %(i), e-s, 's')
+    # time_ave = time_ave/runs
+    # print('Average runtime in ', runs, ' runs: ', time_ave)
+    
+    # for i in range(local_parents.shape[0]):
+    #     MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
+    # parents = unblockshaped(local_parents, dim[0], dim[1])
+    # print(guide)
+    # print(parents)
+    # # TODO: Reconstruct path
 
 
 if __name__ == "__main__":

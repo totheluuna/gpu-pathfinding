@@ -437,7 +437,6 @@ def main():
 
     # reshape grid, H_start, H_goal into separate blocks
     print('----- Reshaping/Decomposing grid and heuristics to separate blocks -----')
-    print(TPB)
     blocked_grid = blockshaped(grid, TPB, TPB)
     blocked_H_start = blockshaped(H_start, TPB, TPB)
     blocked_H_goal = blockshaped(H_goal, TPB, TPB)
@@ -511,12 +510,12 @@ def main():
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
 
-    # debug stuff
-    print(local_parents.shape)
-    for i in range(local_parents.shape[0]):
-        print('%dth block: '%(i))
-        print(local_parents[i])
-        print()
+    # # debug stuff
+    # print(local_parents.shape)
+    # for i in range(local_parents.shape[0]):
+    #     print('%dth block: '%(i))
+    #     print(local_parents[i])
+    #     print()
 
     time_ave = 0
     runs = 10

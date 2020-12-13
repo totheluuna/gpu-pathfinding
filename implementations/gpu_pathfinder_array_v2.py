@@ -432,6 +432,7 @@ def main():
 
     parents = unblockshaped(local_parents, dim[0], dim[1])
     MapBlocks[blockspergrid, threadsperblock](guide, parents)
+    print(guide)
     print(parents)
     # TODO: Reconstruct path
 

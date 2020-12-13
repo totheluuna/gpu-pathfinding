@@ -328,8 +328,10 @@ def main():
     #         if (i,j) == (start[0], start[1]) or (i,j) == (goal[0], goal[1]):
     #             guide[i,j] = 696
     guide = np.arange(dim[0]*dim[1]).astype(np.int32)
-    guide[start[0], start[1]] = 696
-    guide[goal[0], goal[1]] = 696
+    x, y = start
+    guide[x,y] = 696
+    x, y = goal
+    guide[x,y] = 696
 
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')

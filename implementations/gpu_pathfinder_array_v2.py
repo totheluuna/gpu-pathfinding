@@ -365,6 +365,15 @@ def main():
     blocked_grid = blockshaped(grid, TPB, TPB)
     blocked_H_start = blockshaped(H_start, TPB, TPB)
     blocked_H_goal = blockshaped(H_goal, TPB, TPB)
+
+    start_block = block[start[0], start[1]]
+    goal_block = block[goal[0], goal[1]]
+    print('BLOCKS INCLUDING START AND GOAL: ')
+    print('start block: ', start_block)
+    print(planning_grid[start_block])
+    print('goal block ', goal_block)
+    print(planning_grid[goal_block])
+    
     print('GRID BLOCKS: ')
     print(blocked_grid)
     print()
@@ -373,6 +382,8 @@ def main():
     print()
     print('H_goal BLOCKS: ')
     print(blocked_H_goal)
+
+    
 
     
 

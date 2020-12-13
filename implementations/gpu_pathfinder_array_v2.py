@@ -12,7 +12,7 @@ from timeit import default_timer as timer
 
 from numba import cuda, int32, typeof
 
-scale_factor = 8 # scales to a power of 2
+scale_factor = 9 # scales to a power of 2
 dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
 TPB = 8
 
@@ -530,23 +530,14 @@ def main():
     for run in range(runs):
         s = timer()
         SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
-        print(local_parents[local_parents.shape[0]-1])
-        # print(block)
-        print(local_parents.shape)
         blocked_guide_gpu = cp.array(blocked_guide)
         local_parents_gpu = cp.array(local_parents)
         for i in range(local_parents.shape[0]):
-            # print(i)
             MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
-            # MapBlocks[blockspergrid, threadsperblock](blocked_guide_gpu[i], local_parents_gpu[i])
         parents = unblockshaped(local_parents, dim[0], dim[1])
-
-        # # neighbors = cp.zeros((dim[0], dim[1], 8, 2), cp.int32)
         MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
         path = []
         reconstructPathV2(parents, start, goal, path)
-        print(path)
-        
         e = timer()
         time_ave += (e-s)
         print('%dth kernel launch done in ' %(run), e-s, 's')

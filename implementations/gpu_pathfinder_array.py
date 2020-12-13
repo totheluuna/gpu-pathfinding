@@ -450,22 +450,22 @@ def main():
     print(h)
     print(block)
 
-    threadsperblock = (TPB, TPB)
-    blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
-    blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
-    blockspergrid = (blockspergrid_x, blockspergrid_y)
+    # threadsperblock = (TPB, TPB)
+    # blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
+    # blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
+    # blockspergrid = (blockspergrid_x, blockspergrid_y)
 
-    start_block = block[start[0], start[1]]
-    goal_block = block[goal[0], goal[1]]
-    print('BLOCKS INCLUDING START AND GOAL: ')
-    print('start -> block ', start_block)
-    print('start -> block ', goal_block)
-    print(planning_grid[start_block])
-    print(planning_grid[start_block])
+    # start_block = block[start[0], start[1]]
+    # goal_block = block[goal[0], goal[1]]
+    # print('BLOCKS INCLUDING START AND GOAL: ')
+    # print('start -> block ', start_block)
+    # print('start -> block ', goal_block)
+    # print(planning_grid[start_block])
+    # print(planning_grid[start_block])
 
-    planning_h = blockshaped(h, TPB, TPB)
-    print('RESHAPED H: ')
-    print(planning_h)
+    # planning_h = blockshaped(h, TPB, TPB)
+    # print('RESHAPED H: ')
+    # print(planning_h)
 
     print("----- Searching for Path -----")
     s = timer()

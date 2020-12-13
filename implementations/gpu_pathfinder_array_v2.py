@@ -343,10 +343,10 @@ def main():
 
     # debugging purposes: use guide for 1D mapping of indexes
     guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
-    x, y = start
-    guide[x,y] = 696
-    x, y = goal
-    guide[x,y] = 696
+    # x, y = start
+    # guide[x,y] = 696
+    # x, y = goal
+    # guide[x,y] = 696
 
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
@@ -433,7 +433,6 @@ def main():
         print('%dth kernel launch done in ' %(i), e-s, 's')
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
-
     
     for i in range(local_parents.shape[0]):
         MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])

@@ -21,7 +21,7 @@ UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 TPB = 4
 
 
-seed(42069)
+seed(69)
 # functions for converting images to grids
 def getListOfFiles(dirName, allFiles):
     # create a list of file and sub directories 
@@ -413,6 +413,7 @@ def main():
     print('Average runtime in ', runs, ' runs: ', time_ave)
 
     print(unblockshaped(local_parents, dim[0], dim[1]))
+    # TODO: Reconstruct path
 
 if __name__ == "__main__":
     main()

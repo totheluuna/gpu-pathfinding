@@ -540,20 +540,22 @@ def main():
     
     # # TODO: reconstruct path
     print(local_parents.shape)
-    for i in range(local_parents.shape[0]):
+    blocked_guide_gpu = cp.array(blocked_guide)
+    local_parents_gpu = cp.array(local_parents)
+    # for i in range(local_parents.shape[0]):
         # print(i)
-        MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
+    MapBlocks[blockspergrid, threadsperblock](blocked_guide_gpu[i], local_parents_gpu[i])
 
-    parents = unblockshaped(local_parents, dim[0], dim[1])
-    print(parents)
+    # parents = unblockshaped(local_parents, dim[0], dim[1])
+    # print(parents)
 
-    # neighbors = cp.zeros((dim[0], dim[1], 8, 2), cp.int32)
-    MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
-    print(guide)
-    print(parents)
-    path = []
-    reconstructPathV2(parents, start, goal, path)
-    print(path)
+    # # neighbors = cp.zeros((dim[0], dim[1], 8, 2), cp.int32)
+    # MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
+    # print(guide)
+    # print(parents)
+    # path = []
+    # reconstructPathV2(parents, start, goal, path)
+    # print(path)
     
 
 

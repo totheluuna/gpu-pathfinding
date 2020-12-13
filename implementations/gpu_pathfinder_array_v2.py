@@ -15,7 +15,7 @@ from numba import cuda, int32, typeof
 OPEN = 1
 CLOSED = 0
 
-scale_factor = 5 # scales to a power of 2
+scale_factor = 6 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 TPB = 4
@@ -263,14 +263,14 @@ def computeHeuristics(grid, start, goal, h_start, h_goal, block):
 
 @cuda.jit
 def SimultaneousLocalSearch(blocked_grid, local_start, local_goal, blocked_h_goal, blocked_h_start, local_parents, block):
-    pos = cuda.grid(1)
-    if pos >= blocked_grid.shape[0]:
-        return
-    # x, y = cuda.grid(2)
-    # bpg = cuda.gridDim.x    # blocks per grid
-    # pos = x * bpg + y
+    # pos = cuda.grid(1)
     # if pos >= blocked_grid.shape[0]:
-    #     return 
+    #     return
+    x, y = cuda.grid(2)
+    bpg = cuda.gridDim.x    # blocks per grid
+    pos = x * bpg + y
+    if pos >= blocked_grid.shape[0]:
+        return 
     
     # if passable(blocked_grid[pos], local_start[pos]) and inBounds(blocked_grid[pos], local_start[pos]):
     # initialize essential local arrays

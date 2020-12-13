@@ -107,13 +107,15 @@ def randomStartGoal(grid, start, goal):
 
 
 # function for reconstructing found path
-def reconstructPathV2(cameFrom, start, goal, path):
-    currentX, currentY = goal
-    while (currentX, currentY) != start:
-        path.append((currentX, currentY))
-        currentX, currentY = cameFrom[currentX, currentY]
-    path.append(start)
-    path.reverse
+def reconstructPathV2(parents, start, goal, path):
+    # currentX, currentY = goal
+    goal_1d_index = goal[0] * dim[0] + goal[1]
+    print('GOAL: (%d, %d) -> %d'%(goal[0], goal[1], goal_1d_index))
+    # while (currentX, currentY) != start:
+    #     path.append((currentX, currentY))
+    #     currentX, currentY = parents[currentX, currentY]
+    # path.append(start)
+    # path.reverse
 
 # functions for pathfinding
 @cuda.jit(device=True)
@@ -324,12 +326,6 @@ def MapBlocks2(guide, parents, h):
 
         parents[x,y] = min_x * width + min_y
 
-            
-
-
-        
-    
-    
 def blockshaped(arr, nrows, ncols):
     """
     Return an array of shape (n, nrows, ncols) where
@@ -474,7 +470,7 @@ def main():
         SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
         print(local_parents[0])
         # print(block)
-        # TODO: reconstruct path
+        
         for i in range(local_parents.shape[0]):
             MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
         parents = unblockshaped(local_parents, dim[0], dim[1])
@@ -488,6 +484,10 @@ def main():
     print('Average runtime in ', runs, ' runs: ', time_ave)
     print(guide)
     print(parents)
+
+    # TODO: reconstruct path 
+    path = []
+    reconstructPathV2(parents, start, goal, path)
     
 
 

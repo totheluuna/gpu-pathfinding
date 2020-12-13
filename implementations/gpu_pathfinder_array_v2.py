@@ -412,7 +412,7 @@ def main():
         x, y = local_start[i]
         local_parents[i, x, y] = blocked_guide[i, x, y]
         x, y = local_goal[i]
-        local_parents[i, x, y] = blocked_guide[i, x, y]]
+        local_parents[i, x, y] = blocked_guide[i, x, y]
 
         # print('-- %dth block --' %(i))
         # print('local goal: ', local_goal[i])

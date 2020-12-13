@@ -412,7 +412,7 @@ def main():
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
 
-    print(unblockshaped(parents, dim[0], dim[1]))
+    print(unblockshaped(local_parents, dim[0], dim[1]))
 
 if __name__ == "__main__":
     main()

@@ -273,6 +273,21 @@ def SimultaneousLocalSearch(blocked_grid, local_start, local_goal, blocked_h_goa
 
     search(blocked_grid[pos], local_start[pos], local_goal[pos], local_open, local_closed, local_parents[pos], local_cost, local_g, blocked_h_goal[pos], local_neighbors, block)
 
+@cuda.jit
+def MapBlocks(guide, parents):
+    x, y = cuda.grid(2)
+    width, height = guide.shape
+    tx = cuda.threadIdx.x
+    ty = cuda.threadIdx.y
+    bx = cuda.blockIdx.x
+    by = cuda.blockIdx.y
+    dim_x = cuda.blockDim.x
+    dim_y = cuda.blockDim.y
+
+    if x >= width and y >= height:
+        if parents[x,y] > -1:
+            parents[x,y] = guide[x,y]
+    
     
 def blockshaped(arr, nrows, ncols):
     """
@@ -413,8 +428,11 @@ def main():
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
 
-    print(unblockshaped(local_parents, dim[0], dim[1]))
+    parents = unblockshaped(local_parents, dim[0], dim[1]))
+    MapBlocks[blockspergrid, threadsperblock](guide, parents)
+    print(parents)
     # TODO: Reconstruct path
+
 
 if __name__ == "__main__":
     main()

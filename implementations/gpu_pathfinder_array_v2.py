@@ -556,9 +556,9 @@ def main():
     MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
     # print(guide)
     print(parents)
-    # path = []
-    # reconstructPathV2(parents, start, goal, path)
-    # print(path)
+    path = []
+    reconstructPathV2(parents, start, goal, path)
+    print(path)
 
 if __name__ == "__main__":
     main()

@@ -433,6 +433,7 @@ def main():
     start_block = block[start[0], start[1]]
     goal_block = block[goal[0], goal[1]]\
 
+    # debug stuff
     # print(blocked_H_goal.shape)
     # for i in range(blocked_H_goal.shape[0]):
     #     print('%dth block: '%(i))
@@ -481,6 +482,7 @@ def main():
     # print(guide)
     # print(parents)
 
+    # debug stuff
     print(local_parents.shape)
     for i in range(local_parents.shape[0]):
         print('%dth block: '%(i))
@@ -495,11 +497,12 @@ def main():
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
 
-    # print(local_parents.shape)
-    # for i in range(local_parents.shape[0]):
-    #     print('%dth block: '%(i))
-    #     print(local_parents[i])
-    #     print()
+    # debug stuff
+    print(local_parents.shape)
+    for i in range(local_parents.shape[0]):
+        print('%dth block: '%(i))
+        print(local_parents[i])
+        print()
 
     time_ave = 0
     runs = 10

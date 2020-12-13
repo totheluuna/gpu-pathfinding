@@ -374,6 +374,15 @@ def unblockshaped(arr, h, w):
                .reshape(h, w))
 
 def main():
+    global scale_factor, TPB
+
+    parser = argparse.ArgumentParser(description='GPU Pathfinding')
+    parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)', default=4)
+    parser.add_argument('TPB', type=int, help='Block width', default=4)
+    args = parser.parse_args()
+    scale_factor = args.scale_factor
+    TPB = args.TPB
+
     print('----- Preparing Grid -----')
     # create grid from image dataset
     # grid = np.zeros(dim, dtype=np.int32)

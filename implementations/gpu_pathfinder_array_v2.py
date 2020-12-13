@@ -417,7 +417,10 @@ def main():
         # print('-- %dth block --' %(i))
         # print('local goal: ', local_goal[i])
         # print('local start: ', local_start[i])
-    print(local_parents)
+    # print(local_parents)
+    parents = unblockshaped(local_parents, dim[0], dim[1])
+    print(guide)
+    print(parents)
     
     
 
@@ -447,7 +450,7 @@ def main():
     # parents = unblockshaped(local_parents, dim[0], dim[1])
     # print(guide)
     # print(parents)
-    # # TODO: Reconstruct path
+    # TODO: Reconstruct path
 
 
 if __name__ == "__main__":

@@ -433,11 +433,12 @@ def main():
     start_block = block[start[0], start[1]]
     goal_block = block[goal[0], goal[1]]\
 
-    print(blocked_H_goal.shape)
-    for i in range(blocked_H_goal.shape[0]):
-        print('%dth block: '%(i))
-        print(blocked_H_goal[i])
-        print()
+    # print(blocked_H_goal.shape)
+    # for i in range(blocked_H_goal.shape[0]):
+    #     print('%dth block: '%(i))
+    #     print(blocked_H_goal[i])
+    #     print()
+
     # print('BLOCKS INCLUDING START AND GOAL: ')
     # print('start block: ', start_block)
     # print(blocked_guide[start_block])
@@ -454,30 +455,36 @@ def main():
     # # print('H_goal BLOCKS: ')
     # # print(blocked_H_goal)
 
-    # # parents array contains info where tiles came from
-    # local_parents = np.empty(blocked_grid.shape, np.int32)
-    # local_parents[:] = -1
+    # parents array contains info where tiles came from
+    local_parents = np.empty(blocked_grid.shape, np.int32)
+    local_parents[:] = -1
 
-    # # determine local starts and local goals for all blocks
-    # print('----- Determining local starts and goals for all blocks -----')
-    # local_start = np.zeros((blocked_grid.shape[0], 2), np.int32)
-    # local_goal = np.zeros((blocked_grid.shape[0], 2), np.int32)
-    # for i in range(blocked_grid.shape[0]):
-    #     # find the (x,y) index of the min value in each H_start and H_goal block
-    #     local_goal[i] = np.array(np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
-    #     local_start[i] = np.array(np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape))
-    #     x, y = local_start[i]
-    #     local_parents[i, x, y] = blocked_guide[i, x, y]
-    #     x, y = local_goal[i]
-    #     local_parents[i, x, y] = blocked_guide[i, x, y]
+    # determine local starts and local goals for all blocks
+    print('----- Determining local starts and goals for all blocks -----')
+    local_start = np.zeros((blocked_grid.shape[0], 2), np.int32)
+    local_goal = np.zeros((blocked_grid.shape[0], 2), np.int32)
+    for i in range(blocked_grid.shape[0]):
+        # find the (x,y) index of the min value in each H_start and H_goal block
+        local_goal[i] = np.array(np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
+        local_start[i] = np.array(np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape))
+        x, y = local_start[i]
+        local_parents[i, x, y] = blocked_guide[i, x, y]
+        x, y = local_goal[i]
+        local_parents[i, x, y] = blocked_guide[i, x, y]
 
-    #     # print('-- %dth block --' %(i))
-    #     # print('local goal: ', local_goal[i])
-    #     # print('local start: ', local_start[i])
-    # # print(local_parents)
+        print('-- %dth block --' %(i))
+        print('local goal: ', local_goal[i])
+        print('local start: ', local_start[i])
+    # print(local_parents)
     # parents = unblockshaped(local_parents, dim[0], dim[1])
     # print(guide)
     # print(parents)
+
+    # print(blocked_H_goal.shape)
+    # for i in range(blocked_H_goal.shape[0]):
+    #     print('%dth block: '%(i))
+    #     print(blocked_H_goal[i])
+    #     print()
 
     # # Simultaneous local search
     # s = timer()

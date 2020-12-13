@@ -294,7 +294,7 @@ def MapBlocks(guide, parents):
             _y = index%width
             parents[x,y] = guide[_x, _y]
 @cuda.jit
-def MapBlocks2(guide, parents):
+def MapBlocks2(guide, parents, h_start):
     x, y = cuda.grid(2)
     width, height = guide.shape
     tx = cuda.threadIdx.x
@@ -307,9 +307,27 @@ def MapBlocks2(guide, parents):
     if x >= width and y >= height:
         return
 
-    if parents[x,y] > -1:
-        if parents[x,y] == guide[x,y]:
-            parents[x,y] = 69
+    if parents[x,y] == guide[x,y]:
+        # initialize local array
+        local_neighbors = cuda.local.array((8,2), int32)
+        for i in range(8):
+            local_neighbors[i, 0] = 0
+            local_neighbors[i, 1] = 0
+        # get neighbors of (x,y)
+        getNeighbors(parents, (x,y), local_neighbors)
+        min_x, min_y = (x, y) # tile with the minimum heuristic distance from the start tile
+        for i in range(8):
+            _x = local_neighbors[i, 0]
+            _y = local_neighbors[i, 1]
+            if h[_x, _y] < h[min_x, min_y]:
+                min_x, min_y = (_x, _y)
+
+        parents[x,y] = min_x * width + min_y
+
+            
+
+
+        
     
     
 def blockshaped(arr, nrows, ncols):

@@ -293,7 +293,7 @@ def MapBlocks(guide, parents):
             _x = int((index-(index%width))/width)
             _y = index%width
             parents[x,y] = guide[_x, _y]
-
+@cuda.jit
 def MapBlocks2(guide, parents):
     x, y = cuda.grid(2)
     width, height = guide.shape

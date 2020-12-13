@@ -419,7 +419,7 @@ def main():
     # Simultaneous local search
     SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
 
-    print('Something')
+    print(parents)
 
 
     

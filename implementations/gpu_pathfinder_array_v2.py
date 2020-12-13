@@ -497,12 +497,12 @@ def main():
     # print(parents)
 
     # debug stuff
-    print(local_parents.shape)
-    for i in range(local_parents.shape[0]):
-        print('%dth block: '%(i))
-        print(local_start[i])
-        print(local_goal[i])
-        print()
+    # print(local_parents.shape)
+    # for i in range(local_parents.shape[0]):
+    #     print('%dth block: '%(i))
+    #     print(local_start[i])
+    #     print(local_goal[i])
+    #     print()
 
     # Simultaneous local search
     s = timer()

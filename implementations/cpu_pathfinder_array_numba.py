@@ -115,11 +115,11 @@ def reconstructPathV2(parents, start, goal, path):
     start_1d_index = start_x * width + start_y
     current_x, current_y = goal
     current_1d_index = current_x * width + current_y
-    print('START: (%d, %d) -> %d' %(start_x, start_y, start_1d_index))
+    # print('START: (%d, %d) -> %d' %(start_x, start_y, start_1d_index))
     # print('CURRENT (GOAL): (%d, %d) -> %d' %(current_x, current_y, current_1d_index))
     
     while current_1d_index != start_1d_index:
-        print('CURRENT (GOAL): (%d, %d) -> %d' %(current_x, current_y, current_1d_index))
+        # print('CURRENT (GOAL): (%d, %d) -> %d' %(current_x, current_y, current_1d_index))
         path.append(current_1d_index)
         parent_1d_index = parents[current_x, current_y]
         current_x = int((parent_1d_index-(parent_1d_index%width))/width)
@@ -376,14 +376,15 @@ def main():
             neighbors[i, 0] = 0
             neighbors[i, 1] = 0
         search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-        print(parents)
-        path = []
-        reconstructPathV2(parents, tuple(start), tuple(goal), path)
-        e = timer()
-        time_ave += (e-s)
         print('%dth search done in '%(run), e-s, 's')
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
+
+    print(parents)
+    path = []
+    reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    e = timer()
+    time_ave += (e-s)
 
 if __name__ == "__main__":
     main()

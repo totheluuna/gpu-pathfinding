@@ -397,6 +397,10 @@ def main():
     # print('H_goal BLOCKS: ')
     # print(blocked_H_goal)
 
+    # parents array contains info where tiles came from
+    local_parents = np.empty(blocked_grid.shape, np.int32)
+    local_parents[:] = -1
+
     # determine local starts and local goals for all blocks
     print('----- Determining local starts and goals for all blocks -----')
     local_start = np.zeros((blocked_grid.shape[0], 2), np.int32)
@@ -405,13 +409,16 @@ def main():
         # find the (x,y) index of the min value in each H_start and H_goal block
         local_goal[i] = np.array(np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
         local_start[i] = np.array(np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape))
+        x, y = local_start[i]
+        local_parents[i, x, y] = TPB*TPB
+        x, y = local_goal[i]
+        local_parents[i, x, y] = TPB*TPB
+
         # print('-- %dth block --' %(i))
         # print('local goal: ', local_goal[i])
         # print('local start: ', local_start[i])
     
-    # parents array contains info where tiles came from
-    local_parents = np.empty(blocked_grid.shape, np.int32)
-    local_parents[:] = -1
+    
 
     # Simultaneous local search
     s = timer()

@@ -288,13 +288,28 @@ def MapBlocks(guide, parents):
         return
 
     if parents[x,y] > -1:
-        if parents[x,y] == guide[x,y]:
-            parents[x,y] = 69
         if parents[x,y] != guide[x,y]:
             index = parents[x,y]
             _x = int((index-(index%width))/width)
             _y = index%width
             parents[x,y] = guide[_x, _y]
+
+def MapBlocks2(guide, parents):
+    x, y = cuda.grid(2)
+    width, height = guide.shape
+    tx = cuda.threadIdx.x
+    ty = cuda.threadIdx.y
+    bx = cuda.blockIdx.x
+    by = cuda.blockIdx.y
+    dim_x = cuda.blockDim.x
+    dim_y = cuda.blockDim.y
+
+    if x >= width and y >= height:
+        return
+
+    if parents[x,y] > -1:
+        if parents[x,y] == guide[x,y]:
+            parents[x,y] = 69
     
     
 def blockshaped(arr, nrows, ncols):
@@ -451,6 +466,9 @@ def main():
     
     for i in range(local_parents.shape[0]):
         MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
+    for i in range(local_parents.shape[0]):
+        MapBlocks2[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
+        
     parents = unblockshaped(local_parents, dim[0], dim[1])
     guide = unblockshaped(blocked_guide, dim[0], dim[1])
     print(guide)

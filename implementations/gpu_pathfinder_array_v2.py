@@ -314,7 +314,7 @@ def MapBlocks(guide, parents):
             _x = int((index-(index%width))/width)
             _y = index%width
             parents[x,y] = guide[_x, _y]
-    cuda.syncthreads()
+    # cuda.syncthreads()
 @cuda.jit
 def MapBlocks2(guide, parents, h):
     x, y = cuda.grid(2)

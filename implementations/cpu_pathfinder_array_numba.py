@@ -339,6 +339,25 @@ def main():
     runs = 10
     for i in range(runs):
         s = timer()
+        open = np.empty((width, height), dtype=np.int32)
+        closed = np.empty((width, height), dtype=np.int32)
+        parents = np.empty((width, height), dtype=np.int32)
+        cost = np.empty((width, height), dtype=np.int32)
+        g = np.empty((width, height), dtype=np.int32)
+        h = np.empty((width, height), dtype=np.int32)
+        neighbors = np.empty((8,2), dtype=np.int32)
+
+        for i in range(width):
+            for j in range(height):
+                open[i,j] = UNEXPLORED
+                closed[i,j] = UNEXPLORED
+                parents[i,j] = -1
+                cost[i,j] = 0
+                g[i,j] = 0
+                h[i,j] = 0
+        for i in range(8):
+            neighbors[i, 0] = 0
+            neighbors[i, 1] = 0
         search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
         print(parents)
         e = timer()

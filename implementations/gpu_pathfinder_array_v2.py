@@ -370,10 +370,10 @@ def main():
     goal_block = block[goal[0], goal[1]]
     print('BLOCKS INCLUDING START AND GOAL: ')
     print('start block: ', start_block)
-    print(planning_grid[start_block])
+    print(blocked_grid[start_block])
     print('goal block ', goal_block)
-    print(planning_grid[goal_block])
-    
+    print(blocked_grid[goal_block])
+
     print('GRID BLOCKS: ')
     print(blocked_grid)
     print()

@@ -293,7 +293,7 @@ def SimultaneousLocalSearch(blocked_grid, local_start, local_goal, blocked_h_goa
         return
     
     if passable(blocked_grid[i], local_start[i]) and inBounds(blocked_grid[i], local_start[i]):
-        print('locally searching path in block %d' %(i))
+        print(i)
     
 def blockshaped(arr, nrows, ncols):
     """

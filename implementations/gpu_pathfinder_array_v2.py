@@ -415,6 +415,7 @@ def main():
     
     # parents array contains info where tiles came from
     local_parents = np.empty(blocked_grid.shape, np.int32)
+    local_parents[:] = -1
 
     # Simultaneous local search
     SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)

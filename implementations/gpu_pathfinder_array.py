@@ -486,19 +486,19 @@ def main():
     e = timer()
     print('Kernel Launch done in ', e-s, 's')
 
-    time_ave = 0
-    runs = 10
-    for i in range(runs):
-        s = timer()
-        GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, block)
-        parents_host = parents_arr.get()
-        # print(block)
-        # TODO: reconstruct path
-        e = timer()
-        time_ave += (e-s)
-        print(i+'th kernel Launch done in ', e-s, 's')
-    time_ave = time_ave/runs
-    print('Average runtime in ', runs, ' runs: ', time_ave)
+    # time_ave = 0
+    # runs = 10
+    # for i in range(runs):
+    #     s = timer()
+    #     GridDecompPath[blockspergrid, threadsperblock](grid, start, goal, parents_arr, h, block)
+    #     parents_host = parents_arr.get()
+    #     # print(block)
+    #     # TODO: reconstruct path
+    #     e = timer()
+    #     time_ave += (e-s)
+    #     print(i+'th kernel Launch done in ', e-s, 's')
+    # time_ave = time_ave/runs
+    # print('Average runtime in ', runs, ' runs: ', time_ave)
     
 
 if __name__ == "__main__":

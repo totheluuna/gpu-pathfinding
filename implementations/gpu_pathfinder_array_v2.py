@@ -480,7 +480,7 @@ def main():
     for run in range(runs):
         s = timer()
         SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
-        print(local_parents[0])
+        print(local_parents[local_parents.shape[0]-1])
         # print(block)
         e = timer()
         time_ave += (e-s)

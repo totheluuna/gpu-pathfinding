@@ -126,6 +126,8 @@ def reconstructPathV2(parents, start, goal, path):
         current_x = int((parent_1d_index-(parent_1d_index%width))/width)
         current_y = parent_1d_index%width 
         current_1d_index = current_x * width + current_y
+    path.append(start_1d_index)
+    path.reverse
 
 # functions for pathfinding
 @cuda.jit(device=True)

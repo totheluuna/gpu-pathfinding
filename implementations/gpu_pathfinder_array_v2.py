@@ -554,12 +554,11 @@ def main():
         MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
         # MapBlocks[blockspergrid, threadsperblock](blocked_guide_gpu[i], local_parents_gpu[i])
 
-    print(local_parents.shape)
-    for i in range(local_parents.shape[0]):
-        print('%dth block: '%(i))
-        print(local_parents[i])
-        print()
-    
+    # print(local_parents.shape)
+    # for i in range(local_parents.shape[0]):
+    #     print('%dth block: '%(i))
+    #     print(local_parents[i])
+    #     print()
 
     parents = unblockshaped(local_parents, dim[0], dim[1])
     print(guide)

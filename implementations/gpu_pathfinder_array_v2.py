@@ -557,8 +557,6 @@ def main():
     path = []
     reconstructPathV2(parents, start, goal, path)
     print(path)
-    
-
 
 if __name__ == "__main__":
     main()

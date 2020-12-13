@@ -448,8 +448,8 @@ def main():
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
     
-    for i in range(local_parents.shape[0]):
-        MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
+    # for i in range(local_parents.shape[0]):
+    #     MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
     parents = unblockshaped(local_parents, dim[0], dim[1])
     print(guide)
     print(parents)

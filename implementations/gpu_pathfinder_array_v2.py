@@ -436,6 +436,7 @@ def main():
     print(blocked_guide[start_block])
     print('goal block: ', goal_block)
     print(blocked_guide[goal_block])
+    print('BLOCKED SHAPE: ' , blocked_guide.shape)
 
     # print('GRID BLOCKS: ')
     # print(blocked_grid)

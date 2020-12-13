@@ -384,12 +384,12 @@ def main():
     print(blocked_H_goal)
 
     # determine local starts and local goals for all blocks
-    local_start = np.zeros(blocked_grid.shape, np.int32)
-    local_goal = np.zeros(blocked_grid.shape, np.int32)
+    local_start = np.zeros((blocked_grid.shape[0], 2), np.int32)
+    local_goal = np.zeros((blocked_grid.shape[0], 2), np.int32)
     for i in range(blocked_grid.shape[0]):
         # find the (x,y) index of the min value in each H_start and H_goal block
-        local_start[i] = np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape)
-        local_goal[i] = np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape)
+        local_start[i] = np.array(np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
+        local_goal[i] = np.array(np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape))
         print('-- %dth block --' %(i))
         print('local goal: ', local_goal[i])
         print('local start: ', local_start[i])

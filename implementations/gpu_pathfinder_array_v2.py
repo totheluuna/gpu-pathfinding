@@ -345,6 +345,7 @@ def MapBlocks2(guide, parents, h):
                 min_x, min_y = (_x, _y)
 
         parents[x,y] = min_x * width + min_y
+        cuda.syncthreads()
 
 def blockshaped(arr, nrows, ncols):
     """

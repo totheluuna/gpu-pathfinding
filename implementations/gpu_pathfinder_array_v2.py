@@ -486,7 +486,8 @@ def main():
         print('%dth kernel launch done in ' %(run), e-s, 's')
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
-    print(local_parents)
+    print(guide)
+    print(parents)
     
 
 

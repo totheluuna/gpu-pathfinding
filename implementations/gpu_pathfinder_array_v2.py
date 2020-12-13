@@ -304,8 +304,8 @@ def blockshaped(arr, nrows, ncols):
 def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    grid = cp.zeros(dim, dtype=cp.int32)
-    # grid = cp.ones(dim, dtype=cp.int32)
+    grid = np.zeros(dim, dtype=np.int32)
+    # grid = np.ones(dim, dtype=np.int32)
     createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
 
@@ -336,11 +336,11 @@ def main():
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
 
-    H_goal = cp.empty(dim, dtype=cp.int32)
+    H_goal = np.empty(dim, dtype=np.int32)
     H_goal[:] = UNEXPLORED
-    H_start = cp.empty(dim, dtype=cp.int32)
+    H_start = np.empty(dim, dtype=np.int32)
     H_start[:] = UNEXPLORED
-    block = cp.zeros(dim, dtype=cp.int32)
+    block = np.zeros(dim, dtype=np.int32)
 
     # compute heuristics towards start and goal
     threadsperblock = (TPB, TPB)
@@ -382,6 +382,16 @@ def main():
     print()
     print('H_goal BLOCKS: ')
     print(blocked_H_goal)
+
+    # determine local starts and local goals for all blocks
+    local_start = np.zeros(blocked_grid.shape, np.int32)
+    local_goal = np.zeros(blocked_grid.shape, np.int32)
+    for i in range(blocked_grid.shape[0]):
+        # find the (x,y) index of the min value in each H_start and H_goal block
+        print('-- %dth block --')
+        print('local goal: ', np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
+        print('local start: ', np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape)))
+
 
     
 

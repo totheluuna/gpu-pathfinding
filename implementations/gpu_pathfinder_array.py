@@ -428,9 +428,9 @@ def main():
     parents = cp.empty((TPB, TPB), dtype=cp.int32)
     parents[:] = -1
 
-    h = cp.zeros((width, height), dtype=cp.int32)
-    # h = cp.empty((width, height), dtype=cp.int32)
-    # h[:] = -1
+    # h = cp.zeros((width, height), dtype=cp.int32)
+    h = cp.empty((width, height), dtype=cp.int32)
+    h[:] = UNEXPLORED
     block = cp.zeros((width, height), dtype=cp.int32)
 
     # parents_arr = cp.empty((width, height, width, height), dtype=cp.int32)

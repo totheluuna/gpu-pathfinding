@@ -428,7 +428,7 @@ def main():
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
 
-    parents = unblockshaped(local_parents, dim[0], dim[1]))
+    parents = unblockshaped(local_parents, dim[0], dim[1])
     MapBlocks[blockspergrid, threadsperblock](guide, parents)
     print(parents)
     # TODO: Reconstruct path

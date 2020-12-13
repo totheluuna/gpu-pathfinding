@@ -14,7 +14,7 @@ from numba import cuda, int32, typeof
 
 scale_factor = 8 # scales to a power of 2
 dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
-TPB = 4
+TPB = 8
 
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 OPEN = 1

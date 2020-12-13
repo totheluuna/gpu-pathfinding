@@ -292,26 +292,26 @@ def SimultaneousLocalSearch(blocked_grid, local_start, local_goal, blocked_h_goa
     if pos >= blocked_grid.shape[0]:
         return
     
-    if passable(blocked_grid[pos], local_start[pos]) and inBounds(blocked_grid[pos], local_start[pos]):
-        # initialize essential local arrays
-        local_open = cuda.local.array((TPB, TPB), int32)
-        local_closed = cuda.local.array((TPB, TPB), int32)
-        local_cost = cuda.local.array((TPB, TPB), int32)
-        local_g = cuda.local.array((TPB, TPB), int32)
-        local_neighbors = cuda.local.array((8,2), int32)
+    # if passable(blocked_grid[pos], local_start[pos]) and inBounds(blocked_grid[pos], local_start[pos]):
+    # initialize essential local arrays
+    local_open = cuda.local.array((TPB, TPB), int32)
+    local_closed = cuda.local.array((TPB, TPB), int32)
+    local_cost = cuda.local.array((TPB, TPB), int32)
+    local_g = cuda.local.array((TPB, TPB), int32)
+    local_neighbors = cuda.local.array((8,2), int32)
 
-        for i in range(TPB):
-            for j in range(TPB):
-                local_open[i,j] = UNEXPLORED
-                local_closed[i,j] = UNEXPLORED
-                local_cost[i,j] = 0
-                local_g[i,j] = 0
-        # cuda.syncthreads()
-        for i in range(8):
-            local_neighbors[i, 0] = 0
-            local_neighbors[i, 1] = 0
+    for i in range(TPB):
+        for j in range(TPB):
+            local_open[i,j] = UNEXPLORED
+            local_closed[i,j] = UNEXPLORED
+            local_cost[i,j] = 0
+            local_g[i,j] = 0
+    # cuda.syncthreads()
+    for i in range(8):
+        local_neighbors[i, 0] = 0
+        local_neighbors[i, 1] = 0
 
-        search(blocked_grid[pos], local_start[pos], local_goal[pos], local_open, local_closed, local_parents[pos], local_cost, local_g, blocked_h_goal[pos], local_neighbors, block)
+    search(blocked_grid[pos], local_start[pos], local_goal[pos], local_open, local_closed, local_parents[pos], local_cost, local_g, blocked_h_goal[pos], local_neighbors, block)
 
     
 def blockshaped(arr, nrows, ncols):

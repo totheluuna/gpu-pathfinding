@@ -514,7 +514,7 @@ def main():
     # Simultaneous local search
     s = timer()
     SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
-    print(local_parents[local_parents.shape[0]-1]))
+    print(local_parents[local_parents.shape[0]-1])
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
 

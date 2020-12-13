@@ -288,11 +288,11 @@ def computeHeuristics(grid, start, goal, h_start, h_goal, block):
 
 @cuda.jit
 def SimultaneousLocalSearch(blocked_grid, local_start, local_goal, blocked_h_goal, blocked_h_start, local_parents, block):
-    i = cuda.grid(1)
-    if i >= blocked_grid.shape[0]:
+    pos = cuda.grid(1)
+    if pos >= blocked_grid.shape[0]:
         return
     
-    if passable(blocked_grid[i], local_start[i]) and inBounds(blocked_grid[i], local_start[i]):
+    if passable(blocked_grid[pos], local_start[pos]) and inBounds(blocked_grid[pos], local_start[pos]):
         # initialize essential local arrays
         local_open = cuda.local.array((TPB, TPB), int32)
         local_closed = cuda.local.array((TPB, TPB), int32)
@@ -311,7 +311,7 @@ def SimultaneousLocalSearch(blocked_grid, local_start, local_goal, blocked_h_goa
             local_neighbors[i, 0] = 0
             local_neighbors[i, 1] = 0
 
-        search(blocked_grid[i], local_start[i], local_goal[i], local_open, local_closed, local_parents[i], local_cost, local_g, blocked_h_goal[i], local_neighbors, block)
+        search(blocked_grid[pos], local_start[pos], local_goal[pos], local_open, local_closed, local_parents[pos], local_cost, local_g, blocked_h_goal[pos], local_neighbors, block)
 
     
 def blockshaped(arr, nrows, ncols):

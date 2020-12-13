@@ -390,7 +390,7 @@ def main():
         # find the (x,y) index of the min value in each H_start and H_goal block
         print('-- %dth block --')
         print('local goal: ', np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
-        print('local start: ', np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape)))
+        print('local start: ', np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape))
 
 
     

@@ -374,7 +374,8 @@ def unblockshaped(arr, h, w):
                .reshape(h, w))
 
 def main():
-    global scale_factor, TPB
+    global scale_factor
+    global TPB
 
     parser = argparse.ArgumentParser(description='GPU Pathfinding')
     parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)', default=4)

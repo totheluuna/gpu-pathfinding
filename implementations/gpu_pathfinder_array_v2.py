@@ -292,8 +292,13 @@ def SimultaneousLocalSearch(blocked_grid, local_start, local_goal, blocked_h_goa
     if i >= blocked_grid.shape[0]:
         return
     
-    # if passable(blocked_grid[i], local_start[i]) and inBounds(blocked_grid[i], local_start[i]):
-    print(i)
+    if passable(blocked_grid[i], local_start[i]) and inBounds(blocked_grid[i], local_start[i]):
+        local_open = cuda.local.array((TPB, TPB), int32)
+        local_closed = cuda.local.array((TPB, TPB), int32)
+        local_cost = cuda.local.array((TPB, TPB), int32)
+        local_g = cuda.local.array((TPB, TPB), int32)
+        local_neighbors = cuda.local.array((8,2), int32)
+
     
 def blockshaped(arr, nrows, ncols):
     """
@@ -388,8 +393,8 @@ def main():
     local_goal = np.zeros((blocked_grid.shape[0], 2), np.int32)
     for i in range(blocked_grid.shape[0]):
         # find the (x,y) index of the min value in each H_start and H_goal block
-        local_start[i] = np.array(np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
-        local_goal[i] = np.array(np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape))
+        local_goal[i] = np.array(np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
+        local_start[i] = np.array(np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape))
         print('-- %dth block --' %(i))
         print('local goal: ', local_goal[i])
         print('local start: ', local_start[i])

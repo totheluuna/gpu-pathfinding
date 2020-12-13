@@ -288,7 +288,10 @@ def MapBlocks(guide, parents):
         return
 
     if parents[x,y] > -1:
-        parents[x,y] = guide[x,y]
+        index = parents[x,y]
+        _x = int((index-(index%width))/width)
+        _y = index%width
+        parents[x,y] = guide[_x, _y]
     
     
 def blockshaped(arr, nrows, ncols):
@@ -375,6 +378,7 @@ def main():
     blocked_grid = blockshaped(grid, TPB, TPB)
     blocked_H_start = blockshaped(H_start, TPB, TPB)
     blocked_H_goal = blockshaped(H_goal, TPB, TPB)
+    blocked_guide = blockshaped(guide, TPB, TPB)
 
     start_block = block[start[0], start[1]]
     goal_block = block[goal[0], goal[1]]
@@ -430,8 +434,10 @@ def main():
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
 
+    
+    for i in range(local_parents.shape[0]):
+        MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
     parents = unblockshaped(local_parents, dim[0], dim[1])
-    MapBlocks[blockspergrid, threadsperblock](guide, parents)
     print(guide)
     print(parents)
     # TODO: Reconstruct path

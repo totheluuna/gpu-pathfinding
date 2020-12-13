@@ -335,6 +335,7 @@ def main():
     H_goal[:] = UNEXPLORED
     H_start = cp.empty(dim, dtype=cp.int32)
     H_start[:] = UNEXPLORED
+    block = cp.zeros((width, height), dtype=cp.int32)
 
     # compute heuristics towards start and goal
     threadsperblock = (TPB, TPB)

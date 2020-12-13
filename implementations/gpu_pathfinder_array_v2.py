@@ -423,6 +423,7 @@ def main():
 
     # reshape grid, H_start, H_goal into separate blocks
     print('----- Reshaping/Decomposing grid and heuristics to separate blocks -----')
+    print(TPB)
     blocked_grid = blockshaped(grid, TPB, TPB)
     blocked_H_start = blockshaped(H_start, TPB, TPB)
     blocked_H_goal = blockshaped(H_goal, TPB, TPB)

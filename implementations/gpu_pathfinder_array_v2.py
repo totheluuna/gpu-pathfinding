@@ -285,8 +285,10 @@ def MapBlocks(guide, parents):
     dim_y = cuda.blockDim.y
 
     if x >= width and y >= height:
-        if parents[x,y] > -1:
-            parents[x,y] = guide[x,y]
+        return
+
+    if parents[x,y] > -1:
+        parents[x,y] = guide[x,y]
     
     
 def blockshaped(arr, nrows, ncols):

@@ -287,11 +287,14 @@ def MapBlocks(guide, parents):
     if x >= width and y >= height:
         return
 
-    if dim[0]*dim[1] > parents[x,y] > -1:
-        index = parents[x,y]
-        _x = int((index-(index%width))/width)
-        _y = index%width
-        parents[x,y] = guide[_x, _y]
+    if parents[x,y] > -1:
+        if parents[x,y] == x * width + y:
+            parents[x,y] = guide[x,y]
+        else:
+            index = parents[x,y]
+            _x = int((index-(index%width))/width)
+            _y = index%width
+            parents[x,y] = guide[_x, _y]
     
     
 def blockshaped(arr, nrows, ncols):

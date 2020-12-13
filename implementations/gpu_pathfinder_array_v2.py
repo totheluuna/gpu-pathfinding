@@ -528,7 +528,7 @@ def main():
     for i in range(local_parents.shape[0]):
         MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
     print(guide)
-    # print(parents)
+    print(parents)
     # path = []
     # reconstructPathV2(parents, start, goal, path)
     # print(path)

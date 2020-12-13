@@ -537,13 +537,16 @@ def main():
     #     print(local_parents[i])
     #     print()
 
+    
     # # TODO: reconstruct path
     for i in range(local_parents.shape[0]):
-        MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
+        MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i], neighbors)
+
     parents = unblockshaped(local_parents, dim[0], dim[1])
     print(parents)
-    for i in range(local_parents.shape[0]):
-        MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
+
+    # neighbors = cp.zeros((dim[0], dim[1], 8, 2), cp.int32)
+    MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
     print(guide)
     print(parents)
     path = []

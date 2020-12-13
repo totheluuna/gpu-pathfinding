@@ -472,26 +472,27 @@ def main():
         x, y = local_goal[i]
         local_parents[i, x, y] = blocked_guide[i, x, y]
 
-        print('-- %dth block --' %(i))
-        print('local goal: ', local_goal[i])
-        print('local start: ', local_start[i])
+        # print('-- %dth block --' %(i))
+        # print('local goal: ', local_goal[i])
+        # print('local start: ', local_start[i])
+
     # print(local_parents)
     # parents = unblockshaped(local_parents, dim[0], dim[1])
     # print(guide)
     # print(parents)
 
-    # print(blocked_H_goal.shape)
-    # for i in range(blocked_H_goal.shape[0]):
-    #     print('%dth block: '%(i))
-    #     print(blocked_H_goal[i])
-    #     print()
+    print(local_parents.shape)
+    for i in range(local_parents.shape[0]):
+        print('%dth block: '%(i))
+        print(local_parents[i])
+        print()
 
-    # # Simultaneous local search
-    # s = timer()
-    # SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
-    # print(local_parents)
-    # e = timer()
-    # print('kernel launch (+ compilation) done in ', e-s, 's')
+    # Simultaneous local search
+    s = timer()
+    SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
+    print(local_parents)
+    e = timer()
+    print('kernel launch (+ compilation) done in ', e-s, 's')
 
     # # time_ave = 0
     # # runs = 10

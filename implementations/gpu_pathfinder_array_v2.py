@@ -294,7 +294,7 @@ def MapBlocks(guide, parents):
             _y = index%width
             parents[x,y] = guide[_x, _y]
 @cuda.jit
-def MapBlocks2(guide, parents, h_start):
+def MapBlocks2(guide, parents, h):
     x, y = cuda.grid(2)
     width, height = guide.shape
     tx = cuda.threadIdx.x

@@ -293,7 +293,7 @@ def main():
     # create grid from image dataset
     # grid = np.zeros(dim, dtype=np.int32)
     grid = np.ones(dim, dtype=np.int32)
-    createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
 
     # generate random start and goal

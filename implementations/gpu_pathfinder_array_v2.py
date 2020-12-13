@@ -186,7 +186,7 @@ def getMin(arr):
 
 
 @cuda.jit(device=True)
-def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
+def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
 # def search(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors):
     width, height = grid.shape
     start_x, start_y = start
@@ -286,6 +286,15 @@ def computeHeuristics(grid, start, goal, h_start, h_goal, block):
         block[x,y] = bx * dim_x + by
         cuda.syncthreads()
 
+@cuda.jit
+def SimultaneousLocalSearch(blocked_grid, local_start, local_goal, blocked_h_goal, blocked_h_start, local_parents, block):
+    i = cuda.grid(1)
+    if i >= blocked_grid.shape[0]:
+        return
+    
+    if passable(blocked_grid[i], local_start[i]) and inBounds(blocked_grid[i], local_start[i]):
+        print('locally searching path in block %d' %(i))
+    
 def blockshaped(arr, nrows, ncols):
     """
     Return an array of shape (n, nrows, ncols) where
@@ -321,12 +330,6 @@ def main():
     print(goal)
 
     # debugging purposes: use guide for 1D mapping of indexes
-    # guide = np.empty(dim, dtype=np.int32)
-    # for i in range(guide.shape[0]):
-    #     for j in range(guide.shape[1]):
-    #         guide[i,j] = i * guide.shape[0] + j
-    #         if (i,j) == (start[0], start[1]) or (i,j) == (goal[0], goal[1]):
-    #             guide[i,j] = 696
     guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
     x, y = start
     guide[x,y] = 696
@@ -347,7 +350,7 @@ def main():
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
-    print('----- Precomputing Heuristics -----')
+    print('----- Computing Heuristics -----')
     computeHeuristics[blockspergrid, threadsperblock](grid, start, goal, H_start, H_goal, block)
     print('Start H: ')
     print(H_start)
@@ -357,9 +360,6 @@ def main():
     print(block)
     print('Index Guide: ')
     print(guide)
-
-    # determine local starts 
-    # 
 
     # reshape grid, H_start, H_goal into separate blocks
     blocked_grid = blockshaped(grid, TPB, TPB)
@@ -393,6 +393,15 @@ def main():
         print('-- %dth block --' %(i))
         print('local goal: ', local_goal[i])
         print('local start: ', local_start[i])
+    
+    # parents array contains info where tiles came from
+    local_parents = np.empty(blocked_grid.shape, np.int32)
+
+    # Simultaneous local search
+    SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block))
+
+
+    
 
 
     

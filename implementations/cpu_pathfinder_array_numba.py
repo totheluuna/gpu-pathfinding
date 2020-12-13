@@ -337,7 +337,7 @@ def main():
 
     time_ave = 0
     runs = 10
-    for i in range(runs):
+    for run in range(runs):
         s = timer()
         open = np.empty((width, height), dtype=np.int32)
         closed = np.empty((width, height), dtype=np.int32)
@@ -362,7 +362,7 @@ def main():
         print(parents)
         e = timer()
         time_ave += (e-s)
-        print('%dth search done in '%(i), e-s, 's')
+        print('%dth search done in '%(run), e-s, 's')
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
 

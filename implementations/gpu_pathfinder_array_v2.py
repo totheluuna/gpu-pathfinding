@@ -331,9 +331,9 @@ def main():
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
 
-    H_goal = cp.empty((width, height), dtype=cp.int32)
+    H_goal = cp.empty(dim, dtype=cp.int32)
     H_goal[:] = UNEXPLORED
-    H_start = cp.empty((width, height), dtype=cp.int32)
+    H_start = cp.empty(dim, dtype=cp.int32)
     H_start[:] = UNEXPLORED
 
     # compute heuristics towards start and goal

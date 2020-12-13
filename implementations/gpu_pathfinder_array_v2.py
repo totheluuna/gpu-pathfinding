@@ -1,5 +1,5 @@
 from random import randint, seed
-
+import argparse
 import cv2 as cv
 import sys
 import os

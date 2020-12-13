@@ -320,13 +320,16 @@ def main():
     print(start)
     print(goal)
 
-    # # debugging purposes: use guide for 1D mapping of indexes
+    # debugging purposes: use guide for 1D mapping of indexes
     # guide = np.empty(dim, dtype=np.int32)
     # for i in range(guide.shape[0]):
     #     for j in range(guide.shape[1]):
     #         guide[i,j] = i * guide.shape[0] + j
     #         if (i,j) == (start[0], start[1]) or (i,j) == (goal[0], goal[1]):
     #             guide[i,j] = 696
+    guide = np.arange(dim[0]*dim[1]).astype(int32)
+    guide[start[0], start[1]] = 696
+    guide[goal[0], goal[1]] = 696
 
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
@@ -348,6 +351,8 @@ def main():
     print(H_start)
     print('Goal H: ')
     print(H_goal)
+    print('Index Guide: ')
+    print(guide)
 
     # reshape grid into separate blocks
     planning_grid = blockshaped(grid, TPB, TPB)

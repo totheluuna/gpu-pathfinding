@@ -538,17 +538,19 @@ def main():
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
 
-    # print(local_parents.shape)
-    # for i in range(local_parents.shape[0]):
-    #     print('%dth block: '%(i))
-    #     print(local_parents[i])
-    #     print()
-
     print(local_parents.shape)
+    for i in range(local_parents.shape[0]):
+        print('%dth block: '%(i))
+        print(local_parents[i])
+        print()
     for i in range(local_parents.shape[0]):
         MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
     parents = unblockshaped(local_parents, dim[0], dim[1])
     MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
+
+    
+
+
     path = []
     reconstructPathV2(parents, start, goal, path)
     
@@ -565,11 +567,7 @@ def main():
     #     MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
     #     # MapBlocks[blockspergrid, threadsperblock](blocked_guide_gpu[i], local_parents_gpu[i])
 
-    print(local_parents.shape)
-    for i in range(local_parents.shape[0]):
-        print('%dth block: '%(i))
-        print(local_parents[i])
-        print()
+    
 
     # parents = unblockshaped(local_parents, dim[0], dim[1])
     # print(guide)

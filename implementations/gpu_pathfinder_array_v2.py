@@ -12,7 +12,7 @@ from timeit import default_timer as timer
 
 from numba import cuda, int32, typeof
 
-scale_factor = 5 # scales to a power of 2
+scale_factor = 8 # scales to a power of 2
 dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
 TPB = 4
 

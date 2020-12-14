@@ -74,7 +74,7 @@ def createGridFromDatasetImage(dataset, grid, dim):
     getListOfFiles(dataset, listOfImages)
     image = listOfImages[randint(0, len(listOfImages)-1)]
     print(image)
-    image = 'dataset/da2-png/ht_chantry.png'
+    # image = 'dataset/da2-png/ht_chantry.png'
     print('Random Image: ', image)
     imageToGrid(image, grid, dim)
 

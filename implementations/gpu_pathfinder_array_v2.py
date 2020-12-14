@@ -542,7 +542,7 @@ def main():
     for i in range(local_parents.shape[0]):
         print('%dth block: '%(i))
         # print(local_parents[i])
-        print(blocked_grid[i])
+        print(blocked_H_goal[i])
         print()
     for i in range(local_parents.shape[0]):
         MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])

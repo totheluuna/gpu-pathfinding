@@ -83,11 +83,6 @@ def main():
         for j in range(h):
             arr[i,j] = i * w + j
 
-    print(blockshaped(arr, 4,4))
-
-
-    
-
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(arr.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(arr.shape[1] / threadsperblock[1])
@@ -97,6 +92,8 @@ def main():
 
     print('Array: ')
     print(arr)
+    print('Blocked Array: ')
+    print(blockshaped(arr, 4,4))
     print('Block: ')
     # print(arr_gpu)
     print(block)

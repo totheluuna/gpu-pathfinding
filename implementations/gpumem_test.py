@@ -52,7 +52,7 @@ def gpu_memory_test(block, thread, shared_sum_arr, local_sum_arr):
     # print('running thread: ', tx, ty)
     # print('grid coordinates: ', x, y)
     cuda.syncthreads()
-    
+
     local_sum_arr[x,y] = local_sum
     shared_sum_arr[x,y] = shared_sum
     cuda.syncthreads()
@@ -74,6 +74,8 @@ def main():
     arr = np.zeros(shape=dim, dtype=np.int32)
     thread = np.zeros(shape=dim, dtype=np.int32)
     block = np.zeros(shape=dim, dtype=np.int32)
+    shared_sum_arr = np.zeros(shape=dim, dtype=np.int32)
+    local_sum_arr = np.zeros(shape=dim, dtype=np.int32)
     # arr_gpu = cp.zeros(shape=(8,8), dtype=cp.int32)
 
     w, h = arr.shape

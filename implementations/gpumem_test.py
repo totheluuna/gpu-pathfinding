@@ -7,9 +7,9 @@ import math
 
 dim = (8,8)
 @cuda.jit
-def gpu_memory_test(arr, thread):
+def gpu_memory_test(block, thread, shared_sum_arr, local_sum_arr):
     x, y = cuda.grid(2)
-    width, height = dim
+    width, height = block.shape
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bx = cuda.blockIdx.x
@@ -21,33 +21,40 @@ def gpu_memory_test(arr, thread):
     bpg = bpg_x
 
     # print(bpg)
-    if x >= arr.shape[0] and y >= arr.shape[1]:
+    if x >= width and y >= height:
         return
 
+    # initializing local array
     local_arr = cuda.local.array(dim, int32)
     for i in range(TPB):
         for j in range(TPB):
             local_arr[i,j] = 1
-    # local_arr[x,y] = 1
     cuda.syncthreads()
+
+    # initializing shared array
     shared_arr = cuda.shared.array((TPB,TPB), int32)
     shared_arr[tx,ty] = arr[x, y]
     cuda.syncthreads()
+
     # arr[tx,ty] = shared_arr[tx, ty]*2
     # cuda.syncthreads()
 
-    arr[x , y] = bx * dim_x + by
+    block[x , y] = bx * dim_x + by
     thread[x, y] = tx * TPB + ty
-    # sum = 0
-    # for i in range(TPB):
-    #     for j in range(TPB):
-    #         # sum += local_arr[i,j]
-    #         # print(shared_arr[i,j])
-    #         sum += shared_arr[i,j]
+    cuda.syncthreads()
+
+    shared_sum = 0
+    local_sum = 0
+    for i in range(TPB):
+        for j in range(TPB):
+            local_sum += local_arr[i,j]
+            shared_sum += shared_arr[i,j]
     # print('running thread: ', tx, ty)
     # print('grid coordinates: ', x, y)
-    # cuda.syncthreads()
-    # arr[x,y] = sum
+    cuda.syncthreads()
+    
+    local_sum_arr[x,y] = local_sum
+    shared_sum_arr[x,y] = shared_sum
     cuda.syncthreads()
 def blockshaped(arr, nrows, ncols):
     """

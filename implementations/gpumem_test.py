@@ -7,7 +7,7 @@ import math
 
 dim = (8,8)
 @cuda.jit
-def gpu_memory_test(block, thread, shared_sum_arr, local_sum_arr):
+def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr):
     x, y = cuda.grid(2)
     width, height = block.shape
     tx = cuda.threadIdx.x
@@ -86,20 +86,26 @@ def main():
     print(blockshaped(arr, 4,4))
 
 
-    print(arr)
+    
 
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(arr.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(arr.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     print('blocks per grid: ', blockspergrid, '\nthreads per block: ', threadsperblock)
-    gpu_memory_test[blockspergrid, threadsperblock](block, thread, shared_sum_arr, local_sum_arr)
+    gpu_memory_test[blockspergrid, threadsperblock](arr, block, thread, shared_sum_arr, local_sum_arr)
 
-    # print(arr)
+    print('Array: ')
+    print(arr)
+    print('Block: ')
     # print(arr_gpu)
-
     print(block)
+    print('Thread: ')
     print(thread)
+    print('Shared Sum Array: ')
+    print(shared_sum_arr)
+    print('Local Sum Array: ')
+    print(local_sum_arr)
 
 if __name__ == "__main__":
     main()

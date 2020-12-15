@@ -93,7 +93,7 @@ def main():
     blockspergrid_y = math.ceil(arr.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     print('blocks per grid: ', blockspergrid, '\nthreads per block: ', threadsperblock)
-    gpu_memory_test[blockspergrid, threadsperblock](block, thread)
+    gpu_memory_test[blockspergrid, threadsperblock](block, thread, shared_sum_arr, local_sum_arr)
 
     # print(arr)
     # print(arr_gpu)

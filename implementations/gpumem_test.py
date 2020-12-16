@@ -1,4 +1,4 @@
-TPB = 8
+TPB = 4
 
 from numba import cuda, int32
 import numpy as np
@@ -6,7 +6,7 @@ import cupy as cp
 import math
 from skimage.util.shape import view_as_windows
 
-dim = (16,16)
+dim = (8,8)
 @cuda.jit
 def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, padded_arr):
     x, y = cuda.grid(2)

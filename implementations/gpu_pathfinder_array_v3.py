@@ -468,7 +468,7 @@ def main():
     for i in range(parents.shape[0]):
         for j in range(parents.shape[1]):
             print('tile: (%d, %d)' %(i,j))
-            print(parents[i,j]))
+            print(parents[i,j])
             print()
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')

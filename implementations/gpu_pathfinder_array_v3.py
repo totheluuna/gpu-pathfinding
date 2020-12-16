@@ -457,8 +457,8 @@ def main():
 
 
     # parents array contains info where tiles came from
-    local_parents = np.empty((width, height, TPB, TPB), np.int32)
-    local_parents[:] = -1
+    parents = np.empty((width, height, TPB, TPB), np.int32)
+    parents[:] = -1
 
     # debug stuff
     print(parents.shape)

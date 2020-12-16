@@ -7,9 +7,9 @@ import math
 
 dim = (8,8)
 @cuda.jit
-def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr):
+def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, extended_arr):
     x, y = cuda.grid(2)
-    width, height = block.shape
+    width, height = dim
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     bx = cuda.blockIdx.x
@@ -25,23 +25,23 @@ def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr):
         return
 
     # initializing local array
-    local_arr = cuda.local.array(dim, int32)
-    for i in range(TPB):
-        for j in range(TPB):
-            local_arr[i,j] = 1
-    cuda.syncthreads()
-
-    # initializing shared array
-    shared_arr = cuda.shared.array((TPB,TPB), int32)
-    shared_arr[tx,ty] = arr[x, y]
-    cuda.syncthreads()
-
-    # arr[tx,ty] = shared_arr[tx, ty]*2
+    # local_arr = cuda.local.array(dim, int32)
+    # for i in range(TPB):
+    #     for j in range(TPB):
+    #         local_arr[i,j] = 1
     # cuda.syncthreads()
 
-    block[x , y] = bx * dim_x + by
-    thread[x, y] = tx * TPB + ty
+    # initializing shared array
+    # shared_arr = cuda.shared.array((TPB,TPB), int32)
+    # shared_arr[tx,ty] = arr[x, y]
+    # cuda.syncthreads()
+
+    extended_arr[x+1,y+1] = arr[x,y]
     cuda.syncthreads()
+
+    # block[x , y] = bx * dim_x + by
+    # thread[x, y] = tx * TPB + ty
+    # cuda.syncthreads()
 
     shared_sum = 0
     local_sum = 0
@@ -76,6 +76,7 @@ def main():
     block = np.zeros(shape=dim, dtype=np.int32)
     shared_sum_arr = np.zeros(shape=dim, dtype=np.int32)
     local_sum_arr = np.zeros(shape=dim, dtype=np.int32)
+    extended_arr = np.zeros(shape=(dim[0]+4, dim[1]+4), dtype=np.int32)
     # arr_gpu = cp.zeros(shape=(8,8), dtype=cp.int32)
 
     w, h = arr.shape
@@ -88,21 +89,22 @@ def main():
     blockspergrid_y = math.ceil(arr.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
     print('blocks per grid: ', blockspergrid, '\nthreads per block: ', threadsperblock)
-    gpu_memory_test[blockspergrid, threadsperblock](arr, block, thread, shared_sum_arr, local_sum_arr)
+    gpu_memory_test[blockspergrid, threadsperblock](arr, block, thread, shared_sum_arr, local_sum_arr, extended_arr)
 
-    print('Array: ')
-    print(arr)
-    print('Blocked Array: ')
-    print(blockshaped(arr, 4,4))
-    print('Block: ')
-    # print(arr_gpu)
-    print(block)
-    print('Thread: ')
-    print(thread)
-    print('Shared Sum Array: ')
-    print(shared_sum_arr)
-    print('Local Sum Array: ')
-    print(local_sum_arr)
+    # print('Array: ')
+    # print(arr)
+    # print('Blocked Array: ')
+    # print(blockshaped(arr, 4,4))
+    # print('Block: ')
+    # # print(arr_gpu)
+    # print(block)
+    # print('Thread: ')
+    # print(thread)
+    # print('Shared Sum Array: ')
+    # print(shared_sum_arr)
+    # print('Local Sum Array: ')
+    # print(local_sum_arr)
+    print(extended_arr)
 
 if __name__ == "__main__":
     main()

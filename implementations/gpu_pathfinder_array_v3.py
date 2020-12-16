@@ -266,18 +266,27 @@ def computeHeuristics(grid, start, goal, h_start, h_goal, block):
         cuda.syncthreads()
 
 @cuda.jit
-def SimultaneousLocalSearch(blocked_grid, local_start, local_goal, blocked_h_goal, blocked_h_start, local_parents, block):
-    # pos = cuda.grid(1)
-    # if pos >= blocked_grid.shape[0]:
-    #     return
+def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block):
     x, y = cuda.grid(2)
+    width, height = dim
     bpg = cuda.gridDim.x    # blocks per grid
+    tx = cuda.threadIdx.x
+    ty = cuda.threadIdx.y
     pos = x * bpg + y
     if pos >= blocked_grid.shape[0]:
         return 
     
-    # if passable(blocked_grid[pos], local_start[pos]) and inBounds(blocked_grid[pos], local_start[pos]):
+    # copy grid and h to shared memory
+    shared_grid = cuda.shared.array((TPB, TPB), int32)
+    shared_grid[tx, ty] = grid[x,y]
+    cuda.syncthreads()
+
+    shared_h_goal = cuda.shared.array((TPB, TPB), int32)
+    shared_h_goal[tx, ty] = h_goal[x,y]
+    cuda.syncthreads()
+
     # initialize essential local arrays
+    local_start = (tx, ty)
     local_open = cuda.local.array((TPB, TPB), int32)
     local_closed = cuda.local.array((TPB, TPB), int32)
     local_cost = cuda.local.array((TPB, TPB), int32)
@@ -296,7 +305,7 @@ def SimultaneousLocalSearch(blocked_grid, local_start, local_goal, blocked_h_goa
         local_neighbors[i, 1] = 0
     cuda.syncthreads()
 
-    search(blocked_grid[pos], local_start[pos], local_goal[pos], local_open, local_closed, local_parents[pos], local_cost, local_g, blocked_h_goal[pos], local_neighbors, block)
+    search(shared_grid, local_start, goal, local_open, local_closed, parents[x,y], local_cost, local_g, shared_h_goal, local_neighbors, block)
     cuda.syncthreads()
 @cuda.jit
 def MapBlocks(guide, parents):
@@ -392,20 +401,21 @@ def main():
     TPB = args.TPB
     dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
     
+    width, height = dim
 
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    grid = np.zeros(dim, dtype=np.int32)
-    # grid = np.ones(dim, dtype=np.int32)
-    createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    # grid = np.zeros(dim, dtype=np.int32)
+    grid = np.ones(dim, dtype=np.int32)
+    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
 
     # generate random start and goal
-    start = [-1, -1]
-    goal = [-1, -1]
-    # start = [0, 0]
-    # goal = [grid.shape[0]-1, grid.shape[1]-1]
-    randomStartGoal(grid, start, goal)
+    # start = [-1, -1]
+    # goal = [-1, -1]
+    start = [0, 0]
+    goal = [grid.shape[0]-1, grid.shape[1]-1]
+    # randomStartGoal(grid, start, goal)
     start = np.array(start)
     goal = np.array(goal)
     print(start)
@@ -436,129 +446,62 @@ def main():
     print('BLOCKS PER GRID: ', blockspergrid)
     print('----- Computing Heuristics -----')
     computeHeuristics[blockspergrid, threadsperblock](grid, start, goal, H_start, H_goal, block)
-    # print('Start H: ')
-    # print(H_start)
-    # print('Goal H: ')
-    # print(H_goal)
-    # print('Blocking: ')
-    # print(block)
-    # print('Index Guide: ')
-    # print(guide)
+    print('Start H: ')
+    print(H_start)
+    print('Goal H: ')
+    print(H_goal)
+    print('Blocking: ')
+    print(block)
+    print('Index Guide: ')
+    print(guide)
 
-    # reshape grid, H_start, H_goal into separate blocks
-    print('----- Reshaping/Decomposing grid and heuristics to separate blocks -----')
-    blocked_grid = blockshaped(grid, TPB, TPB)
-    blocked_H_start = blockshaped(H_start, TPB, TPB)
-    blocked_H_goal = blockshaped(H_goal, TPB, TPB)
-    blocked_guide = blockshaped(guide, TPB, TPB)
-    blocked_block = blockshaped(block, TPB, TPB)
-
-    start_block = block[start[0], start[1]]
-    goal_block = block[goal[0], goal[1]]\
-
-    # debug stuff
-    # print(blocked_H_goal.shape)
-    # for i in range(blocked_H_goal.shape[0]):
-    #     print('%dth block: '%(i))
-    #     print(blocked_H_goal[i])
-    #     print()
-
-    # print('BLOCKS INCLUDING START AND GOAL: ')
-    # print('start block: ', start_block)
-    # print(blocked_guide[start_block])
-    # print('goal block: ', goal_block)
-    # print(blocked_guide[goal_block])
-    # print('BLOCKED SHAPE: ' , blocked_guide.shape)
-
-    # # print('GRID BLOCKS: ')
-    # # print(blocked_grid)
-    # # print()
-    # # print('H_start BLOCKS: ')
-    # # print(blocked_H_start)
-    # # print()
-    # # print('H_goal BLOCKS: ')
-    # # print(blocked_H_goal)
 
     # parents array contains info where tiles came from
-    local_parents = np.empty(blocked_grid.shape, np.int32)
+    local_parents = np.empty((width, height, TPB, TPB), np.int32)
     local_parents[:] = -1
 
-    # determine local starts and local goals for all blocks
-    print('----- Determining local starts and goals for all blocks -----')
-    local_start = np.zeros((blocked_grid.shape[0], 2), np.int32)
-    local_goal = np.zeros((blocked_grid.shape[0], 2), np.int32)
-    for i in range(blocked_grid.shape[0]):
-        # find the (x,y) index of the min value in each H_start and H_goal block
-        local_goal[i] = np.array(np.unravel_index(blocked_H_goal[i].argmin(), blocked_H_goal[i].shape))
-        local_start[i] = np.array(np.unravel_index(blocked_H_start[i].argmin(), blocked_H_start[i].shape))
-        x, y = local_start[i]
-        local_parents[i, x, y] = blocked_guide[i, x, y]
-        x, y = local_goal[i]
-        local_parents[i, x, y] = blocked_guide[i, x, y]
-
-        # print('-- %dth block --' %(i))
-        # print('local goal: ', local_goal[i])
-        # print('local start: ', local_start[i])
-
-    # print(local_parents)
-    # parents = unblockshaped(local_parents, dim[0], dim[1])
-    # print(guide)
-    # print(parents)
-
     # debug stuff
-    # print(local_parents.shape)
-    # for i in range(local_parents.shape[0]):
-    #     print('%dth block: '%(i))
-    #     print(local_start[i])
-    #     print(local_goal[i])
-    #     print()
+    print(parents.shape)
+    for i in range(parents.shape[0]):
+        for j in range(parents.shape[1]):
+            print(parents[i,j])
 
     # Simultaneous local search
     s = timer()
-    SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
-    print(local_parents[local_parents.shape[0]-1])
+    SimultaneousLocalSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, parents, block)
+    print(parents)
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
 
-    # # debug stuff
+    # time_ave = 0
+    # runs = 10
+    # for run in range(runs):
+    #     s = timer()
+    #     SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
+    #     e = timer()
+    #     time_ave += (e-s)
+    #     print('%dth kernel launch done in ' %(run), e-s, 's')
+    # time_ave = time_ave/runs
+    # print('Average runtime in ', runs, ' runs: ', time_ave)
+
     # print(local_parents.shape)
     # for i in range(local_parents.shape[0]):
     #     print('%dth block: '%(i))
-    #     print(local_parents[i])
+    #     # print(local_parents[i])
+    #     print(local_start[i])
+    #     print(local_goal[i])
     #     print()
+    # for i in range(local_parents.shape[0]):
+    #     MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
+    # parents = unblockshaped(local_parents, dim[0], dim[1])
+    # MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
 
-    time_ave = 0
-    runs = 10
-    for run in range(runs):
-        s = timer()
-        SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
-        e = timer()
-        time_ave += (e-s)
-        print('%dth kernel launch done in ' %(run), e-s, 's')
-    time_ave = time_ave/runs
-    print('Average runtime in ', runs, ' runs: ', time_ave)
-
-    print(local_parents.shape)
-    for i in range(local_parents.shape[0]):
-        print('%dth block: '%(i))
-        # print(local_parents[i])
-        print(local_start[i])
-        print(local_goal[i])
-        print()
-    for i in range(local_parents.shape[0]):
-        MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
-    parents = unblockshaped(local_parents, dim[0], dim[1])
-    MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
-
+    # path = []
+    # reconstructPathV2(parents, start, goal, path)
     
-
-
-    path = []
-    reconstructPathV2(parents, start, goal, path)
-    
-    print(guide)
-    print(parents)
-    print(path)
+    # print(guide)
+    # print(parents)
+    # print(path)
     
     # # # TODO: reconstruct path
     # print(local_parents.shape)

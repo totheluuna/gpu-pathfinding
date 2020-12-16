@@ -76,7 +76,7 @@ def main():
     block = np.zeros(shape=dim, dtype=np.int32)
     shared_sum_arr = np.zeros(shape=dim, dtype=np.int32)
     local_sum_arr = np.zeros(shape=dim, dtype=np.int32)
-    extended_arr = np.zeros(shape=(dim[0]+4, dim[1]+4), dtype=np.int32)
+    extended_arr = np.zeros(shape=(dim[0]+2, dim[1]+2), dtype=np.int32)
     # arr_gpu = cp.zeros(shape=(8,8), dtype=cp.int32)
 
     w, h = arr.shape

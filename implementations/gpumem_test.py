@@ -107,6 +107,7 @@ def main():
     # print(local_sum_arr)
     print(padded_arr)
     chunks = view_as_windows(padded_arr, (TPB+2, TPB+2), step=4)
+    print(chunks.shape)
     print(chunks)
 
 if __name__ == "__main__":

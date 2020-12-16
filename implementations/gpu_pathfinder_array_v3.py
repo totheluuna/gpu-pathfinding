@@ -464,12 +464,13 @@ def main():
     s = timer()
     SimultaneousLocalSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, parents, block)
     # debug stuff
-    print(parents.shape)
-    for i in range(parents.shape[0]):
-        for j in range(parents.shape[1]):
-            print('tile: (%d, %d)' %(i,j))
-            print(parents[i,j])
-            print()
+    print(parents)
+    # print(parents.shape)
+    # for i in range(parents.shape[0]):
+    #     for j in range(parents.shape[1]):
+    #         print('tile: (%d, %d)' %(i,j))
+    #         print(parents[i,j])
+    #         print()
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
 

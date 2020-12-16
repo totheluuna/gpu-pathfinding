@@ -106,7 +106,7 @@ def main():
     # print('Local Sum Array: ')
     # print(local_sum_arr)
     print(padded_arr)
-    chunks = view_as_windows(padded_arr, (TPB+2, TPB+2), step=2)
+    chunks = view_as_windows(padded_arr, (TPB+2, TPB+2), step=4)
     print(chunks)
 
 if __name__ == "__main__":

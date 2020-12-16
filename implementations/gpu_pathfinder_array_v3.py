@@ -273,7 +273,7 @@ def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block):
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
     pos = x * bpg + y
-    if pos >= blocked_grid.shape[0]:
+    if x >= width and y >= height:
         return 
     
     # copy grid and h to shared memory

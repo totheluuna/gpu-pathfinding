@@ -6,7 +6,7 @@ import cupy as cp
 import math
 from skimage.util.shape import view_as_windows
 
-dim = (8,8)
+dim = (16,16)
 @cuda.jit
 def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, padded_arr):
     x, y = cuda.grid(2)

@@ -43,19 +43,19 @@ def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, extended_
     # thread[x, y] = tx * TPB + ty
     # cuda.syncthreads()
 
-    shared_sum = 0
-    local_sum = 0
-    for i in range(TPB):
-        for j in range(TPB):
-            local_sum += local_arr[i,j]
-            shared_sum += shared_arr[i,j]
-    # print('running thread: ', tx, ty)
-    # print('grid coordinates: ', x, y)
-    cuda.syncthreads()
+    # shared_sum = 0
+    # local_sum = 0
+    # for i in range(TPB):
+    #     for j in range(TPB):
+    #         local_sum += local_arr[i,j]
+    #         shared_sum += shared_arr[i,j]
+    # # print('running thread: ', tx, ty)
+    # # print('grid coordinates: ', x, y)
+    # cuda.syncthreads()
 
-    local_sum_arr[x,y] = local_sum
-    shared_sum_arr[x,y] = shared_sum
-    cuda.syncthreads()
+    # local_sum_arr[x,y] = local_sum
+    # shared_sum_arr[x,y] = shared_sum
+    # cuda.syncthreads()
 def blockshaped(arr, nrows, ncols):
     """
     Return an array of shape (n, nrows, ncols) where

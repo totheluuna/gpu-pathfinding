@@ -382,7 +382,7 @@ def main():
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
 
-    print(guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32))
+    print(np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32))
     print(parents)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)

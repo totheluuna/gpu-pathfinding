@@ -40,9 +40,9 @@ def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, padded_ar
     padded_arr[x+1,y+1] = arr[x,y]
     cuda.syncthreads()
 
-    # block[x , y] = bx * dim_x + by
-    # thread[x, y] = tx * TPB + ty
-    # cuda.syncthreads()
+    block[x , y] = bx * dim_x + by
+    thread[x, y] = tx * TPB + ty
+    cuda.syncthreads()
 
     # shared_sum = 0
     # local_sum = 0
@@ -96,9 +96,8 @@ def main():
     # print(arr)
     # print('Blocked Array: ')
     # print(blockshaped(arr, 4,4))
-    # print('Block: ')
-    # # print(arr_gpu)
-    # print(block)
+    print('Block: ')
+    print(block)
     # print('Thread: ')
     # print(thread)
     # print('Shared Sum Array: ')

@@ -394,10 +394,10 @@ def blockshaped(arr, nrows, ncols):
 def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    grid = cp.zeros(dim, dtype=cp.int32)
-    # grid = cp.ones(dim, dtype=cp.int32)
+    # grid = cp.zeros(dim, dtype=cp.int32)
+    grid = cp.ones(dim, dtype=cp.int32)
     guide = np.empty(dim, dtype=np.int32)
-    createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
     print(grid)
 
     planning_grid = blockshaped(grid, TPB, TPB)

@@ -6,7 +6,7 @@ import cupy as cp
 import math
 from skimage.util.shape import view_as_windows
 
-dim = (32,32)
+dim = (4,4)
 @cuda.jit
 def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, padded_arr):
     x, y = cuda.grid(2)
@@ -32,10 +32,10 @@ def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, padded_ar
     #         local_arr[i,j] = 1
     # cuda.syncthreads()
 
-    # initializing shared array
-    # shared_arr = cuda.shared.array((TPB,TPB), int32)
-    # shared_arr[tx,ty] = arr[x, y]
-    # cuda.syncthreads()
+    initializing shared array
+    shared_arr = cuda.shared.array((TPB+1, TPB+1), int32)
+    shared_arr[tx+1,ty+1] = arr[x, y]
+    cuda.syncthreads()
 
     padded_arr[x+1,y+1] = arr[x,y]
     cuda.syncthreads()
@@ -57,6 +57,7 @@ def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, padded_ar
     # local_sum_arr[x,y] = local_sum
     # shared_sum_arr[x,y] = shared_sum
     # cuda.syncthreads()
+
 def blockshaped(arr, nrows, ncols):
     """
     Return an array of shape (n, nrows, ncols) where
@@ -96,8 +97,8 @@ def main():
     # print(arr)
     # print('Blocked Array: ')
     # print(blockshaped(arr, 4,4))
-    print('Block: ')
-    print(block)
+    # print('Block: ')
+    # print(block)
     # print('Thread: ')
     # print(thread)
     # print('Shared Sum Array: ')
@@ -105,9 +106,9 @@ def main():
     # print('Local Sum Array: ')
     # print(local_sum_arr)
     print(padded_arr)
-    chunks = view_as_windows(padded_arr, (TPB+2, TPB+2), step=TPB)
-    print(chunks.shape)
-    print(chunks)
+    # chunks = view_as_windows(padded_arr, (TPB+2, TPB+2), step=TPB)
+    # print(chunks.shape)
+    # print(chunks)
 
 if __name__ == "__main__":
     main()

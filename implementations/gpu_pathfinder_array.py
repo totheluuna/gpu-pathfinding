@@ -405,11 +405,11 @@ def main():
     print(planning_grid)
 
     # generate random start and goal
-    start = [-1, -1]
-    goal = [-1, -1]
-    # start = [0, 0]
-    # goal = [grid.shape[0]-1, grid.shape[1]-1]
-    randomStartGoal(grid, start, goal)
+    # start = [-1, -1]
+    # goal = [-1, -1]
+    start = [0, 0]
+    goal = [grid.shape[0]-1, grid.shape[1]-1]
+    # randomStartGoal(grid, start, goal)
     start = cp.array(start)
     goal = cp.array(goal)
     print(start)

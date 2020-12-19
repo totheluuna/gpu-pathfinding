@@ -311,6 +311,20 @@ def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block, guide):
 
     search(shared_grid, local_start, goal, local_open, local_closed, parents[x,y], local_cost, local_g, shared_h_goal, local_neighbors, block)
     cuda.syncthreads()
+
+@cuda.jit
+def SimultaneousLocalSearch(grid, start, goal, h, parents, grid_blocks, guide_blocks, h_blocks, block):
+    x, y = cuda.grid(2)
+    width, height = dim
+    bpg = cuda.gridDim.x    # blocks per grid
+    tx = cuda.threadIdx.x
+    ty = cuda.threadIdx.y
+
+    if x >= width and y >= height:
+        return 
+    
+
+
 @cuda.jit
 def MapBlocks(guide, parents):
     x, y = cuda.grid(2)
@@ -467,10 +481,13 @@ def main():
     padded_grid = np.zeros((width+2, height+2), dtype=np.int32)
     padded_guide = np.empty((width+2, height+2), dtype=np.int32)
     padded_guide[:] = -1
+    padded_block = np.empty((width+2, height+2), dtype=np.int32)
+    padded_block[:] = -1
     padded_H_goal = np.empty((width+2, height+2), dtype=np.int32)
     padded_H_goal[:] = UNEXPLORED 
     padGrid[blockspergrid, threadsperblock](grid, padded_grid)
     padGrid[blockspergrid, threadsperblock](guide, padded_guide)
+    padGrid[blockspergrid, threadsperblock](block, padded_guide)
     padGrid[blockspergrid, threadsperblock](H_goal, padded_H_goal)
 
     # print(padded_grid)
@@ -485,7 +502,10 @@ def main():
     guide_blocks = guide_blocks.reshape(guide_blocks.shape[0]*guide_blocks.shape[1], guide_blocks.shape[2], guide_blocks.shape[3])
 
     H_goal_blocks = view_as_windows(padded_H_goal, (TPB+2, TPB+2), step=TPB)
-    H_goal_blocks = H_goal_blocks.reshape(H_goal_blocks.shape[0]*H_goal_blocks.shape[1], H_goal_blocks.shape[2], H_goal_blocks.shape[3])
+    H_goal_blocks = H_goal_blocks.reshape(H_goal_blocks.shape[0]*H_goal_blocks.shape[1], H_goal_blocks.shape[2], H_goaliblocks.shape[3])
+
+    blocks = view_as_windows(padded_block, (TPB+2, TPB+2), step=TPB)
+    blocks = blocks.reshape(blocks.shape[0]*blocks.shape[1], blocks.shape[2], blocks.shape[3])
     # print(grid_blocks.shape)
     
 
@@ -507,6 +527,8 @@ def main():
     print(guide_blocks)
     print('Padded Goal H Blocks:')
     print(H_goal_blocks)
+    print('Padded Block Blocks:')
+    print(blocks)
 
 
     

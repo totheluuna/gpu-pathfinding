@@ -25,14 +25,14 @@ def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, padded_ar
     if x >= width and y >= height:
         return
 
-    # initializing local array
-    # local_arr = cuda.local.array(dim, int32)
-    # for i in range(TPB):
-    #     for j in range(TPB):
-    #         local_arr[i,j] = 1
-    # cuda.syncthreads()
+    initializing local array
+    local_arr = cuda.local.array(dim, int32)
+    for i in range(TPB):
+        for j in range(TPB):
+            local_arr[i,j] = 1
+    cuda.syncthreads()
 
-    # initializing shared array
+    initializing shared array
     shared_arr = cuda.shared.array((TPB, TPB), int32)
     shared_arr[tx,ty] = arr[x, y]
     cuda.syncthreads()
@@ -44,19 +44,27 @@ def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, padded_ar
     thread[x, y] = tx * TPB + ty
     cuda.syncthreads()
 
-    # shared_sum = 0
-    # local_sum = 0
-    # for i in range(TPB):
-    #     for j in range(TPB):
-    #         local_sum += local_arr[i,j]
-    #         shared_sum += shared_arr[i,j]
-    # # print('running thread: ', tx, ty)
-    # # print('grid coordinates: ', x, y)
-    # cuda.syncthreads()
+    initializing constant memory
 
-    # local_sum_arr[x,y] = local_sum
-    # shared_sum_arr[x,y] = shared_sum
-    # cuda.syncthreads()
+
+    shared_sum = 0
+    local_sum = 0
+    for i in range(TPB):
+        for j in range(TPB):
+            local_sum += local_arr[i,j]
+            shared_sum += shared_arr[i,j]
+    # print('running thread: ', tx, ty)
+    # print('grid coordinates: ', x, y)
+    cuda.syncthreads()
+
+    local_sum_arr[x,y] = local_sum
+    shared_sum_arr[x,y] = shared_sum
+    cuda.syncthreads()
+
+@cuda.jit
+def constant_mem_test(constant_sum_arr, chunks):
+    x, y = cuda.grid(2)
+    width, height = dim
 
 def blockshaped(arr, nrows, ncols):
     """
@@ -73,18 +81,19 @@ def blockshaped(arr, nrows, ncols):
                .swapaxes(1,2)
                .reshape(-1, nrows, ncols))
 def main():
-    arr = np.zeros(shape=dim, dtype=np.int32)
+    arr = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32))
     thread = np.zeros(shape=dim, dtype=np.int32)
     block = np.zeros(shape=dim, dtype=np.int32)
     shared_sum_arr = np.zeros(shape=dim, dtype=np.int32)
     local_sum_arr = np.zeros(shape=dim, dtype=np.int32)
+    constant_sum_arr = np.zeros(shape=dim, dtype=np.int32)
     padded_arr = np.zeros(shape=(dim[0]+2, dim[1]+2), dtype=np.int32)
     # arr_gpu = cp.zeros(shape=(8,8), dtype=cp.int32)
 
-    w, h = arr.shape
-    for i in range(w):
-        for j in range(h):
-            arr[i,j] = i * w + j
+    block = blockshaped(block, TPB, TPB)
+    for i in range(block.shape[0]):
+        block[i,:] = i
+    block = unblockshaped(block, width, height)
 
     threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(arr.shape[0] / threadsperblock[0])
@@ -106,9 +115,9 @@ def main():
     print('Local Sum Array: ')
     print(local_sum_arr)
     print(padded_arr)
-    # chunks = view_as_windows(padded_arr, (TPB+2, TPB+2), step=TPB)
-    # print(chunks.shape)
-    # print(chunks)
+    chunks = view_as_windows(padded_arr, (TPB+2, TPB+2), step=TPB)
+    print(chunks.shape)
+    print(chunks)
 
 if __name__ == "__main__":
     main()

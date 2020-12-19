@@ -248,7 +248,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bloc
         counter += 1
 
 @cuda.jit
-def computeHeuristics(grid, start, goal, h_start, h_goal, block):
+def computeHeuristics(grid, start, goal, h_start, h_goal):
     x, y = cuda.grid(2)
     width, height = grid.shape
     tx = cuda.threadIdx.x
@@ -262,11 +262,10 @@ def computeHeuristics(grid, start, goal, h_start, h_goal, block):
         if passable(grid, (x,y)) and inBounds(grid, (x,y)):
             h_goal[x,y] = heuristic((x,y), goal)
             h_start[x,y] = heuristic((x,y), start)
-        block[x,y] = bx * dim_x + by
         cuda.syncthreads()
 
 @cuda.jit
-def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block):
+def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block, guide):
     x, y = cuda.grid(2)
     width, height = dim
     bpg = cuda.gridDim.x    # blocks per grid
@@ -283,6 +282,10 @@ def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block):
 
     shared_h_goal = cuda.shared.array((TPB, TPB), int32)
     shared_h_goal[tx, ty] = h_goal[x,y]
+    cuda.syncthreads()
+
+    shared_guide = cuda.shared.array((TPB, TPB), int32)
+    shared_guide[tx, ty] = guide[x,y]
     cuda.syncthreads()
 
     # initialize essential local arrays
@@ -405,17 +408,18 @@ def main():
 
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    # grid = np.zeros(dim, dtype=np.int32)
-    grid = np.ones(dim, dtype=np.int32)
-    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    grid = np.zeros(dim, dtype=np.int32)
+    createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    # grid = np.ones(dim, dtype=np.int32)
+    
     print(grid)
 
     # generate random start and goal
     # start = [-1, -1]
     # goal = [-1, -1]
+    # randomStartGoal(grid, start, goal)
     start = [0, 0]
     goal = [grid.shape[0]-1, grid.shape[1]-1]
-    # randomStartGoal(grid, start, goal)
     start = np.array(start)
     goal = np.array(goal)
     print(start)
@@ -423,10 +427,8 @@ def main():
 
     # debugging purposes: use guide for 1D mapping of indexes
     guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
-    # x, y = start
-    # guide[x,y] = 696
-    # x, y = goal
-    # guide[x,y] = 696
+    print('Grid Index Guide: ')
+    print(guide)
 
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
@@ -445,34 +447,31 @@ def main():
     print('THREADS PER BLOCK: ',threadsperblock)
     print('BLOCKS PER GRID: ', blockspergrid)
     print('----- Computing Heuristics -----')
-    computeHeuristics[blockspergrid, threadsperblock](grid, start, goal, H_start, H_goal, block)
+    computeHeuristics[blockspergrid, threadsperblock](grid, start, goal, H_start, H_goal)
     print('Start H: ')
     print(H_start)
     print('Goal H: ')
     print(H_goal)
-    print('Blocking: ')
-    print(block)
-    print('Index Guide: ')
-    print(guide)
+    
 
 
-    # parents array contains info where tiles came from
-    parents = np.empty((width, height, TPB, TPB), np.int32)
-    parents[:] = -1
+    # # parents array contains info where tiles came from
+    # parents = np.empty((width, height, TPB, TPB), np.int32)
+    # parents[:] = -1
 
-    # Simultaneous local search
-    s = timer()
-    SimultaneousLocalSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, parents, block)
-    # debug stuff
-    print(parents)
-    # print(parents.shape)
-    # for i in range(parents.shape[0]):
-    #     for j in range(parents.shape[1]):
-    #         print('tile: (%d, %d)' %(i,j))
-    #         print(parents[i,j])
-    #         print()
-    e = timer()
-    print('kernel launch (+ compilation) done in ', e-s, 's')
+    # # Simultaneous local search
+    # s = timer()
+    # SimultaneousLocalSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, parents, block, guide)
+    # # debug stuff
+    # print(parents)
+    # # print(parents.shape)
+    # # for i in range(parents.shape[0]):
+    # #     for j in range(parents.shape[1]):
+    # #         print('tile: (%d, %d)' %(i,j))
+    # #         print(parents[i,j])
+    # #         print()
+    # e = timer()
+    # print('kernel launch (+ compilation) done in ', e-s, 's')
 
     # time_ave = 0
     # runs = 10

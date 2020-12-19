@@ -470,6 +470,7 @@ def main():
 
     # prepare local grids
     local_grids = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
+    local_grids = local_grids.reshape(local_grids.shape[0]*local_grids.shape[1], TPB, TPB)
     print(local_grids.shape)
     print(local_grids.reshape(4, 6, 6))
     

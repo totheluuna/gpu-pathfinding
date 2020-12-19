@@ -363,6 +363,16 @@ def MapBlocks2(guide, parents, h):
         parents[x,y] = min_x * width + min_y
         # cuda.syncthreads()
 
+@cuda.jit
+def padGrid(grid, padded_grid):
+    x, y = cuda.grid(2)
+    width, height = dim
+
+    if x >= width and y >= height:
+        return
+    padded_grid[x+1, y+1] = grid[x, y]
+    cuda.syncthreads()
+
 def blockshaped(arr, nrows, ncols):
     """
     Return an array of shape (n, nrows, ncols) where
@@ -424,7 +434,6 @@ def main():
 
     # debugging purposes: use guide for 1D mapping of indexes
     guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
-    
 
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
@@ -452,6 +461,14 @@ def main():
     for i in range(block.shape[0]):
         block[i,:] = i
     block = unblockshaped(block, width, height)
+
+    # prepare padded grid
+    padded_grid = np.zeros((width+2, height+2), dtype=np.int32)
+    padGrid[blockspergrid, threadsperblock](grid, padded_grid)
+    print(padded_grid)
+    
+
+
     print(block)
 
     print('Start: ', start)
@@ -464,6 +481,8 @@ def main():
     print(H_start)
     print('Goal H: ')
     print(H_goal)
+
+
     
 
 

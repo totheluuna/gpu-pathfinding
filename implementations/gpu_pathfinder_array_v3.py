@@ -275,6 +275,7 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:
+            print(next)
             if inBounds(grid, next):
                 if passable(grid, next):
                     next_x, next_y = next

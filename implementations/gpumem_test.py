@@ -81,7 +81,7 @@ def blockshaped(arr, nrows, ncols):
                .swapaxes(1,2)
                .reshape(-1, nrows, ncols))
 def main():
-    arr = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32))
+    arr = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
     thread = np.zeros(shape=dim, dtype=np.int32)
     block = np.zeros(shape=dim, dtype=np.int32)
     shared_sum_arr = np.zeros(shape=dim, dtype=np.int32)

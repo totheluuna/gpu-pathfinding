@@ -58,9 +58,21 @@ def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, padded_ar
     cuda.syncthreads()
 
 @cuda.jit
-def constant_mem_test(constant_sum_arr, chunks):
+def constant_mem_test(constant_sum_arr, chunks, block):
     x, y = cuda.grid(2)
     width, height = dim
+
+    if x >= width and y >= height:
+        return
+    
+    # constant memory use
+    local_constant_grid = cuda.const.array_like(chunks[block[x,y]])
+    sum = 0
+    for i in range(local_constant_grid.shape[0]):
+        for j in range(local_constant_grid.shape[1]):
+            sum += local_constant_grid[i,j]
+    constant_sum_arr[x,y] = sum
+
 
 def blockshaped(arr, nrows, ncols):
     """
@@ -129,6 +141,9 @@ def main():
     chunks = chunks.reshape(chunks.shape[0]*chunks.shape[1], chunks.shape[2], chunks.shape[3])
     print(chunks.shape)
     print(chunks)
+
+    constant_mem_test[blockspergrid, threadsperblock](constant_sum_arr, chunks, block)
+    print(constant_sum_arr)
 
 if __name__ == "__main__":
     main()

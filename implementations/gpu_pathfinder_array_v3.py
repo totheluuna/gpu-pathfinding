@@ -12,7 +12,7 @@ from timeit import default_timer as timer
 
 from numba import cuda, int32, typeof
 
-scale_factor = 4 # scales to a power of 2
+scale_factor = 3 # scales to a power of 2
 dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
 TPB = 4
 
@@ -408,9 +408,9 @@ def main():
 
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    grid = np.zeros(dim, dtype=np.int32)
-    createGridFromDatasetImage('dataset/da2-png', grid, dim)
-    # grid = np.ones(dim, dtype=np.int32)
+    # grid = np.zeros(dim, dtype=np.int32)
+    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    grid = np.ones(dim, dtype=np.int32)
     
     print(grid)
 

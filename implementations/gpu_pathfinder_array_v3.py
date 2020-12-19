@@ -273,7 +273,7 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
         # TODO: change stop condition to: if actual current == goal or block[start] != block[current]
         if (goal_1d_index == actual_current) or (block[start] != block[current]):
         # or (block[current_x, current_y] != block[start_x, start_y]):
-            print(actual_current)
+            print(actual_current, goal_1d_index)
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:

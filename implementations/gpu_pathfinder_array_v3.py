@@ -449,6 +449,8 @@ def main():
     # prepare grid blocking guide
     block = np.zeros(dim, dtype=np.int32)
     block = blockshaped(block, TPB, TPB)
+    for i in range(block.shape[0]):
+        block[i,:] = i
     print(block)
 
     print('Start: ', start)

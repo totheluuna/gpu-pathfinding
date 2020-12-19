@@ -481,10 +481,10 @@ def main():
     grid_blocks = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
     grid_blocks = grid_blocks.reshape(grid_blocks.shape[0]*grid_blocks.shape[1], grid_blocks.shape[2], grid_blocks.shape[3])
 
-    guide_blocks = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
+    guide_blocks = view_as_windows(padded_guide, (TPB+2, TPB+2), step=TPB)
     guide_blocks = guide_blocks.reshape(guide_blocks.shape[0]*guide_blocks.shape[1], guide_blocks.shape[2], guide_blocks.shape[3])
 
-    H_goal_blocks = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
+    H_goal_blocks = view_as_windows(padded_H_goal, (TPB+2, TPB+2), step=TPB)
     H_goal_blocks = H_goal_blocks.reshape(H_goal_blocks.shape[0]*H_goal_blocks.shape[1], H_goal_blocks.shape[2], H_goal_blocks.shape[3])
     # print(grid_blocks.shape)
     

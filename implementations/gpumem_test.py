@@ -25,14 +25,14 @@ def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, padded_ar
     if x >= width and y >= height:
         return
 
-    initializing local array
+    # initializing local array
     local_arr = cuda.local.array(dim, int32)
     for i in range(TPB):
         for j in range(TPB):
             local_arr[i,j] = 1
     cuda.syncthreads()
 
-    initializing shared array
+    # initializing shared array
     shared_arr = cuda.shared.array((TPB, TPB), int32)
     shared_arr[tx,ty] = arr[x, y]
     cuda.syncthreads()
@@ -44,7 +44,7 @@ def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, padded_ar
     thread[x, y] = tx * TPB + ty
     cuda.syncthreads()
 
-    initializing constant memory
+    # initializing constant memory
 
 
     shared_sum = 0

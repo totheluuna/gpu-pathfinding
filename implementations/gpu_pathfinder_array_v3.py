@@ -469,7 +469,7 @@ def main():
     print(padded_grid)
 
     # prepare local grids
-    local_grids = view_as_windows(padded_arr, (TPB+2, TPB+2), step=TPB)
+    local_grids = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
     print(local_grids.shape)
     print(local_grids)
     

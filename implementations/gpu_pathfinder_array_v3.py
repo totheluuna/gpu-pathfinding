@@ -268,7 +268,7 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
         current = (current_x, current_y)
         # TODO: find actual current tile
         actual_current = guide[current]
-        # print(actual_current)
+        print(actual_current)
         if (current_x == goal_x and current_y == goal_y):
         # TODO: change stop condition to: if actual current == goal or block[start] != block[current]
         # if (goal_1d_index == actual_current) or (block[start] != block[current]):
@@ -407,7 +407,7 @@ def GridDecompSearch(grid, start, goal, h, block, parents, grid_blocks, guide_bl
         local_neighbors[i, 1] = 0
     cuda.syncthreads()
 
-    print(thread_block)
+    # print(thread_block)
     searchV2(local_grid, local_start, goal, local_open, local_closed, parents[x,y], local_cost, local_g, local_h, local_neighbors, local_block, local_guide)
     cuda.syncthreads()
 

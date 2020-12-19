@@ -451,6 +451,7 @@ def main():
     block = blockshaped(block, TPB, TPB)
     for i in range(block.shape[0]):
         block[i,:] = i
+    block = unblockshaped(block, width, height)
     print(block)
 
     print('Start: ', start)

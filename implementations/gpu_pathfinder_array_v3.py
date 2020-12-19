@@ -11,6 +11,7 @@ import heapq
 from timeit import default_timer as timer
 
 from numba import cuda, int32, typeof
+from skimage.util.shape import view_as_windows
 
 scale_factor = 3 # scales to a power of 2
 dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
@@ -466,6 +467,11 @@ def main():
     padded_grid = np.zeros((width+2, height+2), dtype=np.int32)
     padGrid[blockspergrid, threadsperblock](grid, padded_grid)
     print(padded_grid)
+
+    # prepare local grids
+    local_grids = view_as_windows(padded_arr, (TPB+2, TPB+2), step=TPB)
+    print(local_grids.shape)
+    print(local_grids)
     
 
 

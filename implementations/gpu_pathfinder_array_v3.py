@@ -341,6 +341,7 @@ def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block, guide):
 
     # initialize essential local arrays
     local_start = (tx, ty)
+    new_goal = (goal[0]+1, goal[1]+1)
     local_open = cuda.local.array((TPB, TPB), int32)
     local_closed = cuda.local.array((TPB, TPB), int32)
     local_cost = cuda.local.array((TPB, TPB), int32)
@@ -359,7 +360,7 @@ def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block, guide):
         local_neighbors[i, 1] = 0
     cuda.syncthreads()
 
-    search(shared_grid, local_start, goal, local_open, local_closed, parents[x,y], local_cost, local_g, shared_h_goal, local_neighbors, block)
+    search(shared_grid, local_start, new_goal, local_open, local_closed, parents[x,y], local_cost, local_g, shared_h_goal, local_neighbors, block)
     cuda.syncthreads()
 
 @cuda.jit

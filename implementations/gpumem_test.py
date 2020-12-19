@@ -66,7 +66,7 @@ def constant_mem_test(constant_sum_arr, chunks, block):
         return
     
     # constant memory use
-    local_constant_grid = chunks[block[x,y]]
+    local_constant_grid = cuda.const.array_like(chunks[block[x,y]])
     sum = 0
     for i in range(local_constant_grid.shape[0]):
         for j in range(local_constant_grid.shape[1]):
@@ -142,9 +142,7 @@ def main():
     print(chunks.shape)
     print(chunks)
 
-    # constant memory use
-    local_constant_grid = cuda.const.array_like(chunks)
-    constant_mem_test[blockspergrid, threadsperblock](constant_sum_arr, local_constant_grid, block)
+    constant_mem_test[blockspergrid, threadsperblock](constant_sum_arr, chunks, block)
     print(constant_sum_arr)
 
 if __name__ == "__main__":

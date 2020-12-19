@@ -502,7 +502,7 @@ def main():
     guide_blocks = guide_blocks.reshape(guide_blocks.shape[0]*guide_blocks.shape[1], guide_blocks.shape[2], guide_blocks.shape[3])
 
     H_goal_blocks = view_as_windows(padded_H_goal, (TPB+2, TPB+2), step=TPB)
-    H_goal_blocks = H_goal_blocks.reshape(H_goal_blocks.shape[0]*H_goal_blocks.shape[1], H_goal_blocks.shape[2], H_goaliblocks.shape[3])
+    H_goal_blocks = H_goal_blocks.reshape(H_goal_blocks.shape[0]*H_goal_blocks.shape[1], H_goal_blocks.shape[2], H_goal_blocks.shape[3])
 
     blocks = view_as_windows(padded_block, (TPB+2, TPB+2), step=TPB)
     blocks = blocks.reshape(blocks.shape[0]*blocks.shape[1], blocks.shape[2], blocks.shape[3])

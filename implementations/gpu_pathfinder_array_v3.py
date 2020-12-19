@@ -250,7 +250,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bloc
         counter += 1
 
 @cuda.jit(device=True)
-def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
+def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block, guide):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal

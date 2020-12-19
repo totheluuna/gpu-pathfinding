@@ -16,6 +16,7 @@ from skimage.util.shape import view_as_windows
 scale_factor = 3 # scales to a power of 2
 dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
 TPB = 4
+padded_TPB = TPB + 2
 
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 OPEN = 1
@@ -382,10 +383,10 @@ def GridDecompSearch(grid, start, goal, h, block, parents, grid_blocks, guide_bl
     # initialize essential local arrays
     local_grid = const_grid_blocks[thread_block]
     local_start = (tx+1, ty+1)
-    local_open = cuda.local.array((TPB+2, TPB+2), int32)
-    local_closed = cuda.local.array((TPB+2, TPB+2), int32)
-    local_cost = cuda.local.array((TPB+2, TPB+2), int32)
-    local_g = cuda.local.array((TPB+2, TPB+2), int32)
+    local_open = cuda.local.array((padded_TPB, padded_TPB), int32)
+    local_closed = cuda.local.array((padded_TPB, padded_TPB), int32)
+    local_cost = cuda.local.array((padded_TPB, padded_TPB), int32)
+    local_g = cuda.local.array((padded_TPB, padded_TPB), int32)
     local_h = const_h_blocks[thread_block]
     local_neighbors = cuda.local.array((8,2), int32)
     local_block = const_blocks[thread_block]

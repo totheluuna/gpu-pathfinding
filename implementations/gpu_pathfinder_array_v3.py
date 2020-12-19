@@ -248,6 +248,53 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bloc
         open[current_x, current_y] = UNEXPLORED
         counter += 1
 
+@cuda.jit(device=True)
+def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
+    width, height = grid.shape
+    start_x, start_y = start
+    goal_x, goal_y = goal
+    goal_1d_index = goal_x * width + goal_y
+
+    open[start_x, start_y] = 0
+    g[start_x, start_y] = 0
+    # h[start_x, start_y] = heuristic(start, goal)
+    cost[start_x, start_y] = g[start_x, start_y] + h[start_x, start_y]
+
+    counter = 0
+    # while np.amin(open) < UNEXPLORED:
+    while getMin(open) < UNEXPLORED:
+        current_x, current_y = getMinIndex(open)
+        current = (current_x, current_y)
+        # TODO: find actual current tile
+        actual_current = guide[current]
+        # if (current_x == goal_x and current_y == goal_y):
+        # TODO: change stop condition to: if actual current == goal or block[start] != block[current]
+        if (goal_1d_index == actual_current) or (block[start] != block[current]):
+        # or (block[current_x, current_y] != block[start_x, start_y]):
+            break
+        getNeighbors(grid, current, neighbors)
+        for next in neighbors:
+            if inBounds(grid, next):
+                if passable(grid, next):
+                    next_x, next_y = next
+                    new_g = g[current_x, current_y] + 1
+                    if open[next_x, next_y] != UNEXPLORED:
+                        if new_g < g[next_x, next_y]:
+                            open[next_x, next_y] = UNEXPLORED
+                    if closed[next_x, next_y] != UNEXPLORED:
+                        if new_g < g[next_x, next_y]:
+                            closed[next_x, next_y] = UNEXPLORED
+                    if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
+                        # parents[next_x, next_y] = current_x * TPB + current_y
+                        parents[next_x, next_y] = current_x * width + current_y
+                        g[next_x, next_y] = new_g
+                        # h[next_x, next_y] = heuristic(next, goal) # omit this step since H is precomputed on GPU
+                        cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
+                        open[next_x, next_y] = cost[next_x, next_y]
+        closed[current_x, current_y] = cost[current_x, current_y]
+        open[current_x, current_y] = UNEXPLORED
+        counter += 1
+
 @cuda.jit
 def computeHeuristics(grid, start, goal, h_start, h_goal):
     x, y = cuda.grid(2)
@@ -313,7 +360,7 @@ def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block, guide):
     cuda.syncthreads()
 
 @cuda.jit
-def GridDecompSearch(grid, start, goal, h, parents, grid_blocks, guide_blocks, h_blocks, blocks):
+def GridDecompSearch(grid, start, goal, h, block, parents, grid_blocks, guide_blocks, h_blocks, blocks):
     x, y = cuda.grid(2)
     width, height = dim
     bpg = cuda.gridDim.x    # blocks per grid
@@ -328,14 +375,21 @@ def GridDecompSearch(grid, start, goal, h, parents, grid_blocks, guide_blocks, h
     const_guide_blocks = cuda.const.array_like(guide_blocks)
     const_h_blocks = cuda.const.array_like(h_blocks)
     const_blocks = cuda.const.array_like(blocks)
+    const_block = cuda.const.array_like(block)
+
+    thread_block = const_block[x,y]
 
     # initialize essential local arrays
-    local_start = (tx, ty)
-    local_open = cuda.local.array((TPB, TPB), int32)
-    local_closed = cuda.local.array((TPB, TPB), int32)
-    local_cost = cuda.local.array((TPB, TPB), int32)
-    local_g = cuda.local.array((TPB, TPB), int32)
+    local_grid = const_grid_blocks[thread_block]
+    local_start = (tx+1, ty+1)
+    local_open = cuda.local.array((TPB+2, TPB+2), int32)
+    local_closed = cuda.local.array((TPB+2, TPB+2), int32)
+    local_cost = cuda.local.array((TPB+2, TPB+2), int32)
+    local_g = cuda.local.array((TPB+2, TPB+2), int32)
+    local_h = const_h_blocks[thread_block]
     local_neighbors = cuda.local.array((8,2), int32)
+    local_block = const_blocks[thread_block]
+    local_guide = const_guide_blocks[thread_block]
 
     for i in range(TPB):
         for j in range(TPB):
@@ -349,7 +403,9 @@ def GridDecompSearch(grid, start, goal, h, parents, grid_blocks, guide_blocks, h
         local_neighbors[i, 1] = 0
     cuda.syncthreads()
 
-    print(x,y)
+    searchV2(local_grid, local_start, goal, local_open, local_closed, parents[x,y], local_cost, local_g, local_h, local_neighbors, local_block, local_guide)
+    cuda.syncthreads()
+
     
 
 
@@ -566,7 +622,7 @@ def main():
 
     # Simultaneous local search
     s = timer()
-    GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
+    GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
     # debug stuff
     print(parents)
     # print(parents.shape)

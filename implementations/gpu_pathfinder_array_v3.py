@@ -313,7 +313,7 @@ def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block, guide):
     cuda.syncthreads()
 
 @cuda.jit
-def SimultaneousLocalSearch(grid, start, goal, h, parents, grid_blocks, guide_blocks, h_blocks, block):
+def GridDecompSearch(grid, start, goal, h, parents, grid_blocks, guide_blocks, h_blocks, blocks):
     x, y = cuda.grid(2)
     width, height = dim
     bpg = cuda.gridDim.x    # blocks per grid
@@ -322,6 +322,34 @@ def SimultaneousLocalSearch(grid, start, goal, h, parents, grid_blocks, guide_bl
 
     if x >= width and y >= height:
         return 
+
+    # copy blocked (grid, guide, h, blocks) to constant memory
+    const_grid_blocks = cuda.const.array_like(grid_blocks)
+    const_guide_blocks = cuda.const.array_like(guide_blocks)
+    const_h_blocks = cuda.const.array_like(h_blocks)
+    const_blocks = cuda.const.array_like(blocks)
+
+    # initialize essential local arrays
+    local_start = (tx, ty)
+    local_open = cuda.local.array((TPB, TPB), int32)
+    local_closed = cuda.local.array((TPB, TPB), int32)
+    local_cost = cuda.local.array((TPB, TPB), int32)
+    local_g = cuda.local.array((TPB, TPB), int32)
+    local_neighbors = cuda.local.array((8,2), int32)
+
+    for i in range(TPB):
+        for j in range(TPB):
+            local_open[i,j] = UNEXPLORED
+            local_closed[i,j] = UNEXPLORED
+            local_cost[i,j] = 0
+            local_g[i,j] = 0
+    cuda.syncthreads()
+    for i in range(8):
+        local_neighbors[i, 0] = 0
+        local_neighbors[i, 1] = 0
+    cuda.syncthreads()
+
+    print(x,y)
     
 
 
@@ -534,21 +562,21 @@ def main():
     parents = np.empty((width, height, TPB+2, TPB+2), np.int32)
     parents[:] = -1
 
-    print(parents)
-
-    # # Simultaneous local search
-    # s = timer()
-    # SimultaneousLocalSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, parents, block, guide)
-    # # debug stuff
     # print(parents)
-    # # print(parents.shape)
-    # # for i in range(parents.shape[0]):
-    # #     for j in range(parents.shape[1]):
-    # #         print('tile: (%d, %d)' %(i,j))
-    # #         print(parents[i,j])
-    # #         print()
-    # e = timer()
-    # print('kernel launch (+ compilation) done in ', e-s, 's')
+
+    # Simultaneous local search
+    s = timer()
+    GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
+    # debug stuff
+    print(parents)
+    # print(parents.shape)
+    # for i in range(parents.shape[0]):
+    #     for j in range(parents.shape[1]):
+    #         print('tile: (%d, %d)' %(i,j))
+    #         print(parents[i,j])
+    #         print()
+    e = timer()
+    print('kernel launch (+ compilation) done in ', e-s, 's')
 
     # time_ave = 0
     # runs = 10

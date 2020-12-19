@@ -628,7 +628,7 @@ def main():
     s = timer()
     GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
     # debug stuff
-    # print(parents)
+    print(parents)
     # print(parents.shape)
     # for i in range(parents.shape[0]):
     #     for j in range(parents.shape[1]):

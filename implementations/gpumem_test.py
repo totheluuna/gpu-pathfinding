@@ -130,6 +130,7 @@ def main():
     print(local_sum_arr)
     print(padded_arr)
     chunks = view_as_windows(padded_arr, (TPB+2, TPB+2), step=TPB)
+    chunks = chunks.reshape(chunks.shape[0]*chunks.shape[1], chunks.shape[2], chunks.shape[3])
     print(chunks.shape)
     print(chunks)
 

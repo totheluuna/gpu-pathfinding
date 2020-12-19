@@ -267,7 +267,7 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         # TODO: find actual current tile
-        # actual_current = guide[current]
+        actual_current = guide[current]
         # print(actual_current)
         if (current_x == goal_x and current_y == goal_y):
         # TODO: change stop condition to: if actual current == goal or block[start] != block[current]

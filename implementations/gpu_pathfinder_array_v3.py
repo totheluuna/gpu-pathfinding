@@ -268,6 +268,7 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
         current = (current_x, current_y)
         # TODO: find actual current tile
         actual_current = guide[current]
+        print(actual_current)
         # if (current_x == goal_x and current_y == goal_y):
         # TODO: change stop condition to: if actual current == goal or block[start] != block[current]
         if (goal_1d_index == actual_current) or (block[start] != block[current]):
@@ -275,7 +276,6 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:
-            print(next)
             if inBounds(grid, next):
                 if passable(grid, next):
                     next_x, next_y = next

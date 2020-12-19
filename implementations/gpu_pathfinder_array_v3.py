@@ -530,13 +530,11 @@ def main():
     print('Padded Block Blocks:')
     print(blocks)
 
+    # parents array contains info where tiles came from
+    parents = np.empty((width, height, TPB+2, TPB+2), np.int32)
+    parents[:] = -1
 
-    
-
-
-    # # parents array contains info where tiles came from
-    # parents = np.empty((width, height, TPB, TPB), np.int32)
-    # parents[:] = -1
+    print(parents)
 
     # # Simultaneous local search
     # s = timer()

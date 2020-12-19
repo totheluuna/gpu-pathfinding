@@ -487,7 +487,7 @@ def main():
     padded_H_goal[:] = UNEXPLORED 
     padGrid[blockspergrid, threadsperblock](grid, padded_grid)
     padGrid[blockspergrid, threadsperblock](guide, padded_guide)
-    padGrid[blockspergrid, threadsperblock](block, padded_guide)
+    padGrid[blockspergrid, threadsperblock](block, padded_block)
     padGrid[blockspergrid, threadsperblock](H_goal, padded_H_goal)
 
     # print(padded_grid)

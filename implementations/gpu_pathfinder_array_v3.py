@@ -473,20 +473,20 @@ def main():
     padGrid[blockspergrid, threadsperblock](guide, padded_guide)
     padGrid[blockspergrid, threadsperblock](H_goal, padded_H_goal)
 
-    print(padded_grid)
-    print(padded_guide)
-    print(padded_H_goal)
+    # print(padded_grid)
+    # print(padded_guide)
+    # print(padded_H_goal)
 
     # prepare local grids
-    local_grids = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
-    local_grids = local_grids.reshape(local_grids.shape[0]*local_grids.shape[1], local_grids.shape[2], local_grids.shape[3])
+    grid_blocks = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
+    grid_blocks = grid_blocks.reshape(grid_blocks.shape[0]*grid_blocks.shape[1], grid_blocks.shape[2], grid_blocks.shape[3])
 
-    local_grids = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
-    local_grids = local_grids.reshape(local_grids.shape[0]*local_grids.shape[1], local_grids.shape[2], local_grids.shape[3])
+    guide_blocks = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
+    guide_blocks = guide_blocks.reshape(guide_blocks.shape[0]*guide_blocks.shape[1], guide_blocks.shape[2], guide_blocks.shape[3])
 
-    local_grids = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
-    local_grids = local_grids.reshape(local_grids.shape[0]*local_grids.shape[1], local_grids.shape[2], local_grids.shape[3])
-    # print(local_grids.shape)
+    H_goal_blocks = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
+    H_goal_blocks = H_goal_blocks.reshape(H_goal_blocks.shape[0]*H_goal_blocks.shape[1], H_goal_blocks.shape[2], H_goal_blocks.shape[3])
+    # print(grid_blocks.shape)
     
 
     print('Start: ', start)
@@ -499,12 +499,14 @@ def main():
     print(H_start)
     print('Goal H: ')
     print(H_goal)
-    print('Grid Blocking :')
+    print('Grid Blocking:')
     print(block)
-    print('Padded Local Grids')
-    print(local_grids)
-    print('Padded Local Grids')
-    print(local_grids)
+    print('Padded Grid Blocks:')
+    print(grid_blocks)
+    print('Padded Guide Blocks:')
+    print(guide_blocks)
+    print('Padded Goal H Blocks:')
+    print(H_goal_blocks)
 
 
     

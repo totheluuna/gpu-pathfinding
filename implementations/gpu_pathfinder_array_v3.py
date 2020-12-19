@@ -463,18 +463,31 @@ def main():
         block[i,:] = i
     block = unblockshaped(block, width, height)
 
-    # prepare padded grid
+    # prepare padded grid, guide, H_goal
     padded_grid = np.zeros((width+2, height+2), dtype=np.int32)
+    padded_guide = np.empty((width+2, height+2), dtype=np.int32)
+    padded_guide[:] = -1
+    padded_H_goal = np.empty((width+2, height+2), dtype=np.int32)
+    padded_H_goal[:] = UNEXPLORED 
     padGrid[blockspergrid, threadsperblock](grid, padded_grid)
+    padGrid[blockspergrid, threadsperblock](guide, padded_guide)
+    padGrid[blockspergrid, threadsperblock](H_goal, padded_H_goal)
+
     print(padded_grid)
+    print(padded_guide)
+    print(padded_H_goal)
 
     # prepare local grids
     local_grids = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
     local_grids = local_grids.reshape(local_grids.shape[0]*local_grids.shape[1], local_grids.shape[2], local_grids.shape[3])
-    print(local_grids.shape)
-    print(local_grids)
 
-    print(block)
+    local_grids = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
+    local_grids = local_grids.reshape(local_grids.shape[0]*local_grids.shape[1], local_grids.shape[2], local_grids.shape[3])
+
+    local_grids = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
+    local_grids = local_grids.reshape(local_grids.shape[0]*local_grids.shape[1], local_grids.shape[2], local_grids.shape[3])
+    # print(local_grids.shape)
+    
 
     print('Start: ', start)
     print('Goal: ', goal)
@@ -486,6 +499,12 @@ def main():
     print(H_start)
     print('Goal H: ')
     print(H_goal)
+    print('Grid Blocking :')
+    print(block)
+    print('Padded Local Grids')
+    print(local_grids)
+    print('Padded Local Grids')
+    print(local_grids)
 
 
     

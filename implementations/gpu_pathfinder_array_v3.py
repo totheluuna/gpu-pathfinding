@@ -254,7 +254,7 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
-    goal_1d_index = goal_x * width + goal_y
+    goal_1d_index = goal_x * dim[0] + goal_y
 
     open[start_x, start_y] = 0
     g[start_x, start_y] = 0

@@ -411,8 +411,6 @@ def main():
     # grid = np.zeros(dim, dtype=np.int32)
     # createGridFromDatasetImage('dataset/da2-png', grid, dim)
     grid = np.ones(dim, dtype=np.int32)
-    
-    print(grid)
 
     # generate random start and goal
     # start = [-1, -1]
@@ -422,13 +420,11 @@ def main():
     goal = [grid.shape[0]-1, grid.shape[1]-1]
     start = np.array(start)
     goal = np.array(goal)
-    print(start)
-    print(goal)
+    
 
     # debugging purposes: use guide for 1D mapping of indexes
     guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
-    print('Grid Index Guide: ')
-    print(guide)
+    
 
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
@@ -448,6 +444,14 @@ def main():
     print('BLOCKS PER GRID: ', blockspergrid)
     print('----- Computing Heuristics -----')
     computeHeuristics[blockspergrid, threadsperblock](grid, start, goal, H_start, H_goal)
+    print(blockspergrid)
+
+    print('Start: ', start)
+    print('Goal: ', goal)
+    print('Grid')
+    print(grid)
+    print('Grid Index Guide: ')
+    print(guide)
     print('Start H: ')
     print(H_start)
     print('Goal H: ')

@@ -37,7 +37,7 @@ def gpu_memory_test(arr, block, thread, shared_sum_arr, local_sum_arr, padded_ar
     shared_arr[tx,ty] = arr[x, y]
     cuda.syncthreads()
 
-    padded_arr[x+1,y+1] = arr[x,y]
+    padded_arr[x+1,y+1] = block[x,y]
     cuda.syncthreads()
     
     thread[x, y] = tx * TPB + ty

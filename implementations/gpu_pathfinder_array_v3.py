@@ -433,7 +433,7 @@ def main():
     H_goal[:] = UNEXPLORED
     H_start = np.empty(dim, dtype=np.int32)
     H_start[:] = UNEXPLORED
-    block = np.zeros(dim, dtype=np.int32)
+    
 
     # compute heuristics towards start and goal
     threadsperblock = (TPB, TPB)
@@ -445,6 +445,11 @@ def main():
     print('----- Computing Heuristics -----')
     computeHeuristics[blockspergrid, threadsperblock](grid, start, goal, H_start, H_goal)
     print(blockspergrid)
+
+    # prepare grid blocking guide
+    block = np.zeros(dim, dtype=np.int32)
+    block = blockshaped(block, TPB, TPB)
+    print(block)
 
     print('Start: ', start)
     print('Goal: ', goal)

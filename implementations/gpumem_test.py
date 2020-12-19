@@ -94,6 +94,7 @@ def unblockshaped(arr, h, w):
                .reshape(h, w))
 
 def main():
+    width, height = dim
     arr = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
     thread = np.zeros(shape=dim, dtype=np.int32)
     block = np.zeros(shape=dim, dtype=np.int32)

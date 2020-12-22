@@ -431,19 +431,34 @@ def main():
 
     print("----- Searching for Path -----")
     s = timer()
-    new_start = (start[0]+1, start[1]+1)
-    # new_start = (3+1, 3+1)
-    local_grid = grid_blocks[3]
-    local_h = h_blocks[3]
-    local_block = blocks[3]
-    local_guide = guide_blocks[3] 
-    if passable(local_grid, new_start): 
-        search(local_grid, new_start, goal, open, closed, parents, cost, g, local_h, UNEXPLORED, neighbors, local_block, local_guide)
-    x,y = start
-    print()
-    print(np.arange((TPB+2)*(TPB+2)).reshape(TPB+2, TPB+2).astype(np.int32))
-    print(local_guide)
-    print(parents)
+    # new_start = (start[0]+1, start[1]+1)
+    # # new_start = (3+1, 3+1)
+    # local_grid = grid_blocks[3]
+    # local_h = h_blocks[3]
+    # local_block = blocks[3]
+    # local_guide = guide_blocks[3] 
+    # if passable(local_grid, new_start): 
+    #     search(local_grid, new_start, goal, open, closed, parents, cost, g, local_h, UNEXPLORED, neighbors, local_block, local_guide)
+    for ctr in range(grid_blocks.shape[0]):
+        for i in range(TPB):
+            for j in range(TPB):
+                if i == 0 or j == 0:
+                    new_start = (i+1, j+1)
+                    local_grid = grid_blocks[ctr]
+                    local_h = h_blocks[ctr]
+                    local_block = blocks[ctr]
+                    local_guide = guide_blocks[ctr]
+                    print('===== BLOCK: ', ctr, ' START: ', local_guide[new_start], '=====')
+                    if passable(local_grid, new_start): 
+                        search(local_grid, new_start, goal, open, closed, parents, cost, g, local_h, UNEXPLORED, neighbors, local_block, local_guide)
+                    print()
+                    print(np.arange((TPB+2)*(TPB+2)).reshape(TPB+2, TPB+2).astype(np.int32))
+                    print(local_guide)
+                    print(parents)
+    # print()
+    # print(np.arange((TPB+2)*(TPB+2)).reshape(TPB+2, TPB+2).astype(np.int32))
+    # print(local_guide)
+    # print(parents)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)
     e = timer()

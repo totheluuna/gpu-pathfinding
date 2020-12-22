@@ -330,6 +330,9 @@ def main():
         block[i,:] = i
     block = unblockshaped(block, width, height)
 
+    h = np.empty(dim, dtype=np.int32)
+    h[:] = UNEXPLORED
+
     print('Start: ', start)
     print('Goal: ', goal)
     print('Grid')
@@ -344,8 +347,6 @@ def main():
     # # initialize essential arrays for search algorithm
     # print('----- Initializing Variables -----')
 
-    # h = np.empty(dim, dtype=np.int32)
-    # h[:] = UNEXPLORED
 
     # neighbors = np.empty((8,2), dtype=np.int32)
     # neighbors[:] = np.array([0,0])

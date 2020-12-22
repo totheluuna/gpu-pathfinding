@@ -13,6 +13,9 @@ OPEN = 1
 CLOSED = 0
 UNEXPLORED = 999999
 
+scale_factor = 4 # scales to a power of 2
+dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
+UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 # from numba import jit
 # from numba.typed import List
 
@@ -256,56 +259,120 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
                 closed[current_x, current_y] = cost[current_x, current_y]
                 open[current_x, current_y] = UNEXPLORED
         counter += 1
+def blockshaped(arr, nrows, ncols):
+    """
+    Return an array of shape (n, nrows, ncols) where
+    n * nrows * ncols = arr.size
+
+    If arr is a 2D array, the returned array should look like n subblocks with
+    each subblock preserving the "physical" layout of arr.
+    """
+    h, w = arr.shape
+    assert h % nrows == 0, "{} rows is not evenly divisble by {}".format(h, nrows)
+    assert w % ncols == 0, "{} cols is not evenly divisble by {}".format(w, ncols)
+    return (arr.reshape(h//nrows, nrows, -1, ncols)
+               .swapaxes(1,2)
+               .reshape(-1, nrows, ncols))
+
+def unblockshaped(arr, h, w):
+    """
+    Return an array of shape (h, w) where
+    h * w = arr.size
+
+    If arr is of shape (n, nrows, ncols), n sublocks of shape (nrows, ncols),
+    then the returned array preserves the "physical" layout of the sublocks.
+    """
+    n, nrows, ncols = arr.shape
+    return (arr.reshape(h//nrows, -1, nrows, ncols)
+               .swapaxes(1,2)
+               .reshape(h, w))
 
 def main():
+    # global scale_factor
+    # global TPB
+    # global dim
+
+    # parser = argparse.ArgumentParser(description='GPU Pathfinding')
+    # parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')
+    # parser.add_argument('TPB', type=int, help='Block width')
+    # args = parser.parse_args()
+    # scale_factor = args.scale_factor
+    # TPB = args.TPB
+    # dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
+    
+    width, height = dim
+
+    print('----- Preparing Grid -----')
     # create grid from image dataset
-    scale_factor = 4 # scales to a power of 2
-    dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
-    UNEXPLORED = int(math.pow(2, (scale_factor*2)))
     # grid = np.zeros(dim, dtype=np.int32)
-    grid = np.ones(dim, dtype=np.int32)
     # createGridFromDatasetImage('dataset/da2-png', grid, dim)
-    print(grid)
+    grid = np.ones(dim, dtype=np.int32)
+
     # generate random start and goal
     # start = [-1, -1]
     # goal = [-1, -1]
+    # randomStartGoal(grid, start, goal)
     start = [0, 0]
     goal = [grid.shape[0]-1, grid.shape[1]-1]
-    # goal = [16, 16]
-    neighbors = np.empty((8,2), dtype=np.int32)
-    neighbors[:] = np.array([0,0])
-    print(neighbors)
-    # randomStartGoal(grid, start, goal)
     start = np.array(start)
     goal = np.array(goal)
-    print(start)
-    print(goal)
-    # search for path
-    width, height = grid.shape
-    open = np.empty((width, height), dtype=np.int32) # open or closed
-    open[:] = UNEXPLORED
-    closed = np.empty((width, height), dtype=np.int32) # open or closed
-    closed[:] = UNEXPLORED
-    parents = np.empty((width, height), dtype=np.int32)
-    # parents[:] = np.array([-1,-1])
-    parents[:] = -1
-    cost = np.zeros((width, height), dtype=np.int32)
-    g = np.zeros((width, height), dtype=np.int32)
-    h = np.zeros((width, height), dtype=np.int32)
-    x,y = start
-    # print(parents)
+    
 
-    print("----- Searching for Path -----")
-    s = timer()
-    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-    x,y = start
+    # debugging purposes: use guide for 1D mapping of indexes
+    guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
+
+    # blocking index guide
+    block = np.zeros(dim, dtype=np.int32)
+    block = blockshaped(block, TPB, TPB)
+    for i in range(block.shape[0]):
+        block[i,:] = i
+    block = unblockshaped(block, width, height)
+
+    print('Start: ', start)
+    print('Goal: ', goal)
+    print('Grid')
+    print(grid)
+    print('Grid Index Guide: ')
+    print(guide)
+    print('H (from goal): ')
     print(h)
-    print(parents)
-    # path = []
-    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    e = timer()
-    print('\nPath found in ', e-s, 's')
-    # print(path)
+    print('Grid Blocking:')
+    print(block)
+
+    # # initialize essential arrays for search algorithm
+    # print('----- Initializing Variables -----')
+
+    # h = np.empty(dim, dtype=np.int32)
+    # h[:] = UNEXPLORED
+
+    # neighbors = np.empty((8,2), dtype=np.int32)
+    # neighbors[:] = np.array([0,0])
+    # print(neighbors)
+    
+    # open = np.empty((width, height), dtype=np.int32) # open or closed
+    # open[:] = UNEXPLORED
+    # closed = np.empty((width, height), dtype=np.int32) # open or closed
+    # closed[:] = UNEXPLORED
+    # parents = np.empty((width, height), dtype=np.int32)
+    # # parents[:] = np.array([-1,-1])
+    # parents[:] = -1
+    # cost = np.zeros((width, height), dtype=np.int32)
+    # g = np.zeros((width, height), dtype=np.int32)
+    # h = np.zeros((width, height), dtype=np.int32)
+    # x,y = start
+    # # print(parents)
+
+    # print("----- Searching for Path -----")
+    # s = timer()
+    # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    # x,y = start
+    # print(h)
+    # print(parents)
+    # # path = []
+    # # reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    # e = timer()
+    # print('\nPath found in ', e-s, 's')
+    # # print(path)
 
 if __name__ == "__main__":
     main()

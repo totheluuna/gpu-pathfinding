@@ -245,7 +245,9 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         # for next in getNeighbors(grid, current, neighbors):
         for next in neighbors:
             if passable(grid, next) and inBounds(grid, next):
-                print(next, 'is passable and in bounds')
+                row, col = next
+                idx = row*width+col
+                print(idx, 'is passable and in bounds')
                 next_x, next_y = next
                 new_g = g[current_x, current_y] + 1
                 if open[next_x, next_y] != UNEXPLORED:

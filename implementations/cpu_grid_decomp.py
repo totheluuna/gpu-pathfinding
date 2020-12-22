@@ -224,6 +224,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
+    goal_1d_index = goal_x * dim[0] + goal_y
 
     open[start_x, start_y] = 0
     g[start_x, start_y] = 0
@@ -241,7 +242,8 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         current = (current_x, current_y)
         actual_index = guide[current]
         print('=== Current index: ', current_x*width+current_y, 'Actual index: ', actual_index)
-        if (current_x == goal_x and current_y == goal_y) or block[start] != block[current]:
+        # if (current_x == goal_x and current_y == goal_y) or block[start] != block[current]:
+        if (actual_index == goal_1d_index) or block[start] != block[current]:
             print("\riterations: {}".format(counter), end='')
             break
         getNeighbors(grid, current, neighbors)

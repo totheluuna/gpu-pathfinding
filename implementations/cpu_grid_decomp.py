@@ -239,7 +239,8 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         # current_x, current_y = current
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
-        print('=== Current index: ', current_x*width+current_y)
+        actual_index = guide[current]
+        print('=== Current index: ', current_x*width+current_y, 'Actual index: ', actual_index)
         if (current_x == goal_x and current_y == goal_y) or block[start] != block[current]:
             print("\riterations: {}".format(counter), end='')
             break

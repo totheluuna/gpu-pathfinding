@@ -16,6 +16,8 @@ UNEXPLORED = 999999
 scale_factor = 4 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
+TPB = 4
+
 # from numba import jit
 # from numba.typed import List
 

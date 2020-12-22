@@ -363,9 +363,9 @@ def main():
     padGrid(block, padded_block)
     padGrid(h, padded_h)
 
-    # print(padded_grid)
-    # print(padded_guide)
-    # print(padded_h)
+    print(padded_grid)
+    print(padded_guide)
+    print(padded_h)
 
     # # prepare local grids
     # grid_blocks = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)

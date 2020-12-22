@@ -403,34 +403,33 @@ def main():
     # print('----- Initializing Variables -----')
 
 
-    # neighbors = np.empty((8,2), dtype=np.int32)
-    # neighbors[:] = np.array([0,0])
-    # print(neighbors)
+    neighbors = np.empty((8,2), dtype=np.int32)
+    neighbors[:] = np.array([0,0])
+    print(neighbors)
     
-    # open = np.empty((width, height), dtype=np.int32) # open or closed
-    # open[:] = UNEXPLORED
-    # closed = np.empty((width, height), dtype=np.int32) # open or closed
-    # closed[:] = UNEXPLORED
-    # parents = np.empty((width, height), dtype=np.int32)
-    # # parents[:] = np.array([-1,-1])
-    # parents[:] = -1
-    # cost = np.zeros((width, height), dtype=np.int32)
-    # g = np.zeros((width, height), dtype=np.int32)
-    # h = np.zeros((width, height), dtype=np.int32)
-    # x,y = start
-    # # print(parents)
-
-    # print("----- Searching for Path -----")
-    # s = timer()
-    # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
-    # x,y = start
-    # print(h)
+    open = np.empty((TPB+2, TPB+2), dtype=np.int32) # open or closed
+    open[:] = UNEXPLORED
+    closed = np.empty((TPB+2, TPB+2), dtype=np.int32) # open or closed
+    closed[:] = UNEXPLORED
+    parents = np.empty((TPB+2, TPB+2), dtype=np.int32)
+    # parents[:] = np.array([-1,-1])
+    parents[:] = -1
+    cost = np.zeros((TPB+2, TPB+2), dtype=np.int32)
+    g = np.zeros((TPB+2, TPB+2), dtype=np.int32)
+    x,y = start
     # print(parents)
-    # # path = []
-    # # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    # e = timer()
-    # print('\nPath found in ', e-s, 's')
-    # # print(path)
+
+    print("----- Searching for Path -----")
+    s = timer()
+    search(grid_blocks[0], start, goal, open, closed, parents, cost, g, h_blocks[0], UNEXPLORED, neighbors)
+    x,y = start
+    print(h)
+    print(parents)
+    # path = []
+    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    e = timer()
+    print('\nPath found in ', e-s, 's')
+    # print(path)
 
 if __name__ == "__main__":
     main()

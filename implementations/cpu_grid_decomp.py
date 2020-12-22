@@ -220,7 +220,7 @@ def getMinIndex(arr):
 
 
 # @jit(nopython=True)
-def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors):
+def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, block):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -238,7 +238,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         print('Current: ', current)
-        if current_x == goal_x and current_y == goal_y:
+        if (current_x == goal_x and current_y == goal_y) or block[start] != block[current]:
             print("\riterations: {}".format(counter), end='')
             break
         getNeighbors(grid, current, neighbors)
@@ -424,7 +424,7 @@ def main():
     s = timer()
     new_start = (start[0]+1, start[1]+1) 
     if passable(grid_blocks[0], new_start): 
-        search(grid_blocks[0], new_start, goal, open, closed, parents, cost, g, h_blocks[0], UNEXPLORED, neighbors)
+        search(grid_blocks[0], new_start, goal, open, closed, parents, cost, g, h_blocks[0], UNEXPLORED, neighbors, blocks[0])
     x,y = start
     print(parents)
     # path = []

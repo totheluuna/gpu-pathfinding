@@ -343,6 +343,37 @@ def main():
     print(h)
     print('Grid Blocking:')
     print(block)
+    
+    padded_grid = np.zeros((width+2, height+2), dtype=np.int32)
+    padded_guide = np.empty((width+2, height+2), dtype=np.int32)
+    padded_guide[:] = -1
+    padded_block = np.empty((width+2, height+2), dtype=np.int32)
+    padded_block[:] = -1
+    padded_h = np.empty((width+2, height+2), dtype=np.int32)
+    padded_h[:] = UNEXPLORED 
+    padGrid[blockspergrid, threadsperblock](grid, padded_grid)
+    padGrid[blockspergrid, threadsperblock](guide, padded_guide)
+    padGrid[blockspergrid, threadsperblock](block, padded_block)
+    padGrid[blockspergrid, threadsperblock](h, padded_h)
+
+    # print(padded_grid)
+    # print(padded_guide)
+    # print(padded_h)
+
+    # # prepare local grids
+    # grid_blocks = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
+    # grid_blocks = grid_blocks.reshape(grid_blocks.shape[0]*grid_blocks.shape[1], grid_blocks.shape[2], grid_blocks.shape[3])
+
+    # guide_blocks = view_as_windows(padded_guide, (TPB+2, TPB+2), step=TPB)
+    # guide_blocks = guide_blocks.reshape(guide_blocks.shape[0]*guide_blocks.shape[1], guide_blocks.shape[2], guide_blocks.shape[3])
+
+    # h_blocks = view_as_windows(padded_h, (TPB+2, TPB+2), step=TPB)
+    # h_blocks = h_blocks.reshape(h_blocks.shape[0]*h_blocks.shape[1], h_blocks.shape[2], h_blocks.shape[3])
+
+    # blocks = view_as_windows(padded_block, (TPB+2, TPB+2), step=TPB)
+    # blocks = blocks.reshape(blocks.shape[0]*blocks.shape[1], blocks.shape[2], blocks.shape[3])
+    # print(grid_blocks.shape)
+
 
     # # initialize essential arrays for search algorithm
     # print('----- Initializing Variables -----')

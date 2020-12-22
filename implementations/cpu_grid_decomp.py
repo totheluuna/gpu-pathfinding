@@ -340,16 +340,6 @@ def main():
     h = np.empty(dim, dtype=np.int32)
     h[:] = UNEXPLORED
 
-    print('Start: ', start)
-    print('Goal: ', goal)
-    print('Grid')
-    print(grid)
-    print('Grid Index Guide: ')
-    print(guide)
-    print('H (from goal): ')
-    print(h)
-    print('Grid Blocking:')
-    print(block)
     
     padded_grid = np.zeros((width+2, height+2), dtype=np.int32)
     padded_guide = np.empty((width+2, height+2), dtype=np.int32)
@@ -363,24 +353,42 @@ def main():
     padGrid(block, padded_block)
     padGrid(h, padded_h)
 
-    print(padded_grid)
-    print(padded_guide)
-    print(padded_h)
+    # print(padded_grid)
+    # print(padded_guide)
+    # print(padded_h)
 
-    # # prepare local grids
-    # grid_blocks = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
-    # grid_blocks = grid_blocks.reshape(grid_blocks.shape[0]*grid_blocks.shape[1], grid_blocks.shape[2], grid_blocks.shape[3])
+    # prepare local grids
+    grid_blocks = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
+    grid_blocks = grid_blocks.reshape(grid_blocks.shape[0]*grid_blocks.shape[1], grid_blocks.shape[2], grid_blocks.shape[3])
 
-    # guide_blocks = view_as_windows(padded_guide, (TPB+2, TPB+2), step=TPB)
-    # guide_blocks = guide_blocks.reshape(guide_blocks.shape[0]*guide_blocks.shape[1], guide_blocks.shape[2], guide_blocks.shape[3])
+    guide_blocks = view_as_windows(padded_guide, (TPB+2, TPB+2), step=TPB)
+    guide_blocks = guide_blocks.reshape(guide_blocks.shape[0]*guide_blocks.shape[1], guide_blocks.shape[2], guide_blocks.shape[3])
 
-    # h_blocks = view_as_windows(padded_h, (TPB+2, TPB+2), step=TPB)
-    # h_blocks = h_blocks.reshape(h_blocks.shape[0]*h_blocks.shape[1], h_blocks.shape[2], h_blocks.shape[3])
+    h_blocks = view_as_windows(padded_h, (TPB+2, TPB+2), step=TPB)
+    h_blocks = h_blocks.reshape(h_blocks.shape[0]*h_blocks.shape[1], h_blocks.shape[2], h_blocks.shape[3])
 
-    # blocks = view_as_windows(padded_block, (TPB+2, TPB+2), step=TPB)
-    # blocks = blocks.reshape(blocks.shape[0]*blocks.shape[1], blocks.shape[2], blocks.shape[3])
-    # print(grid_blocks.shape)
+    blocks = view_as_windows(padded_block, (TPB+2, TPB+2), step=TPB)
+    blocks = blocks.reshape(blocks.shape[0]*blocks.shape[1], blocks.shape[2], blocks.shape[3])
+    print(grid_blocks.shape)
 
+    print('Start: ', start)
+    print('Goal: ', goal)
+    print('Grid')
+    print(grid)
+    print('Grid Index Guide: ')
+    print(guide)
+    print('H (from goal): ')
+    print(h)
+    print('Grid Blocking:')
+    print(block)
+    print('Padded Grid Blocks:')
+    print(grid_blocks)
+    print('Padded Guide Blocks:')
+    print(guide_blocks)
+    print('Padded Goal H Blocks:')
+    print(H_goal_blocks)
+    print('Padded Block Blocks:')
+    print(blocks)
 
     # # initialize essential arrays for search algorithm
     # print('----- Initializing Variables -----')

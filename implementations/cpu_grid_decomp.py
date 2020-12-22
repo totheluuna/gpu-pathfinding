@@ -423,7 +423,6 @@ def main():
     s = timer()
     search(grid_blocks[0], start, goal, open, closed, parents, cost, g, h_blocks[0], UNEXPLORED, neighbors)
     x,y = start
-    print(h)
     print(parents)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)

@@ -414,7 +414,7 @@ def main():
     closed[:] = UNEXPLORED
     parents = np.empty((TPB+2, TPB+2), dtype=np.int32)
     # parents[:] = np.array([-1,-1])
-    parents[:] = -1
+    parents[:] = UNEXPLORED
     cost = np.zeros((TPB+2, TPB+2), dtype=np.int32)
     g = np.zeros((TPB+2, TPB+2), dtype=np.int32)
     x,y = start

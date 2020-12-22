@@ -220,7 +220,7 @@ def getMinIndex(arr):
 
 
 # @jit(nopython=True)
-def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, block):
+def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors, block, guide):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -431,13 +431,14 @@ def main():
     # new_start = (3+1, 3+1)
     local_grid = grid_blocks[3]
     local_h = h_blocks[3]
-    local_block = blocks[3] 
+    local_block = blocks[3]
+    local_guide = guide_blocks[3] 
     if passable(local_grid, new_start): 
-        search(local_grid, new_start, goal, open, closed, parents, cost, g, local_h, UNEXPLORED, neighbors, local_block)
+        search(local_grid, new_start, goal, open, closed, parents, cost, g, local_h, UNEXPLORED, neighbors, local_block, local_guide)
     x,y = start
     print()
     print(np.arange((TPB+2)*(TPB+2)).reshape(TPB+2, TPB+2).astype(np.int32))
-    print(guide_blocks[2])
+    print(local_guide)
     print(parents)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)

@@ -206,7 +206,6 @@ def getMin(arr):
     
     return min
 
-
 @cuda.jit(device=True)
 def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block):
     width, height = grid.shape

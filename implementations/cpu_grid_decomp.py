@@ -429,6 +429,7 @@ def main():
     if passable(grid_blocks[0], new_start): 
         search(grid_blocks[0], new_start, goal, open, closed, parents, cost, g, h_blocks[0], UNEXPLORED, neighbors, blocks[0])
     x,y = start
+    print(np.arange((TPB+2)*(TPB+2)).reshape(TPB+2, TPB+2).astype(np.int32))
     print(parents)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)

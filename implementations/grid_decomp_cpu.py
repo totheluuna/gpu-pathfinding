@@ -12,9 +12,9 @@ from skimage.util.shape import view_as_windows
 
 OPEN = 1
 CLOSED = 0
-UNEXPLORED = 999999
+# UNEXPLORED = 999999
 
-scale_factor = 3 # scales to a power of 2
+scale_factor = 4 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 TPB = 4
@@ -23,6 +23,7 @@ TPB = 4
 # from numba.typed import List
 
 seed(42069)
+# seed(6969)
 # functions for converting images to grids
 def getListOfFiles(dirName, allFiles):
     # create a list of file and sub directories 
@@ -231,7 +232,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
     # h[start_x, start_y] = heuristic(start, goal)
     cost[start_x, start_y] = g[start_x, start_y] + h[start_x, start_y]
     # parents[start_x, start_y] = start_x*width+start_y
-    parents[start_x, start_y] = 69 
+    parents[start_x, start_y] = 729 
 
     counter = 0
     while np.amin(open) < UNEXPLORED:
@@ -241,9 +242,9 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         actual_index = guide[current]
-        print('=== Current index: ', current_x*width+current_y, 'Actual index: ', actual_index)
+        # print('=== Current index: ', current_x*width+current_y, 'Actual index: ', actual_index)
         # if (current_x == goal_x and current_y == goal_y) or block[start] != block[current]:
-        if (actual_index == goal_1d_index) or block[start] != block[current]:
+        if (actual_index == goal_1d_index) or (block[start] != block[current]):
             print("\riterations: {}".format(counter), end='')
             break
         getNeighbors(grid, current, neighbors)
@@ -252,7 +253,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
             if passable(grid, next) and inBounds(grid, next):
                 row, col = next
                 idx = row*width+col
-                print(idx, 'is passable and in bounds')
+                # print(idx, 'is passable and in bounds')
                 next_x, next_y = next
                 new_g = g[current_x, current_y] + 1
                 if open[next_x, next_y] != UNEXPLORED:
@@ -269,8 +270,8 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
                     # h[next_x, next_y] = heuristic(next, goal)
                     cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
                     open[next_x, next_y] = cost[next_x, next_y]
-                closed[current_x, current_y] = cost[current_x, current_y]
-                open[current_x, current_y] = UNEXPLORED
+        closed[current_x, current_y] = cost[current_x, current_y]
+        open[current_x, current_y] = UNEXPLORED
         counter += 1
 def blockshaped(arr, nrows, ncols):
     """
@@ -331,16 +332,16 @@ def main():
 
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    # grid = np.zeros(dim, dtype=np.int32)
-    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
-    grid = np.ones(dim, dtype=np.int32)
+    grid = np.zeros(dim, dtype=np.int32)
+    createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    # grid = np.ones(dim, dtype=np.int32)
 
     # generate random start and goal
-    # start = [-1, -1]
-    # goal = [-1, -1]
-    # randomStartGoal(grid, start, goal)
-    start = [0, 0]
-    goal = [grid.shape[0]-1, grid.shape[1]-1]
+    start = [-1, -1]
+    goal = [-1, -1]
+    randomStartGoal(grid, start, goal)
+    # start = [0, 0]
+    # goal = [grid.shape[0]-1, grid.shape[1]-1]
     start = np.array(start)
     goal = np.array(goal)
     
@@ -439,10 +440,23 @@ def main():
     # local_guide = guide_blocks[3] 
     # if passable(local_grid, new_start): 
     #     search(local_grid, new_start, goal, open, closed, parents, cost, g, local_h, UNEXPLORED, neighbors, local_block, local_guide)
+    computed = 0
     for ctr in range(grid_blocks.shape[0]):
         for i in range(TPB):
             for j in range(TPB):
-                if i == 0 or j == 0:
+                if (i == 0 or i == TPB-1 or j == 0 or j == TPB-1):
+                    neighbors = np.empty((8,2), dtype=np.int32)
+                    neighbors[:] = np.array([0,0])
+                    open = np.empty((TPB+2, TPB+2), dtype=np.int32) # open or closed
+                    open[:] = UNEXPLORED
+                    closed = np.empty((TPB+2, TPB+2), dtype=np.int32) # open or closed
+                    closed[:] = UNEXPLORED
+                    parents = np.empty((TPB+2, TPB+2), dtype=np.int32)
+                    # parents[:] = np.array([-1,-1])
+                    parents[:] = -1
+                    cost = np.zeros((TPB+2, TPB+2), dtype=np.int32)
+                    g = np.zeros((TPB+2, TPB+2), dtype=np.int32)
+                    # if i == 0 or j == 0:
                     new_start = (i+1, j+1)
                     local_grid = grid_blocks[ctr]
                     local_h = h_blocks[ctr]
@@ -452,9 +466,12 @@ def main():
                     if passable(local_grid, new_start): 
                         search(local_grid, new_start, goal, open, closed, parents, cost, g, local_h, UNEXPLORED, neighbors, local_block, local_guide)
                     print()
-                    print(np.arange((TPB+2)*(TPB+2)).reshape(TPB+2, TPB+2).astype(np.int32))
-                    print(local_guide)
+                    # print(np.arange((TPB+2)*(TPB+2)).reshape(TPB+2, TPB+2).astype(np.int32))
+                    # print(local_guide)
                     print(parents)
+                    computed += 1
+    
+    print('Computed for: ', computed)
     # print()
     # print(np.arange((TPB+2)*(TPB+2)).reshape(TPB+2, TPB+2).astype(np.int32))
     # print(local_guide)

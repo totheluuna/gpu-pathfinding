@@ -18,7 +18,8 @@ UNEXPLORED = 999999
 # from numba import jit
 # from numba.typed import List
 
-seed(42069)
+# seed(42069)
+seed(6969)
 # functions for converting images to grids
 def getListOfFiles(dirName, allFiles):
     # create a list of file and sub directories 

@@ -229,6 +229,8 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
     g[start_x, start_y] = 0
     # h[start_x, start_y] = heuristic(start, goal)
     cost[start_x, start_y] = g[start_x, start_y] + h[start_x, start_y]
+    # parents[start_x, start_y] = start_x*width+start_y
+    parents[start_x, start_y] = 69 
 
     counter = 0
     while np.amin(open) < UNEXPLORED:
@@ -417,7 +419,7 @@ def main():
     closed[:] = UNEXPLORED
     parents = np.empty((TPB+2, TPB+2), dtype=np.int32)
     # parents[:] = np.array([-1,-1])
-    parents[:] = -99
+    parents[:] = -1
     cost = np.zeros((TPB+2, TPB+2), dtype=np.int32)
     g = np.zeros((TPB+2, TPB+2), dtype=np.int32)
     x,y = start
@@ -425,12 +427,17 @@ def main():
 
     print("----- Searching for Path -----")
     s = timer()
-    new_start = (start[0]+1, start[1]+1) 
-    if passable(grid_blocks[0], new_start): 
-        search(grid_blocks[0], new_start, goal, open, closed, parents, cost, g, h_blocks[0], UNEXPLORED, neighbors, blocks[0])
+    # new_start = (start[0]+1, start[1]+1)
+    new_start = (3+1, 3+1)
+    local_grid = grid_blocks[2]
+    local_h = h_blocks[2]
+    local_block = blocks[2] 
+    if passable(local_grid, new_start): 
+        search(local_grid, new_start, goal, open, closed, parents, cost, g, local_h, UNEXPLORED, neighbors, local_block)
     x,y = start
     print()
     print(np.arange((TPB+2)*(TPB+2)).reshape(TPB+2, TPB+2).astype(np.int32))
+    print(guide_blocks[2])
     print(parents)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)

@@ -237,6 +237,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         # current_x, current_y = current
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
+        print('Current: ', current)
         if current_x == goal_x and current_y == goal_y:
             print("\riterations: {}".format(counter), end='')
             break
@@ -421,7 +422,8 @@ def main():
 
     print("----- Searching for Path -----")
     s = timer()
-    search(grid_blocks[0], start, goal, open, closed, parents, cost, g, h_blocks[0], UNEXPLORED, neighbors)
+    if passable(grid_blocks[0], start): 
+        search(grid_blocks[0], start, goal, open, closed, parents, cost, g, h_blocks[0], UNEXPLORED, neighbors)
     x,y = start
     print(parents)
     # path = []

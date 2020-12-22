@@ -422,7 +422,8 @@ def main():
 
     print("----- Searching for Path -----")
     s = timer()
-    if passable(grid_blocks[0], start): 
+    new_start = (start[0]+1, start[1]+1) 
+    if passable(grid_blocks[0], new_start): 
         search(grid_blocks[0], start, goal, open, closed, parents, cost, g, h_blocks[0], UNEXPLORED, neighbors)
     x,y = start
     print(parents)

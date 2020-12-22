@@ -8,6 +8,7 @@ import numpy as np
 
 import heapq
 from timeit import default_timer as timer
+from skimage.util.shape import view_as_windows
 
 OPEN = 1
 CLOSED = 0
@@ -386,7 +387,7 @@ def main():
     print('Padded Guide Blocks:')
     print(guide_blocks)
     print('Padded Goal H Blocks:')
-    print(H_goal_blocks)
+    print(h_blocks)
     print('Padded Block Blocks:')
     print(blocks)
 

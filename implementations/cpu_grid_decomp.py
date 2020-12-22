@@ -289,6 +289,13 @@ def unblockshaped(arr, h, w):
                .swapaxes(1,2)
                .reshape(h, w))
 
+def padGrid(grid, padded_grid):
+    width, height = dim
+
+    for i in range(width):
+        for j in range(height):
+            padded_grid[i+1, j+1] = grid[i,j]
+
 def main():
     # global scale_factor
     # global TPB
@@ -351,10 +358,10 @@ def main():
     padded_block[:] = -1
     padded_h = np.empty((width+2, height+2), dtype=np.int32)
     padded_h[:] = UNEXPLORED 
-    padGrid[blockspergrid, threadsperblock](grid, padded_grid)
-    padGrid[blockspergrid, threadsperblock](guide, padded_guide)
-    padGrid[blockspergrid, threadsperblock](block, padded_block)
-    padGrid[blockspergrid, threadsperblock](h, padded_h)
+    padGrid(grid, padded_grid)
+    padGrid(guide, padded_guide)
+    padGrid(block, padded_block)
+    padGrid(h, padded_h)
 
     # print(padded_grid)
     # print(padded_guide)

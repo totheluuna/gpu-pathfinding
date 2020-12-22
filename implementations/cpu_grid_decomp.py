@@ -297,6 +297,13 @@ def padGrid(grid, padded_grid):
         for j in range(height):
             padded_grid[i+1, j+1] = grid[i,j]
 
+def computeHeuristics(grid, tile, h):
+    width, height = dim
+
+    for i in range(width):
+        for j in range(height):
+            h[i,j] = heuristic((i,j), tile)
+
 def main():
     # global scale_factor
     # global TPB
@@ -340,6 +347,7 @@ def main():
 
     h = np.empty(dim, dtype=np.int32)
     h[:] = UNEXPLORED
+    computeHeuristics(grid, goal, h)
 
     
     padded_grid = np.zeros((width+2, height+2), dtype=np.int32)

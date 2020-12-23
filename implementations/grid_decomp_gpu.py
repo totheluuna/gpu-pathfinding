@@ -264,7 +264,7 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
 
     counter = 0
     _min = getMin(open)
-    while min < UNEXPLORED:
+    while _min < UNEXPLORED:
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         actual_index = guide[current]

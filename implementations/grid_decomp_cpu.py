@@ -14,7 +14,7 @@ OPEN = 1
 CLOSED = 0
 # UNEXPLORED = 999999
 
-scale_factor = 3 # scales to a power of 2
+scale_factor = 7 # scales to a power of 2
 dim = (int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor)))
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 TPB = 4

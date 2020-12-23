@@ -591,69 +591,9 @@ def main():
     s = timer()
     # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
     GridDecompSearch[blockspergrid, threadsperblock](grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks)
-    # debug stuff
-    print(parents)
-    # print(parents.shape)
-    # for i in range(parents.shape[0]):
-    #     for j in range(parents.shape[1]):
-    #         print('tile: (%d, %d)' %(i,j))
-    #         print(parents[i,j])
-    #         print()
+    # print(parents)
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
-
-    # time_ave = 0
-    # runs = 10
-    # for run in range(runs):
-    #     s = timer()
-    #     SimultaneousLocalSearch[blockspergrid, threadsperblock](blocked_grid, local_start, local_goal, blocked_H_goal, blocked_H_start, local_parents, block)
-    #     e = timer()
-    #     time_ave += (e-s)
-    #     print('%dth kernel launch done in ' %(run), e-s, 's')
-    # time_ave = time_ave/runs
-    # print('Average runtime in ', runs, ' runs: ', time_ave)
-
-    # print(local_parents.shape)
-    # for i in range(local_parents.shape[0]):
-    #     print('%dth block: '%(i))
-    #     # print(local_parents[i])
-    #     print(local_start[i])
-    #     print(local_goal[i])
-    #     print()
-    # for i in range(local_parents.shape[0]):
-    #     MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
-    # parents = unblockshaped(local_parents, dim[0], dim[1])
-    # MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
-
-    # path = []
-    # reconstructPathV2(parents, start, goal, path)
-    
-    # print(guide)
-    # print(parents)
-    # print(path)
-    
-    # # # TODO: reconstruct path
-    # print(local_parents.shape)
-    # blocked_guide_gpu = cp.array(blocked_guide)
-    # local_parents_gpu = cp.array(local_parents)
-    # for i in range(local_parents.shape[0]):
-    #     # print(i)
-    #     MapBlocks[blockspergrid, threadsperblock](blocked_guide[i], local_parents[i])
-    #     # MapBlocks[blockspergrid, threadsperblock](blocked_guide_gpu[i], local_parents_gpu[i])
-
-    
-
-    # parents = unblockshaped(local_parents, dim[0], dim[1])
-    # print(guide)
-    # print(parents)
-
-    # # # neighbors = cp.zeros((dim[0], dim[1], 8, 2), cp.int32)
-    # MapBlocks2[blockspergrid, threadsperblock](guide, parents, H_start)
-    # # print(guide)
-    # print(parents)
-    # path = []
-    # reconstructPathV2(parents, start, goal, path)
-    # print(path)
 
 if __name__ == "__main__":
     main()

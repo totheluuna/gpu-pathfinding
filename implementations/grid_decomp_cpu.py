@@ -242,7 +242,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         actual_index = guide[current]
-        # print('=== Current index: ', current_x*width+current_y, 'Actual index: ', actual_index)
+        print('=== Current index: ', current_x*width+current_y, 'Actual index: ', actual_index)
         # if (current_x == goal_x and current_y == goal_y) or block[start] != block[current]:
         if (actual_index == goal_1d_index) or (block[start] != block[current]):
             print("\riterations: {}".format(counter), end='')
@@ -253,7 +253,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
             if passable(grid, next) and inBounds(grid, next):
                 row, col = next
                 idx = row*width+col
-                # print(idx, 'is passable and in bounds')
+                print(idx, 'is passable and in bounds')
                 next_x, next_y = next
                 new_g = g[current_x, current_y] + 1
                 if open[next_x, next_y] != UNEXPLORED:
@@ -467,7 +467,7 @@ def main():
                         search(local_grid, new_start, goal, open, closed, parents, cost, g, local_h, UNEXPLORED, neighbors, local_block, local_guide)
                     print()
                     # print(np.arange((TPB+2)*(TPB+2)).reshape(TPB+2, TPB+2).astype(np.int32))
-                    # print(local_guide)
+                    print(local_guide)
                     print(parents)
                     computed += 1
     

@@ -363,7 +363,8 @@ def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block, guide):
     cuda.syncthreads()
 
 @cuda.jit
-def GridDecompSearch(grid, start, goal, h, block, parents, grid_blocks, guide_blocks, h_blocks, blocks):
+# def GridDecompSearch(grid, start, goal, h, block, parents, grid_blocks, guide_blocks, h_blocks, blocks):
+def GridDecompSearch(grid_blocks, start, goal, parents, h_blocks, guide_blocks, blocks):
     x, y = cuda.grid(2)
     width, height = dim
     bpg = cuda.gridDim.x    # blocks per grid
@@ -373,46 +374,8 @@ def GridDecompSearch(grid, start, goal, h, block, parents, grid_blocks, guide_bl
     if x >= width and y >= height:
         return 
 
-    # copy blocked (grid, guide, h, blocks) to constant memory
-    const_grid_blocks = cuda.const.array_like(grid_blocks)
-    const_guide_blocks = cuda.const.array_like(guide_blocks)
-    const_h_blocks = cuda.const.array_like(h_blocks)
-    const_blocks = cuda.const.array_like(blocks)
-    const_block = cuda.const.array_like(block)
-
-    thread_block = const_block[x,y]
-
-    # initialize essential local arrays
-    local_grid = const_grid_blocks[thread_block]
-    local_start = (tx+1, ty+1)
-    local_open = cuda.local.array((padded_TPB, padded_TPB), int32)
-    local_closed = cuda.local.array((padded_TPB, padded_TPB), int32)
-    local_cost = cuda.local.array((padded_TPB, padded_TPB), int32)
-    local_g = cuda.local.array((padded_TPB, padded_TPB), int32)
-    local_h = const_h_blocks[thread_block]
-    local_neighbors = cuda.local.array((8,2), int32)
-    local_block = const_blocks[thread_block]
-    local_guide = const_guide_blocks[thread_block]
-
-    for i in range(TPB):
-        for j in range(TPB):
-            local_open[i,j] = UNEXPLORED
-            local_closed[i,j] = UNEXPLORED
-            local_cost[i,j] = 0
-            local_g[i,j] = 0
-    cuda.syncthreads()
-    for i in range(8):
-        local_neighbors[i, 0] = 0
-        local_neighbors[i, 1] = 0
-    cuda.syncthreads()
-
-    # print(thread_block)
-    searchV2(local_grid, local_start, goal, local_open, local_closed, parents[x,y], local_cost, local_g, local_h, local_neighbors, local_block, local_guide)
-    cuda.syncthreads()
-
+    print(tx,ty)
     
-
-
 @cuda.jit
 def MapBlocks(guide, parents):
     x, y = cuda.grid(2)
@@ -626,7 +589,8 @@ def main():
 
     # Simultaneous local search
     s = timer()
-    GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
+    # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
+    GridDecompSearch[blockspergrid, threadsperblock](grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks)
     # debug stuff
     print(parents)
     # print(parents.shape)

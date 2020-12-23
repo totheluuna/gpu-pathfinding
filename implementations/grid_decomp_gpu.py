@@ -351,8 +351,8 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
         _neighbors = cuda.local.array((8,2), int32)
         
 
-        for i in range(TPB):
-            for j in range(TPB):
+        for i in range(padded_TPB):
+            for j in range(padded_TPB):
                 _open[i,j] = UNEXPLORED
                 _closed[i,j] = UNEXPLORED
                 _cost[i,j] = 0

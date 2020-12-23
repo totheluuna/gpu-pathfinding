@@ -585,6 +585,20 @@ def main():
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
 
+    time_ave = 0
+    runs = 10
+    for run in range(runs):
+        counter[:] = 0
+        s = timer()
+        GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter)
+        print(counter)
+        e = timer()
+        time_ave += (e-s)
+        print('%dth kernel launch done in ' %(run), e-s, 's')
+    time_ave = time_ave/runs
+    print('Average runtime in ', runs, ' runs: ', time_ave)
+
+
 if __name__ == "__main__":
     main()
 

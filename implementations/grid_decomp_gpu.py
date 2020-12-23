@@ -348,14 +348,14 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
 
         for i in range(TPB):
             for j in range(TPB):
-                local_open[i,j] = UNEXPLORED
-                local_closed[i,j] = UNEXPLORED
-                local_cost[i,j] = 0
-                local_g[i,j] = 0
+                _open[i,j] = UNEXPLORED
+                _closed[i,j] = UNEXPLORED
+                _cost[i,j] = 0
+                _g[i,j] = 0
         cuda.syncthreads()
         for i in range(8):
-            local_neighbors[i, 0] = 0
-            local_neighbors[i, 1] = 0
+            _neighbors[i, 0] = 0
+            _neighbors[i, 1] = 0
         cuda.syncthreads()
 
         searchV2(local_grid, local_start, goal, _open, _closed, parents[x,y], _cost, _g, local_h, _neighbors, local_block, local_guide, counter[x,y])

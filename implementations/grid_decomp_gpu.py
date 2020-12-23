@@ -328,6 +328,7 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
     
     if tx == 0 or tx == TPB-1 or ty == 0 or ty == TPB-1:
         print(x,y)
+        counter += 1
         cuda.syncthreads()
 
 
@@ -546,8 +547,9 @@ def main():
 
     # Simultaneous local search
     s = timer()
+    counter = 0
     # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
-    GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks)
+    GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter)
     # print(parents)
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')

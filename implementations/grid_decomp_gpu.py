@@ -295,7 +295,7 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
                     open[next_x, next_y] = cost[next_x, next_y]
         closed[current_x, current_y] = cost[current_x, current_y]
         open[current_x, current_y] = UNEXPLORED
-        counter += 1
+        counter = counter + 1
 
 @cuda.jit
 def computeHeuristics(grid, start, goal, h_start, h_goal):

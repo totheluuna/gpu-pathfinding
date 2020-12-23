@@ -250,7 +250,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bloc
         counter += 1
 
 @cuda.jit(device=True)
-def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block, guide, counter):
+def searchV2(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors, block, guide, counter_arr):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -262,15 +262,16 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
     # parents[start_x, start_y] = start_x*width+start_y
     parents[start_x, start_y] = 729 
 
-    # counter = 0
+    counter = 0
     _min = getMin(open)
     while _min < UNEXPLORED:
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         actual_index = guide[current]
-        print(start_x, start_y, _min, current_x, current_y, block[current], actual_index)
+        # print(start_x, start_y, _min, current_x, current_y, block[current], actual_index)
         if (actual_index == goal_1d_index) or (block[start] != block[current]):
             # print("\riterations: {}".format(counter), end='')
+            counter_arr[x,y] = counter
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:
@@ -291,7 +292,6 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
                     # parents[next_x, next_y] = current_x * width + current_y
                     parents[next_x, next_y] = actual_index 
                     g[next_x, next_y] = new_g
-                    # h[next_x, next_y] = heuristic(next, goal)
                     cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
                     open[next_x, next_y] = cost[next_x, next_y]
         closed[current_x, current_y] = cost[current_x, current_y]
@@ -361,9 +361,7 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
             _neighbors[i, 0] = 0
             _neighbors[i, 1] = 0
         
-
-        searchV2(grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], local_ctr)
-        print(local_ctr, local_ctr)
+        searchV2(x, y, grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], counter)
         cuda.syncthreads()
 
 

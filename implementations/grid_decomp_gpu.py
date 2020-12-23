@@ -250,7 +250,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bloc
         counter += 1
 
 @cuda.jit(device=True)
-def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block, guide, counter_tile):
+def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block, guide, counter):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -271,8 +271,7 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
         print(start_x, start_y, _min, current_x, current_y, block[current], actual_index)
         if (actual_index == goal_1d_index) or (block[start] != block[current]):
             # print("\riterations: {}".format(counter), end='')
-            counter_tile = counter
-            print(counter)
+            print(counter, counter)
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:
@@ -343,6 +342,7 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
         local_guide = guide_blocks[thread_block]
         local_start = (tx+1, ty+1)
         local_h = h_blocks[thread_block]
+        local_ctr = 0
 
         _open = cuda.local.array((padded_TPB, padded_TPB), int32)
         _closed = cuda.local.array((padded_TPB, padded_TPB), int32)
@@ -363,7 +363,8 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
             _neighbors[i, 1] = 0
         
 
-        searchV2(grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], counter[x,y])
+        searchV2(grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], local_ctr)
+        counter[x,y] = local_ctr
         cuda.syncthreads()
 
 

@@ -262,7 +262,7 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
     # parents[start_x, start_y] = start_x*width+start_y
     parents[start_x, start_y] = 729 
 
-    counter = 0
+    # counter = 0
     _min = getMin(open)
     while _min < UNEXPLORED:
         current_x, current_y = getMinIndex(open)

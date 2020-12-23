@@ -249,7 +249,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bloc
         counter += 1
 
 @cuda.jit(device=True)
-def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block, guide):
+def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, block, guide, counter_tile):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -257,42 +257,41 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
 
     open[start_x, start_y] = 0
     g[start_x, start_y] = 0
-    # h[start_x, start_y] = heuristic(start, goal)
     cost[start_x, start_y] = g[start_x, start_y] + h[start_x, start_y]
+    # parents[start_x, start_y] = start_x*width+start_y
+    parents[start_x, start_y] = 729 
 
     counter = 0
-    # while np.amin(open) < UNEXPLORED:
-    while getMin(open) < UNEXPLORED:
+    while np.amin(open) < UNEXPLORED:
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
-        # TODO: find actual current tile
-        actual_current = guide[current]
-        print(actual_current)
-        if (current_x == goal_x and current_y == goal_y):
-        # TODO: change stop condition to: if actual current == goal or block[start] != block[current]
-        # if (goal_1d_index == actual_current) or (block[start] != block[current]):
-        # or (block[current_x, current_y] != block[start_x, start_y]):
-            # print(actual_current, goal_1d_index, block[start], block[current])
+        actual_index = guide[current]
+        if (actual_index == goal_1d_index) or (block[start] != block[current]):
+            # print("\riterations: {}".format(counter), end='')
+            counter_tile = counter
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:
-            if inBounds(grid, next):
-                if passable(grid, next):
-                    next_x, next_y = next
-                    new_g = g[current_x, current_y] + 1
-                    if open[next_x, next_y] != UNEXPLORED:
-                        if new_g < g[next_x, next_y]:
-                            open[next_x, next_y] = UNEXPLORED
-                    if closed[next_x, next_y] != UNEXPLORED:
-                        if new_g < g[next_x, next_y]:
-                            closed[next_x, next_y] = UNEXPLORED
-                    if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
-                        # parents[next_x, next_y] = current_x * TPB + current_y
-                        parents[next_x, next_y] = current_x * width + current_y
-                        g[next_x, next_y] = new_g
-                        # h[next_x, next_y] = heuristic(next, goal) # omit this step since H is precomputed on GPU
-                        cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
-                        open[next_x, next_y] = cost[next_x, next_y]
+            if passable(grid, next) and inBounds(grid, next):
+                row, col = next
+                idx = row*width+col
+                # print(idx, 'is passable and in bounds')
+                next_x, next_y = next
+                new_g = g[current_x, current_y] + 1
+                if open[next_x, next_y] != UNEXPLORED:
+                    if new_g < g[next_x, next_y]:
+                        open[next_x, next_y] = UNEXPLORED
+                if closed[next_x, next_y] != UNEXPLORED:
+                    if new_g < g[next_x, next_y]:
+                        closed[next_x, next_y] = UNEXPLORED
+                if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
+                    # parents[next_x, next_y] = np.array([current_x, current_y])
+                    # parents[next_x, next_y] = current_x * width + current_y
+                    parents[next_x, next_y] = actual_index 
+                    g[next_x, next_y] = new_g
+                    # h[next_x, next_y] = heuristic(next, goal)
+                    cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
+                    open[next_x, next_y] = cost[next_x, next_y]
         closed[current_x, current_y] = cost[current_x, current_y]
         open[current_x, current_y] = UNEXPLORED
         counter += 1
@@ -329,9 +328,37 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
     local_bound_check = tx == 0 or tx == TPB-1 or ty == 0 or ty == TPB-1
     start_tile_check = x == start[0] and y == start[1]
     goal_tile_check = x == goal[0] and y == goal[1]
+    thread_block = block[x,y]
+
     if local_bound_check or start_tile_check or goal_tile_check:
-        print(x,y)
         counter[x,y] = 1
+        # initialize essential local arrays
+        local_grid = grid_blocks[thread_block]
+        local_block = blocks[thread_block]
+        local_guide = guide_blocks[thread_block]
+        local_start = (tx+1, ty+1)
+        local_h = h_blocks[thread_block]
+
+        _open = cuda.local.array((padded_TPB, padded_TPB), int32)
+        _closed = cuda.local.array((padded_TPB, padded_TPB), int32)
+        _cost = cuda.local.array((padded_TPB, padded_TPB), int32)
+        _g = cuda.local.array((padded_TPB, padded_TPB), int32)
+        _neighbors = cuda.local.array((8,2), int32)
+        
+
+        for i in range(TPB):
+            for j in range(TPB):
+                local_open[i,j] = UNEXPLORED
+                local_closed[i,j] = UNEXPLORED
+                local_cost[i,j] = 0
+                local_g[i,j] = 0
+        cuda.syncthreads()
+        for i in range(8):
+            local_neighbors[i, 0] = 0
+            local_neighbors[i, 1] = 0
+        cuda.syncthreads()
+
+        searchV2(local_grid, local_start, goal, _open, _closed, parents[x,y], _cost, _g, local_h, _neighbors, local_block, local_guide, counter[x,y])
         cuda.syncthreads()
 
 

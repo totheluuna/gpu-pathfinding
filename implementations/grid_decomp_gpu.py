@@ -262,7 +262,7 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
     parents[start_x, start_y] = 729 
 
     counter = 0
-    while np.amin(open) < UNEXPLORED:
+    while getMin(open) < UNEXPLORED:
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         actual_index = guide[current]

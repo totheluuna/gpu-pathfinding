@@ -331,7 +331,7 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
     thread_block = block[x,y]
 
     if local_bound_check or start_tile_check or goal_tile_check:
-        counter[x,y] = 1
+        # counter[x,y] = 1
         # initialize essential local arrays
         local_grid = grid_blocks[thread_block]
         local_block = blocks[thread_block]

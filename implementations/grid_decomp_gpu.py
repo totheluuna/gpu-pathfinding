@@ -269,10 +269,8 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
         current = (current_x, current_y)
         actual_index = guide[current]
         print(start_x, start_y, _min, current_x, current_y, block[current], actual_index)
-        print(counter, counter)
         if (actual_index == goal_1d_index) or (block[start] != block[current]):
             # print("\riterations: {}".format(counter), end='')
-            
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:
@@ -365,7 +363,7 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
         
 
         searchV2(grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], local_ctr)
-        counter[x,y] = 1
+        print(local_ctr, local_ctr)
         cuda.syncthreads()
 
 

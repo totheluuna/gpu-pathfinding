@@ -373,8 +373,8 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
 
     if x >= width and y >= height:
         return 
-    current_block = block[x,y]
-    print(current_block)
+    block[x,y]
+    print(block[x,y])
 
     
 @cuda.jit

@@ -316,7 +316,7 @@ def computeHeuristics(grid, start, goal, h_start, h_goal):
 
 @cuda.jit
 # def GridDecompSearch(grid, start, goal, h, block, parents, grid_blocks, guide_blocks, h_blocks, blocks):
-def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks, guide_blocks, blocks):
+def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks, guide_blocks, blocks, counter):
     x, y = cuda.grid(2)
     width, height = dim
     bpg = cuda.gridDim.x    # blocks per grid
@@ -325,8 +325,13 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
 
     if x >= width and y >= height:
         return 
-    current_block = block[x,y]
-    print(current_block)
+    
+    if tx == 0 or tx == TPB-1 or ty == 0 or ty == TPB-1:
+        print(x,y)
+        counter += 1
+        cuda.syncthreads()
+
+
 
     
 @cuda.jit

@@ -374,7 +374,8 @@ def GridDecompSearch(grid_blocks, start, goal, parents, h_blocks, guide_blocks, 
     if x >= width and y >= height:
         return 
 
-    print(tx,ty)
+    print(block[x,y])
+
     
 @cuda.jit
 def MapBlocks(guide, parents):

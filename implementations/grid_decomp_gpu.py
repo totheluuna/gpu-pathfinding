@@ -13,7 +13,7 @@ from timeit import default_timer as timer
 from numba import cuda, int32, typeof
 from skimage.util.shape import view_as_windows
 
-scale_factor = 3 # scales to a power of 2
+scale_factor = 7 # scales to a power of 2
 dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
 TPB = 4
 padded_TPB = TPB + 2
@@ -364,9 +364,6 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
         searchV2(x, y, grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], counter)
         cuda.syncthreads()
 
-
-
-    
 @cuda.jit
 def MapBlocks(guide, parents):
     x, y = cuda.grid(2)
@@ -583,7 +580,7 @@ def main():
     counter = np.zeros(dim, np.int32)
     # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
     GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter)
-    print(parents)
+    # print(parents)
     print(counter)
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')

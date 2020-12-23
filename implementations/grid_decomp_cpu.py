@@ -462,13 +462,13 @@ def main():
                     local_h = h_blocks[ctr]
                     local_block = blocks[ctr]
                     local_guide = guide_blocks[ctr]
-                    print('===== BLOCK: ', ctr, ' START: ', local_guide[new_start], '=====')
+                    # print('===== BLOCK: ', ctr, ' START: ', local_guide[new_start], '=====')
                     if passable(local_grid, new_start): 
                         search(local_grid, new_start, goal, open, closed, parents, cost, g, local_h, UNEXPLORED, neighbors, local_block, local_guide)
-                    print()
+                    # print()
                     # print(np.arange((TPB+2)*(TPB+2)).reshape(TPB+2, TPB+2).astype(np.int32))
-                    print(local_guide)
-                    print(parents)
+                    # print(local_guide)
+                    # print(parents)
                     computed += 1
     
     print('Computed for: ', computed)

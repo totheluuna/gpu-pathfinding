@@ -266,6 +266,7 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
         current_x, current_y = getMinIndex(open)
         current = (current_x, current_y)
         actual_index = guide[current]
+        print(block[current], actual_index)
         if (actual_index == goal_1d_index) or (block[start] != block[current]):
             # print("\riterations: {}".format(counter), end='')
             counter_tile = counter

@@ -269,9 +269,10 @@ def searchV2(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bl
         current = (current_x, current_y)
         actual_index = guide[current]
         print(start_x, start_y, _min, current_x, current_y, block[current], actual_index)
+        print(counter, counter)
         if (actual_index == goal_1d_index) or (block[start] != block[current]):
             # print("\riterations: {}".format(counter), end='')
-            print(counter, counter)
+            
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:

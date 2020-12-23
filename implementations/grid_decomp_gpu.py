@@ -364,7 +364,7 @@ def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block, guide):
 
 @cuda.jit
 # def GridDecompSearch(grid, start, goal, h, block, parents, grid_blocks, guide_blocks, h_blocks, blocks):
-def GridDecompSearch(grid_blocks, start, goal, parents, h_blocks, guide_blocks, blocks):
+def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks, guide_blocks, blocks):
     x, y = cuda.grid(2)
     width, height = dim
     bpg = cuda.gridDim.x    # blocks per grid
@@ -373,7 +373,7 @@ def GridDecompSearch(grid_blocks, start, goal, parents, h_blocks, guide_blocks, 
 
     if x >= width and y >= height:
         return 
-    current_block = blocks[x,y]
+    current_block = block[x,y]
     print(current_block)
 
     
@@ -591,7 +591,7 @@ def main():
     # Simultaneous local search
     s = timer()
     # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
-    GridDecompSearch[blockspergrid, threadsperblock](grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks)
+    GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks)
     # print(parents)
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')

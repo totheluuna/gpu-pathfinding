@@ -315,54 +315,6 @@ def computeHeuristics(grid, start, goal, h_start, h_goal):
         cuda.syncthreads()
 
 @cuda.jit
-def SimultaneousLocalSearch(grid, start, goal, h_goal, parents, block, guide):
-    x, y = cuda.grid(2)
-    width, height = dim
-    bpg = cuda.gridDim.x    # blocks per grid
-    tx = cuda.threadIdx.x
-    ty = cuda.threadIdx.y
-    pos = x * bpg + y
-    if x >= width and y >= height:
-        return 
-    
-    # copy grid and h to shared memory
-    shared_grid = cuda.shared.array((TPB, TPB), int32)
-    shared_grid[tx, ty] = grid[x,y]
-    cuda.syncthreads()
-
-    shared_h_goal = cuda.shared.array((TPB, TPB), int32)
-    shared_h_goal[tx, ty] = h_goal[x,y]
-    cuda.syncthreads()
-
-    shared_guide = cuda.shared.array((TPB, TPB), int32)
-    shared_guide[tx, ty] = guide[x,y]
-    cuda.syncthreads()
-
-    # initialize essential local arrays
-    local_start = (tx, ty)
-    new_goal = (goal[0]+1, goal[1]+1)
-    local_open = cuda.local.array((TPB, TPB), int32)
-    local_closed = cuda.local.array((TPB, TPB), int32)
-    local_cost = cuda.local.array((TPB, TPB), int32)
-    local_g = cuda.local.array((TPB, TPB), int32)
-    local_neighbors = cuda.local.array((8,2), int32)
-
-    for i in range(TPB):
-        for j in range(TPB):
-            local_open[i,j] = UNEXPLORED
-            local_closed[i,j] = UNEXPLORED
-            local_cost[i,j] = 0
-            local_g[i,j] = 0
-    cuda.syncthreads()
-    for i in range(8):
-        local_neighbors[i, 0] = 0
-        local_neighbors[i, 1] = 0
-    cuda.syncthreads()
-
-    search(shared_grid, local_start, new_goal, local_open, local_closed, parents[x,y], local_cost, local_g, shared_h_goal, local_neighbors, block)
-    cuda.syncthreads()
-
-@cuda.jit
 # def GridDecompSearch(grid, start, goal, h, block, parents, grid_blocks, guide_blocks, h_blocks, blocks):
 def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks, guide_blocks, blocks):
     x, y = cuda.grid(2)
@@ -373,8 +325,8 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
 
     if x >= width and y >= height:
         return 
-    block[x,y]
-    print(block[x,y])
+    current_block = block[x,y]
+    print(current_block)
 
     
 @cuda.jit

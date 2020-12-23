@@ -326,7 +326,10 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
     if x >= width and y >= height:
         return 
     
-    if tx == 0 or tx == TPB-1 or ty == 0 or ty == TPB-1:
+    local_bound_check = tx == 0 or tx == TPB-1 or ty == 0 or ty == TPB-1
+    start_tile_check = x == start[0] and y == start[1]
+    goal_tile_check = x == goal[0] and y == goal[1]
+    if local_bound_check and start_tile_check and goal_tile_check:
         print(x,y)
         counter[x,y] = 1
         cuda.syncthreads()

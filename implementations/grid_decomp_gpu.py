@@ -364,7 +364,7 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
         
 
         searchV2(grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], local_ctr)
-        counter[x,y] = local_ctr
+        counter[x,y] = 1
         cuda.syncthreads()
 
 

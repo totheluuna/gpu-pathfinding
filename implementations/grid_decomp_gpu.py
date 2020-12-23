@@ -551,6 +551,7 @@ def main():
     # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
     GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter)
     # print(parents)
+    print(counter)
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
 

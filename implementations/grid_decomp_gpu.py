@@ -260,7 +260,8 @@ def searchV2(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbo
     g[start_x, start_y] = 0
     cost[start_x, start_y] = g[start_x, start_y] + h[start_x, start_y]
     # parents[start_x, start_y] = start_x*width+start_y
-    parents[start_x, start_y] = 729 
+    # parents[start_x, start_y] = 729
+    parents[start_x, start_y] = guide[start_x, start_y] 
 
     counter = 0
     _min = getMin(open)
@@ -613,6 +614,7 @@ def main():
     # print('Average runtime in ', runs, ' runs: ', time_ave)
 
     # trying to recreate path
+    print('----- Reconstructing Path -----')
     start_1d_index = start[0]*width+start[1]
     goal_1d_index = goal[0]*width+goal[1]
     current_index = start_1d_index
@@ -638,12 +640,15 @@ def main():
     path.append(current_index)
     print('paths connecting blocks: ', path)
 
-    # subpaths = []
-    # for start in path:
-    #     # reconstruct subpath
-    #     subpath = []
-    #     goal_1d_index
-    #     while current_index != 
+    print('----- Reconstructing Subpaths -----')
+    subpaths = []
+    for start in path:
+        start_x = int((start_index-(start_index%width))/width)
+        start_y = start_index%widtht
+        start_block = block[start_x, start_y]
+        print(guide_blocks[start_block])
+        print()
+
 
 
 if __name__ == "__main__":

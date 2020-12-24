@@ -136,6 +136,26 @@ def reconstructPathV2(parents, start, goal, path):
     path.append(start_1d_index)
     path.reverse
 
+def reconstructPathV3(parents, guide, goal_1d_index, path):
+    # convert 1D goal index -> 2D goal index
+    goal_x = int((goal_-(goal_%width))/width)
+    goal_y = goal_%width 
+    current = (goal_x, goal_y)
+    current_1d_index = goal
+
+    print('2D: ', current, '1D: ', current_1d_index)
+    print(guide)
+    print(np.arange(padded_TPB*padded_TPB).reshape(padded_TPB, padded_TPB).astype(np.int32))
+    print(parents)
+
+    ctr = 0
+    while current_1d_index != parents[current]:
+        if ctr > 10:
+            print('Timeout!')
+            break
+        
+
+
 # functions for pathfinding
 @cuda.jit(device=True)
 def passable(grid, tile):
@@ -649,11 +669,10 @@ def main():
         start_x = int((start_index-(start_index%width))/width)
         start_y = start_index%width
         start_block = block[start_x, start_y]
+        subpath = []
         print()
         print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
-        print(guide_blocks[start_block])
-        print(np.arange(padded_TPB*padded_TPB).reshape(padded_TPB, padded_TPB).astype(np.int32))
-        print(parents[start_x, start_y])
+        reconstructPathV3(parents[start_x, start_y], guide_blocks[start_block], established_local_goal[start_x, start_y], subpath)
 
 
 

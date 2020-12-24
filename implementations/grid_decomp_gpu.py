@@ -138,6 +138,7 @@ def reconstructPathV2(parents, start, goal, path):
 
 def reconstructPathV3(parents, guide, goal_1d_index, path):
     # convert 1D goal index -> 2D goal index
+    width, height = parents.shape
     goal_x = int((goal_1d_index-(goal_1d_index%width))/width)
     goal_y = goal_1d_index%width 
     current = (goal_x, goal_y)

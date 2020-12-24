@@ -157,14 +157,14 @@ def reconstructPathV3(parents, guide, goal_1d_index, path):
             print('Timeout!')
             break
         # path.append(current_1d_index)
-        path.append(guide[current])
         parent_1d_index = parents[current]
         current_x = int((parent_1d_index-(parent_1d_index%width))/width)
         current_y = parent_1d_index%width 
         current_1d_index = current_x * width + current_y
         current = (current_x, current_y)
+        path.append(guide[current])
         ctr += 1
-    # path.append(guide[current])
+    path.append(guide[current])
     path = path.reverse()
         
 

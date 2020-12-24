@@ -581,8 +581,8 @@ def main():
 
     # Simultaneous local search
     print('----- Simulataneously Searching for SubPaths -----')
-    # x,y = start
-    x, y = goal
+    x,y = start
+    # x, y = goal
     s = timer()
     counter = np.zeros(dim, np.int32)
     # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
@@ -637,6 +637,13 @@ def main():
     current_index = established_goal[current_x, current_y]
     path.append(current_index)
     print('paths connecting blocks: ', path)
+
+    # subpaths = []
+    # for start in path:
+    #     # reconstruct subpath
+    #     subpath = []
+    #     goal_1d_index
+    #     while current_index != 
 
 
 if __name__ == "__main__":

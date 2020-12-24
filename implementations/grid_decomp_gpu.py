@@ -13,9 +13,9 @@ from timeit import default_timer as timer
 from numba import cuda, int32, typeof
 from skimage.util.shape import view_as_windows
 
-scale_factor = 5 # scales to a power of 2
+scale_factor = 7 # scales to a power of 2
 dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
-TPB = 4
+TPB = 8
 padded_TPB = TPB + 2
 
 UNEXPLORED = int(math.pow(2, (scale_factor*2)))

@@ -686,7 +686,8 @@ def main():
         print()
         print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
         reconstructPathV3(parents[start_x, start_y], guide_blocks[start_block], established_local_goal[start_x, start_y], subpath)
-        print('start: ', start_index, 'subpath: ', subpath)
+        # print('start: ', start_index, 'subpath: ', subpath)
+        subpaths = subpaths + subpath
 
 
 

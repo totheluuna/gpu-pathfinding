@@ -659,7 +659,7 @@ def main():
     path = []
     ctr = 0
     while current_index != goal_1d_index:
-        if ctr > UNEXPLORED: # just in case there is infinite loop
+        if ctr > width*2: # just in case there is infinite loop
             print('Timeout!')
             break
         path.append(current_index)

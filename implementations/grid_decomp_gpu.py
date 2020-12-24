@@ -575,27 +575,30 @@ def main():
     # print(parents)
 
     # Simultaneous local search
+    x,y = start
     s = timer()
     counter = np.zeros(dim, np.int32)
     # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
     GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter)
     # print(parents)
-    print(counter)
+    # print(counter)
+    print(guide_blocks[block[x,y]])
+    print(parents[x,y])
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
 
-    time_ave = 0
-    runs = 10
-    for run in range(runs):
-        counter[:] = 0
-        s = timer()
-        GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter)
-        print(counter)
-        e = timer()
-        time_ave += (e-s)
-        print('%dth kernel launch done in ' %(run), e-s, 's')
-    time_ave = time_ave/runs
-    print('Average runtime in ', runs, ' runs: ', time_ave)
+    # time_ave = 0
+    # runs = 10
+    # for run in range(runs):
+    #     counter[:] = 0
+    #     s = timer()
+    #     GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter)
+    #     print(counter)
+    #     e = timer()
+    #     time_ave += (e-s)
+    #     print('%dth kernel launch done in ' %(run), e-s, 's')
+    # time_ave = time_ave/runs
+    # print('Average runtime in ', runs, ' runs: ', time_ave)
 
 
 if __name__ == "__main__":

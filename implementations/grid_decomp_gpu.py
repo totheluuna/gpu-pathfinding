@@ -574,11 +574,14 @@ def main():
     parents = np.empty((width, height, TPB+2, TPB+2), np.int32)
     parents[:] = -1
 
+    established_goal = np.zeros(dim, np.int32)
+
     # print(parents)
 
     # Simultaneous local search
     print('----- Simulataneously Searching for SubPaths -----')
-    x,y = start
+    # x,y = start
+    x, y = goal
     s = timer()
     counter = np.zeros(dim, np.int32)
     # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)

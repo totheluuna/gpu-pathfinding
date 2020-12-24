@@ -23,8 +23,9 @@ UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 OPEN = 1
 CLOSED = 0
 
-seed(42042042069)
+# seed(42042042069)
 # seed(42069)
+seed(1)
 # functions for converting images to grids
 def getListOfFiles(dirName, allFiles):
     # create a list of file and sub directories 
@@ -675,17 +676,17 @@ def main():
     path.append(current_index)
     print('paths connecting blocks: ', path)
 
-    print('----- Reconstructing Subpaths -----')
-    subpaths = []
-    for start_index in path:
-        start_x = int((start_index-(start_index%width))/width)
-        start_y = start_index%width
-        start_block = block[start_x, start_y]
-        subpath = []
-        print()
-        print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
-        reconstructPathV3(parents[start_x, start_y], guide_blocks[start_block], established_local_goal[start_x, start_y], subpath)
-        print('start: ', start_index, 'subpath: ', subpath)
+    # print('----- Reconstructing Subpaths -----')
+    # subpaths = []
+    # for start_index in path:
+    #     start_x = int((start_index-(start_index%width))/width)
+    #     start_y = start_index%width
+    #     start_block = block[start_x, start_y]
+    #     subpath = []
+    #     print()
+    #     print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
+    #     reconstructPathV3(parents[start_x, start_y], guide_blocks[start_block], established_local_goal[start_x, start_y], subpath)
+    #     print('start: ', start_index, 'subpath: ', subpath)
 
 
 

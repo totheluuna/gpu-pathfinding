@@ -575,6 +575,7 @@ def main():
     # print(parents)
 
     # Simultaneous local search
+    print('----- Simulataneously Searching for SubPaths -----')
     x,y = start
     s = timer()
     counter = np.zeros(dim, np.int32)

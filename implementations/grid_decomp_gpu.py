@@ -625,7 +625,7 @@ def main():
             print('Timeout!')
             break
         path.append(current_index)
-        counter += 1
+        ctr += 1
 
 
 if __name__ == "__main__":

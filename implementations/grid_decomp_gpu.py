@@ -616,7 +616,7 @@ def main():
     print('START IN 1D: ', start_1d_index)
     print('GOAL IN 1D: ', goal_1d_index)
     path = []
-    while 
+    # while 
 
 
 if __name__ == "__main__":

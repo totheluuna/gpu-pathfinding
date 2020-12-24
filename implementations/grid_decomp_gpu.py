@@ -592,7 +592,9 @@ def main():
     print(guide_blocks[block[x,y]])
     print(H_goal_blocks[block[x,y]])
     print(parents[x,y])
+    print(h)
     print(guide)
+
     print(established_goal)
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
@@ -613,10 +615,17 @@ def main():
     # trying to recreate path
     start_1d_index = start[0]*width+start[1]
     goal_1d_index = goal[0]*width+goal[1]
+    current_index = start_1d_index
     print('START IN 1D: ', start_1d_index)
     print('GOAL IN 1D: ', goal_1d_index)
     path = []
-    # while 
+    ctr = 0
+    while current_index != goal_1d_index:
+        if ctr > 10:
+            print('Timeout!')
+            break
+        path.append(current_index)
+        counter += 1
 
 
 if __name__ == "__main__":

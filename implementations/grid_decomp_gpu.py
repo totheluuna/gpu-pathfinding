@@ -145,10 +145,10 @@ def reconstructPathV3(parents, guide, goal_1d_index, path):
     current = (goal_x, goal_y)
     current_1d_index = goal_1d_index
 
-    print('2D: ', current, '1D: ', current_1d_index)
-    print(guide)
-    print(np.arange(padded_TPB*padded_TPB).reshape(padded_TPB, padded_TPB).astype(np.int32))
-    print(parents)
+    # print('2D: ', current, '1D: ', current_1d_index)
+    # print(guide)
+    # print(np.arange(padded_TPB*padded_TPB).reshape(padded_TPB, padded_TPB).astype(np.int32))
+    # print(parents)
 
     ctr = 0
     while current_1d_index != parents[current]:

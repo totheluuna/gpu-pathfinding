@@ -632,6 +632,10 @@ def main():
         # set current index to established goal (1D) index
         current_index = established_goal[current_x, current_y]
         ctr += 1
+    current_x = int((current_index-(current_index%width))/width)
+    current_y = current_index%width
+    current_index = established_goal[current_x, current_y]
+    path.append(current_index)
     print(path)
 
 

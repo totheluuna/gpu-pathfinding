@@ -154,6 +154,7 @@ def reconstructPathV3(parents, guide, goal_1d_index, path):
         if ctr > 10:
             print('Timeout!')
             break
+        ctr += 1
         
 
 

@@ -259,9 +259,9 @@ def searchV2(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbo
     open[start_x, start_y] = 0
     g[start_x, start_y] = 0
     cost[start_x, start_y] = g[start_x, start_y] + h[start_x, start_y]
-    # parents[start_x, start_y] = start_x*width+start_y
+    parents[start_x, start_y] = start_x*width+start_y
     # parents[start_x, start_y] = 729
-    parents[start_x, start_y] = guide[start_x, start_y] 
+    # parents[start_x, start_y] = guide[start_x, start_y] 
 
     counter = 0
     _min = getMin(open)
@@ -291,8 +291,8 @@ def searchV2(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbo
                         closed[next_x, next_y] = UNEXPLORED
                 if open[next_x, next_y] == UNEXPLORED and closed[next_x, next_y] == UNEXPLORED:
                     # parents[next_x, next_y] = np.array([current_x, current_y])
-                    # parents[next_x, next_y] = current_x * width + current_y
-                    parents[next_x, next_y] = actual_index 
+                    parents[next_x, next_y] = current_x * width + current_y
+                    # parents[next_x, next_y] = actual_index 
                     g[next_x, next_y] = new_g
                     cost[next_x, next_y] = g[next_x, next_y] + h[next_x, next_y]
                     open[next_x, next_y] = cost[next_x, next_y]

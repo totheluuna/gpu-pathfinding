@@ -636,7 +636,7 @@ def main():
     current_y = current_index%width
     current_index = established_goal[current_x, current_y]
     path.append(current_index)
-    print(path)
+    print('paths connecting blocks: ', path)
 
 
 if __name__ == "__main__":

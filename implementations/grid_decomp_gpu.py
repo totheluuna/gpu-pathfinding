@@ -650,7 +650,7 @@ def main():
         start_y = start_index%width
         start_block = block[start_x, start_y]
         print()
-        print('BLOCK: ', start_block)
+        print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
         print(guide_blocks[start_block])
         print(np.arange(padded_TPB*padded_TPB).reshape(padded_TPB, padded_TPB).astype(np.int32))
         print(parents[start_x, start_y])

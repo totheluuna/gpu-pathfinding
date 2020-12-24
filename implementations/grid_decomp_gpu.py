@@ -610,6 +610,11 @@ def main():
     # time_ave = time_ave/runs
     # print('Average runtime in ', runs, ' runs: ', time_ave)
 
+    # trying to recreate path
+    start_1d_index = start[0]*width+start[1]
+    print('START IN 1D: ', start_1d_index)
+    # while 
+
 
 if __name__ == "__main__":
     main()

@@ -164,7 +164,7 @@ def reconstructPathV3(parents, guide, goal_1d_index, path):
         current = (current_x, current_y)
         ctr += 1
     path.append(guide[current])
-    # path = path.reverse
+    path = path.reverse()
         
 
 

@@ -250,7 +250,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bloc
         counter += 1
 
 @cuda.jit(device=True)
-def searchV2(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors, block, guide, counter_arr):
+def searchV2(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbors, block, guide, counter_arr, established_goal):
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
@@ -272,7 +272,7 @@ def searchV2(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbo
         if (actual_index == goal_1d_index) or (block[start] != block[current]):
             # print("\riterations: {}".format(counter), end='')
             counter_arr[x,y] = counter
-            parents[current] = guide[current] # FOR DEBUGGING
+            established_goal[current] = guide[current] # FOR DEBUGGING
             break
         getNeighbors(grid, current, neighbors)
         for next in neighbors:
@@ -318,7 +318,7 @@ def computeHeuristics(grid, start, goal, h_start, h_goal):
 
 @cuda.jit
 # def GridDecompSearch(grid, start, goal, h, block, parents, grid_blocks, guide_blocks, h_blocks, blocks):
-def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks, guide_blocks, blocks, counter):
+def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks, guide_blocks, blocks, counter, established_goal):
     x, y = cuda.grid(2)
     width, height = dim
     bpg = cuda.gridDim.x    # blocks per grid
@@ -362,7 +362,7 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
             _neighbors[i, 0] = 0
             _neighbors[i, 1] = 0
         
-        searchV2(x, y, grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], counter)
+        searchV2(x, y, grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], counter, established_goal)
         cuda.syncthreads()
 
 @cuda.jit
@@ -585,7 +585,7 @@ def main():
     s = timer()
     counter = np.zeros(dim, np.int32)
     # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
-    GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter)
+    GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter, established_goal)
     # print(parents)
     # print(counter)
     print(grid_blocks[block[x,y]])

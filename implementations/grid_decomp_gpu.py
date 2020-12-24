@@ -691,9 +691,6 @@ def main():
     print('full path: (w/ duplicates) ', subpaths)
     # print('full path: (w/o duplicates) ', set(subpaths))
 
-
-
-
 if __name__ == "__main__":
     main()
 

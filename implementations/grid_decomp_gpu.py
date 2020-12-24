@@ -592,9 +592,8 @@ def main():
     print(guide_blocks[block[x,y]])
     print(H_goal_blocks[block[x,y]])
     print(parents[x,y])
-    print(h)
     print(guide)
-
+    print(H_goal)
     print(established_goal)
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')

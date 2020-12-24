@@ -473,16 +473,16 @@ def main():
 
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    grid = np.zeros(dim, dtype=np.int32)
-    createGridFromDatasetImage('dataset/da2-png', grid, dim)
-    # grid = np.ones(dim, dtype=np.int32)
+    # grid = np.zeros(dim, dtype=np.int32)
+    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    grid = np.ones(dim, dtype=np.int32)
 
     # generate random start and goal
-    start = [-1, -1]
-    goal = [-1, -1]
-    randomStartGoal(grid, start, goal)
-    # start = [0, 0]
-    # goal = [grid.shape[0]-1, grid.shape[1]-1]
+    # start = [-1, -1]
+    # goal = [-1, -1]
+    # randomStartGoal(grid, start, goal)
+    start = [0, 0]
+    goal = [grid.shape[0]-1, grid.shape[1]-1]
     start = np.array(start)
     goal = np.array(goal)
     
@@ -588,7 +588,7 @@ def main():
     print(grid_blocks[block[x,y]])
     print(guide_blocks[block[x,y]])
     print(H_goal_blocks[block[x,y]])
-    print(parents[x,y+1])
+    print(parents[x,y])
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
 

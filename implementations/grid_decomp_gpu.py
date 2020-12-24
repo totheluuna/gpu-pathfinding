@@ -626,6 +626,7 @@ def main():
             break
         path.append(current_index)
         ctr += 1
+    print(path)
 
 
 if __name__ == "__main__":

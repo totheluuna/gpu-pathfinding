@@ -621,10 +621,16 @@ def main():
     path = []
     ctr = 0
     while current_index != goal_1d_index:
-        if ctr > 10:
+        if ctr > 10: # just in case there is infinite loop
             print('Timeout!')
             break
         path.append(current_index)
+        # calculate 2D index from 1D
+        current_x = int((current_index-(current_index%width))/width)
+        current_y = current_index%width
+        # get the established goal using 2D index
+        # set current index to established goal (1D) index
+        current_index = established_goal[current_x, current_y]
         ctr += 1
     print(path)
 

@@ -138,10 +138,10 @@ def reconstructPathV2(parents, start, goal, path):
 
 def reconstructPathV3(parents, guide, goal_1d_index, path):
     # convert 1D goal index -> 2D goal index
-    goal_x = int((goal-(goal%width))/width)
-    goal_y = goal%width 
+    goal_x = int((goal_1d_index-(goal_1d_index%width))/width)
+    goal_y = goal_1d_index%width 
     current = (goal_x, goal_y)
-    current_1d_index = goal
+    current_1d_index = goal_1d_index
 
     print('2D: ', current, '1D: ', current_1d_index)
     print(guide)

@@ -151,10 +151,20 @@ def reconstructPathV3(parents, guide, goal_1d_index, path):
 
     ctr = 0
     while current_1d_index != parents[current]:
+        # in case of infinite loop
         if ctr > 10:
             print('Timeout!')
             break
+        # path.append(current_1d_index)
+        path.append(guide[current])
+        parent_1d_index = parents[current]
+        current_x = int((parent_1d_index-(parent_1d_index%width))/width)
+        current_y = parent_1d_index%width 
+        current_1d_index = current_x * width + current_y
+        current = (current_x, current_y)
         ctr += 1
+    path.append(guide[current])
+    path.reverse
         
 
 
@@ -675,6 +685,7 @@ def main():
         print()
         print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
         reconstructPathV3(parents[start_x, start_y], guide_blocks[start_block], established_local_goal[start_x, start_y], subpath)
+        print('start: ', start_index, 'subpath: ', subpath)
 
 
 

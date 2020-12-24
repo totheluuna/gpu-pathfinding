@@ -583,6 +583,7 @@ def main():
     GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter)
     # print(parents)
     # print(counter)
+    print(grid_blocks[block[x,y]])
     print(guide_blocks[block[x,y]])
     print(parents[x,y])
     e = timer()

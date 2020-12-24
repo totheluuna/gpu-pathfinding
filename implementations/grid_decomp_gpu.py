@@ -688,7 +688,9 @@ def main():
         reconstructPathV3(parents[start_x, start_y], guide_blocks[start_block], established_local_goal[start_x, start_y], subpath)
         # print('start: ', start_index, 'subpath: ', subpath)
         subpaths = subpaths + subpath
-    print('full path: ', subpaths)
+    print('full path: (w/ duplicates) ', subpaths)
+    print('full path: (w/o duplicates) ', set(subpaths))
+
 
 
 

@@ -24,8 +24,8 @@ OPEN = 1
 CLOSED = 0
 
 # seed(42042042069)
-# seed(42069)
-seed(1)
+seed(42069)
+# seed(1)
 # functions for converting images to grids
 def getListOfFiles(dirName, allFiles):
     # create a list of file and sub directories 

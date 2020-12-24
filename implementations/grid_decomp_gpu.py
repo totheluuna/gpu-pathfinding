@@ -642,12 +642,12 @@ def main():
 
     print('----- Reconstructing Subpaths -----')
     subpaths = []
-    for start in path:
-        start_x = int((start_index-(start_index%width))/width)
-        start_y = start_index%widtht
-        start_block = block[start_x, start_y]
-        print(guide_blocks[start_block])
-        print()
+    # for start in path:
+    #     start_x = int((start_index-(start_index%width))/width)
+    #     start_y = start_index%widtht
+    #     start_block = block[start_x, start_y]
+    #     print(guide_blocks[start_block])
+    #     print()
 
 
 

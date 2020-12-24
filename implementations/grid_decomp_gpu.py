@@ -646,8 +646,8 @@ def main():
         start_x = int((start_index-(start_index%width))/width)
         start_y = start_index%width
         start_block = block[start_x, start_y]
-        print('BLOCK: ', start_block)
         print()
+        print('BLOCK: ', start_block)
         print(guide_blocks[start_block])
         print(np.arange(padded_TPB*padded_TPB).reshape(padded_TPB, padded_TPB).astype(np.int32))
         print(parents[start_x, start_y])

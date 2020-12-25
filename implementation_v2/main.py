@@ -25,6 +25,7 @@ def main():
     config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
 
     width, height = config.dim
+    test_func()
 
     print('----- Preparing Grid -----')
     # create grid from image dataset

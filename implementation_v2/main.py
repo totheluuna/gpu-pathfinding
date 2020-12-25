@@ -21,16 +21,16 @@ def main():
     args = parser.parse_args()
     config.scale_factor = args.scale_factor
     config.TPB = args.TPB
-    config.dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
-    config.UNEXPLORED = int(math.pow(2, (scale_factor*2)))
+    config.dim = int(math.pow(2, config.scale_factor)), int(math.pow(2, config.scale_factor))
+    config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
 
-    width, height = dim
+    width, height = config.dim
 
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    # grid = np.zeros(dim, dtype=np.int32)
-    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
-    grid = np.ones(dim, dtype=np.int32)
+    # grid = np.zeros(config.dim, dtype=np.int32)
+    # createGridFromDatasetImage('dataset/da2-png', grid, config.dim)
+    grid = np.ones(config.dim, dtype=np.int32)
 
     # generate random start and goal
     # start = [-1, -1]
@@ -42,7 +42,7 @@ def main():
     goal = np.array(goal)
     
     # debugging purposes: use guide for 1D mapping of indexes
-    guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
+    guide = np.arange(config.dim[0]*config.dim[1]).reshape(config.dim).astype(np.int32)
 
     print(grid)
     print(start)

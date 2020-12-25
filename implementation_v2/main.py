@@ -5,6 +5,8 @@ import sys
 import os
 import math
 import helper
+import globals
+import config
 import numpy as np
 
 scale_factor = 4 # scales to a power of 2
@@ -18,24 +20,24 @@ OPEN = 1
 CLOSED = 0
 
 def test_func():
-    print('scale factor: ', scale_factor)
-    print('TPB: ', TPB)
-    print('max value: ', UNEXPLORED)
+    print('scale factor: ', config.scale_factor)
+    print('TPB: ', config.TPB)
+    print('max value: ', config.UNEXPLORED)
 
 def main():
-    global scale_factor
-    global TPB
-    global dim
-    global UNEXPLORED
+    # global scale_factor
+    # global TPB
+    # global dim
+    # global UNEXPLORED
 
     parser = argparse.ArgumentParser(description='GPU Pathfinding')
     parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')
     parser.add_argument('TPB', type=int, help='Block width')
     args = parser.parse_args()
-    scale_factor = args.scale_factor
-    TPB = args.TPB
-    dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
-    UNEXPLORED = int(math.pow(2, (scale_factor*2)))
+    config.scale_factor = args.scale_factor
+    config.TPB = args.TPB
+    config.dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
+    config.UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 
     width, height = dim
 

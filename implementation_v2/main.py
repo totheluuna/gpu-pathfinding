@@ -5,8 +5,7 @@ import sys
 import os
 import math
 import helper
-import globals
-import configobj
+import config
 import numpy as np
 
 scale_factor = 4 # scales to a power of 2
@@ -20,9 +19,9 @@ OPEN = 1
 CLOSED = 0
 
 def test_func():
-    print('scale factor: ', configobj.scale_factor)
-    print('TPB: ', configobj.TPB)
-    print('max value: ', configobj.UNEXPLORED)
+    print('scale factor: ', config.scale_factor)
+    print('TPB: ', config.TPB)
+    print('max value: ', config.UNEXPLORED)
 
 def main():
     # global scale_factor
@@ -34,10 +33,10 @@ def main():
     parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')
     parser.add_argument('TPB', type=int, help='Block width')
     args = parser.parse_args()
-    configobj.scale_factor = args.scale_factor
-    configobj.TPB = args.TPB
-    configobj.dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
-    configobj.UNEXPLORED = int(math.pow(2, (scale_factor*2)))
+    config.scale_factor = args.scale_factor
+    config.TPB = args.TPB
+    config.dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
+    config.UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 
     width, height = dim
 

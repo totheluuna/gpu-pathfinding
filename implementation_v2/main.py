@@ -4,6 +4,8 @@ import cv2 as cv
 import sys
 import os
 import math
+import helper
+import numpy as np
 
 scale_factor = 4 # scales to a power of 2
 dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
@@ -34,7 +36,32 @@ def main():
     TPB = args.TPB
     dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
     UNEXPLORED = int(math.pow(2, (scale_factor*2)))
-    test_func()
+
+    width, height = dim
+
+    print('----- Preparing Grid -----')
+    # create grid from image dataset
+    # grid = np.zeros(dim, dtype=np.int32)
+    # createGridFromDatasetImage('dataset/da2-png', grid, dim)
+    grid = np.ones(dim, dtype=np.int32)
+
+    # generate random start and goal
+    # start = [-1, -1]
+    # goal = [-1, -1]
+    # randomStartGoal(grid, start, goal)
+    start = [0, 0]
+    goal = [grid.shape[0]-1, grid.shape[1]-1]
+    start = np.array(start)
+    goal = np.array(goal)
+    
+    # debugging purposes: use guide for 1D mapping of indexes
+    guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
+
+    print(grid)
+    print(start)
+    print(goal)
+    print(guide)
+
 
     
 

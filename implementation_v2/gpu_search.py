@@ -8,6 +8,8 @@ from skimage.util.shape import view_as_windows
 import helper, config
 
 dim = config.dim
+TPB = config.TPB
+padded_TPB = config.padded_TPB
 
 # functions for pathfinding
 @cuda.jit(device=True)
@@ -219,15 +221,15 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
         local_h = h_blocks[thread_block]
         local_ctr = 0
 
-        _open = cuda.local.array((config.padded_TPB, config.padded_TPB), int32)
-        _closed = cuda.local.array((config.padded_TPB, config.padded_TPB), int32)
-        _cost = cuda.local.array((config.padded_TPB, config.padded_TPB), int32)
-        _g = cuda.local.array((config.padded_TPB, config.padded_TPB), int32)
+        _open = cuda.local.array((padded_TPB, padded_TPB), int32)
+        _closed = cuda.local.array((padded_TPB, padded_TPB), int32)
+        _cost = cuda.local.array((padded_TPB, padded_TPB), int32)
+        _g = cuda.local.array((padded_TPB, padded_TPB), int32)
         _neighbors = cuda.local.array((8,2), int32)
         
 
-        for i in range(config.padded_TPB):
-            for j in range(config.padded_TPB):
+        for i in range(padded_TPB):
+            for j in range(padded_TPB):
                 _open[i,j] = config.UNEXPLORED
                 _closed[i,j] = config.UNEXPLORED
                 _cost[i,j] = 0

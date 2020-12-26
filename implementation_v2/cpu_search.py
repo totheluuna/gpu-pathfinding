@@ -1,5 +1,9 @@
+import math
+import numpy as np
 from numba import njit
+from timeit import default_timer as timer
 
+import config
 # functions for pathfinding
 @njit
 def passable(grid, tile):
@@ -118,18 +122,7 @@ def test(grid, start, goal):
     print("----- Searching for Path -----")
     s = timer()
     width, height = grid.shape
-    # open = np.empty((width, height), dtype=np.int32) # open or closed
-    # open[:] = UNEXPLORED
-    # closed = np.empty((width, height), dtype=np.int32) # open or closed
-    # closed[:] = UNEXPLORED
-    # parents = np.empty((width, height), dtype=np.int32)
-    # # parents[:] = np.array([-1,-1])
-    # parents[:] = -1
-    # cost = np.zeros((width, height), dtype=np.int32)
-    # g = np.zeros((width, height), dtype=np.int32)
-    # h = np.zeros((width, height), dtype=np.int32)
-    # x,y = start
-    # # print(parents)
+
     open = np.empty((width, height), dtype=np.int32)
     closed = np.empty((width, height), dtype=np.int32)
     parents = np.empty((width, height), dtype=np.int32)
@@ -140,8 +133,8 @@ def test(grid, start, goal):
 
     for i in range(width):
         for j in range(height):
-            open[i,j] = UNEXPLORED
-            closed[i,j] = UNEXPLORED
+            open[i,j] = config.UNEXPLORED
+            closed[i,j] = config.UNEXPLORED
             parents[i,j] = -1
             cost[i,j] = 0
             g[i,j] = 0
@@ -150,7 +143,7 @@ def test(grid, start, goal):
         neighbors[i, 0] = 0
         neighbors[i, 1] = 0
         
-    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    search(grid, start, goal, open, closed, parents, cost, g, h, config.UNEXPLORED, neighbors)
     x,y = start
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)
@@ -181,8 +174,8 @@ def test(grid, start, goal):
 
         for i in range(width):
             for j in range(height):
-                open[i,j] = UNEXPLORED
-                closed[i,j] = UNEXPLORED
+                open[i,j] = config.UNEXPLORED
+                closed[i,j] = config.UNEXPLORED
                 parents[i,j] = -1
                 cost[i,j] = 0
                 g[i,j] = 0
@@ -190,7 +183,7 @@ def test(grid, start, goal):
         for i in range(8):
             neighbors[i, 0] = 0
             neighbors[i, 1] = 0
-        search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+        search(grid, start, goal, open, closed, parents, cost, g, h, config.UNEXPLORED, neighbors)
         e = timer()
         time_ave += (e-s)
         print('%dth search done in '%(run), e-s, 's')

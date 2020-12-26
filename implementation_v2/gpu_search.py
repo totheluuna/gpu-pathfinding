@@ -449,18 +449,18 @@ def test(grid, start, goal):
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
 
-    # time_ave = 0
-    # runs = 10
-    # for run in range(runs):
-    #     counter[:] = 0
-    #     s = timer()
-    #     GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter)
-    #     print(counter)
-    #     e = timer()
-    #     time_ave += (e-s)
-    #     print('%dth kernel launch done in ' %(run), e-s, 's')
-    # time_ave = time_ave/runs
-    # print('Average runtime in ', runs, ' runs: ', time_ave)
+    time_ave = 0
+    runs = 10
+    for run in range(runs):
+        counter[:] = 0
+        s = timer()
+        GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter)
+        print(counter)
+        e = timer()
+        time_ave += (e-s)
+        print('%dth kernel launch done in ' %(run), e-s, 's')
+    time_ave = time_ave/runs
+    print('Average runtime in ', runs, ' runs: ', time_ave)
 
     # trying to recreate path
     print('----- Reconstructing Path -----')
@@ -489,17 +489,17 @@ def test(grid, start, goal):
     path.append(current_index)
     print('paths connecting blocks: ', path)
 
-    print('----- Reconstructing Subpaths -----')
+    # print('----- Reconstructing Subpaths -----')
     subpaths = []
     for start_index in path:
         start_x = int((start_index-(start_index%width))/width)
         start_y = start_index%width
         start_block = block[start_x, start_y]
         subpath = []
-        print()
-        print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
+        # print()
+        # print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
         helper.reconstructPathV3(parents[start_x, start_y], guide_blocks[start_block], established_local_goal[start_x, start_y], subpath)
-        print('start: ', start_index, 'subpath: ', subpath)
+        # print('start: ', start_index, 'subpath: ', subpath)
         subpaths = subpaths + subpath
     print('full path: (w/ duplicates) ', subpaths)
     # print('full path: (w/o duplicates) ', set(subpaths))

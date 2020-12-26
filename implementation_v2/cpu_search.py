@@ -190,7 +190,7 @@ def test(grid, start, goal):
     time_ave = time_ave/runs
     print('Average runtime in ', runs, ' runs: ', time_ave)
 
-    print(np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32))
+    print(np.arange(config.dim[0]*config.dim[1]).reshape(dim).astype(np.int32))
     print(parents)
     # path = []
     # reconstructPathV2(parents, tuple(start), tuple(goal), path)

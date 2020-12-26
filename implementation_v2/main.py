@@ -50,7 +50,7 @@ def main():
     print(goal)
 
     # cpu implementation
-    # cpu.test(grid, start, goal)
+    cpu.test(grid, start, goal)
 
     # gpu implementation
     gpu.test(grid, start, goal)

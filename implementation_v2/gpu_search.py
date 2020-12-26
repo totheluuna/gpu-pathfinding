@@ -336,6 +336,7 @@ def unblockshaped(arr, h, w):
 
 def test(grid, start, goal):
     width, height = dim
+    print(dim)
     # debugging purposes: use guide for 1D mapping of indexes
     guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
 

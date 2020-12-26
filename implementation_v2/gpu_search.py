@@ -335,6 +335,8 @@ def unblockshaped(arr, h, w):
                .reshape(h, w))
 
 def test(grid, start, goal):
+    global dim, TPB, padded_TPB
+
     width, height = dim
     print(dim)
     # debugging purposes: use guide for 1D mapping of indexes

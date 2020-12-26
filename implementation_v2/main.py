@@ -9,6 +9,7 @@ import config
 import numpy as np
 
 import cpu_search as cpu
+import gpu_search as gpu
 
 def test_func():
     print('scale factor: ', config.scale_factor)
@@ -52,7 +53,7 @@ def main():
     cpu.test(grid, start, goal)
 
     # gpu implementation
-    # test_gpu(grid, start, goal)
+    gpu.test(grid, start, goal)
 
 
     

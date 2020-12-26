@@ -335,7 +335,11 @@ def unblockshaped(arr, h, w):
                .reshape(h, w))
 
 def test(grid, start, goal):
-    # global dim, TPB, padded_TPB
+    global dim, TPB, padded_TPB
+
+    dim = config.dim
+    TPB = config.TPB
+    padded_TPB = config.padded_TPB
 
     width, height = dim
     print('HELLO', dim)

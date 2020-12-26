@@ -192,6 +192,6 @@ def test(grid, start, goal):
 
     print(np.arange(config.dim[0]*config.dim[1]).reshape(config.dim).astype(np.int32))
     print(parents)
-    # path = []
-    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    # print(path)
+    path = []
+    reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    print(path)

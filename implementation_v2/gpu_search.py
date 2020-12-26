@@ -7,7 +7,7 @@ from skimage.util.shape import view_as_windows
 
 import helper, config
 
-dim = dim
+dim = config.dim
 
 # functions for pathfinding
 @cuda.jit(device=True)

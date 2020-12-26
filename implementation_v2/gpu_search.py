@@ -114,7 +114,7 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, neighbors, bloc
                         if new_g < g[next_x, next_y]:
                             closed[next_x, next_y] = config.UNEXPLORED
                     if open[next_x, next_y] == config.UNEXPLORED and closed[next_x, next_y] == config.UNEXPLORED:
-                        # parents[next_x, next_y] = current_x * config.TPB + current_y
+                        # parents[next_x, next_y] = current_x * TPB + current_y
                         parents[next_x, next_y] = current_x * width + current_y
                         g[next_x, next_y] = new_g
                         # h[next_x, next_y] = heuristic(next, goal) # omit this step since H is precomputed on GPU
@@ -205,7 +205,7 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
     if x >= width and y >= height:
         return 
     
-    local_bound_check = tx == 0 or tx == config.TPB-1 or ty == 0 or ty == config.TPB-1
+    local_bound_check = tx == 0 or tx == TPB-1 or ty == 0 or ty == TPB-1
     start_tile_check = x == start[0] and y == start[1]
     goal_tile_check = x == goal[0] and y == goal[1]
     thread_block = block[x,y]
@@ -349,7 +349,7 @@ def test(grid, start, goal):
     
 
     # compute heuristics towards start and goal
-    threadsperblock = (config.TPB, config.TPB)
+    threadsperblock = (TPB, TPB)
     blockspergrid_x = math.ceil(grid.shape[0] / threadsperblock[0])
     blockspergrid_y = math.ceil(grid.shape[1] / threadsperblock[1])
     blockspergrid = (blockspergrid_x, blockspergrid_y)
@@ -361,7 +361,7 @@ def test(grid, start, goal):
 
     # prepare grid blocking guide
     block = np.zeros(dim, dtype=np.int32)
-    block = blockshaped(block, config.TPB, config.TPB)
+    block = blockshaped(block, TPB, TPB)
     for i in range(block.shape[0]):
         block[i,:] = i
     block = unblockshaped(block, width, height)
@@ -384,16 +384,16 @@ def test(grid, start, goal):
     # print(padded_H_goal)
 
     # prepare local grids
-    grid_blocks = view_as_windows(padded_grid, (config.TPB+2, config.TPB+2), step=config.TPB)
+    grid_blocks = view_as_windows(padded_grid, (TPB+2, TPB+2), step=TPB)
     grid_blocks = grid_blocks.reshape(grid_blocks.shape[0]*grid_blocks.shape[1], grid_blocks.shape[2], grid_blocks.shape[3])
 
-    guide_blocks = view_as_windows(padded_guide, (config.TPB+2, config.TPB+2), step=config.TPB)
+    guide_blocks = view_as_windows(padded_guide, (TPB+2, TPB+2), step=TPB)
     guide_blocks = guide_blocks.reshape(guide_blocks.shape[0]*guide_blocks.shape[1], guide_blocks.shape[2], guide_blocks.shape[3])
 
-    H_goal_blocks = view_as_windows(padded_H_goal, (config.TPB+2, config.TPB+2), step=config.TPB)
+    H_goal_blocks = view_as_windows(padded_H_goal, (TPB+2, TPB+2), step=TPB)
     H_goal_blocks = H_goal_blocks.reshape(H_goal_blocks.shape[0]*H_goal_blocks.shape[1], H_goal_blocks.shape[2], H_goal_blocks.shape[3])
 
-    blocks = view_as_windows(padded_block, (config.TPB+2, config.TPB+2), step=config.TPB)
+    blocks = view_as_windows(padded_block, (TPB+2, TPB+2), step=TPB)
     blocks = blocks.reshape(blocks.shape[0]*blocks.shape[1], blocks.shape[2], blocks.shape[3])
     # print(grid_blocks.shape)
     
@@ -420,7 +420,7 @@ def test(grid, start, goal):
     # print(blocks)
 
     # parents array contains info where tiles came from
-    parents = np.empty((width, height, config.TPB+2, config.TPB+2), np.int32)
+    parents = np.empty((width, height, TPB+2, TPB+2), np.int32)
     parents[:] = -1
 
     established_goal = np.zeros(dim, np.int32)

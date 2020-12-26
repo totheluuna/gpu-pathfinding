@@ -429,78 +429,78 @@ def test(grid, start, goal):
 
     # print(parents)
 
-    # Simultaneous local search
-    print('----- Simulataneously Searching for SubPaths -----')
-    x,y = start
-    # x, y = goal
-    s = timer()
-    counter = np.zeros(dim, np.int32)
-    # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
-    GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter, established_goal, established_local_goal)
-    # print(parents)
-    # print(counter)
-    print(grid_blocks[block[x,y]])
-    print(guide_blocks[block[x,y]])
-    print(H_goal_blocks[block[x,y]])
-    print(parents[x,y])
-    print(guide)
-    print(H_goal)
-    print(established_goal)
-    print(established_local_goal)
-    e = timer()
-    print('kernel launch (+ compilation) done in ', e-s, 's')
+    # # Simultaneous local search
+    # print('----- Simulataneously Searching for SubPaths -----')
+    # x,y = start
+    # # x, y = goal
+    # s = timer()
+    # counter = np.zeros(dim, np.int32)
+    # # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
+    # GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter, established_goal, established_local_goal)
+    # # print(parents)
+    # # print(counter)
+    # print(grid_blocks[block[x,y]])
+    # print(guide_blocks[block[x,y]])
+    # print(H_goal_blocks[block[x,y]])
+    # print(parents[x,y])
+    # print(guide)
+    # print(H_goal)
+    # print(established_goal)
+    # print(established_local_goal)
+    # e = timer()
+    # print('kernel launch (+ compilation) done in ', e-s, 's')
 
-    time_ave = 0
-    runs = 10
-    for run in range(runs):
-        counter[:] = 0
-        s = timer()
-        GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter, established_goal, established_local_goal)
-        print(counter)
-        e = timer()
-        time_ave += (e-s)
-        print('%dth kernel launch done in ' %(run), e-s, 's')
-    time_ave = time_ave/runs
-    print('Average runtime in ', runs, ' runs: ', time_ave)
+    # time_ave = 0
+    # runs = 10
+    # for run in range(runs):
+    #     counter[:] = 0
+    #     s = timer()
+    #     GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter, established_goal, established_local_goal)
+    #     print(counter)
+    #     e = timer()
+    #     time_ave += (e-s)
+    #     print('%dth kernel launch done in ' %(run), e-s, 's')
+    # time_ave = time_ave/runs
+    # print('Average runtime in ', runs, ' runs: ', time_ave)
 
-    # trying to recreate path
-    print('----- Reconstructing Path -----')
-    start_1d_index = start[0]*width+start[1]
-    goal_1d_index = goal[0]*width+goal[1]
-    current_index = start_1d_index
-    print('START IN 1D: ', start_1d_index)
-    print('GOAL IN 1D: ', goal_1d_index)
-    path = []
-    ctr = 0
-    while current_index != goal_1d_index:
-        if ctr > width*2: # just in case there is infinite loop
-            print('Timeout!')
-            break
-        path.append(current_index)
-        # calculate 2D index from 1D
-        current_x = int((current_index-(current_index%width))/width)
-        current_y = current_index%width
-        # get the established goal using 2D index
-        # set current index to established goal (1D) index
-        current_index = established_goal[current_x, current_y]
-        ctr += 1
-    current_x = int((current_index-(current_index%width))/width)
-    current_y = current_index%width
-    current_index = established_goal[current_x, current_y]
-    path.append(current_index)
-    print('paths connecting blocks: ', path)
+    # # trying to recreate path
+    # print('----- Reconstructing Path -----')
+    # start_1d_index = start[0]*width+start[1]
+    # goal_1d_index = goal[0]*width+goal[1]
+    # current_index = start_1d_index
+    # print('START IN 1D: ', start_1d_index)
+    # print('GOAL IN 1D: ', goal_1d_index)
+    # path = []
+    # ctr = 0
+    # while current_index != goal_1d_index:
+    #     if ctr > width*2: # just in case there is infinite loop
+    #         print('Timeout!')
+    #         break
+    #     path.append(current_index)
+    #     # calculate 2D index from 1D
+    #     current_x = int((current_index-(current_index%width))/width)
+    #     current_y = current_index%width
+    #     # get the established goal using 2D index
+    #     # set current index to established goal (1D) index
+    #     current_index = established_goal[current_x, current_y]
+    #     ctr += 1
+    # current_x = int((current_index-(current_index%width))/width)
+    # current_y = current_index%width
+    # current_index = established_goal[current_x, current_y]
+    # path.append(current_index)
+    # print('paths connecting blocks: ', path)
 
-    # print('----- Reconstructing Subpaths -----')
-    subpaths = []
-    for start_index in path:
-        start_x = int((start_index-(start_index%width))/width)
-        start_y = start_index%width
-        start_block = block[start_x, start_y]
-        subpath = []
-        # print()
-        # print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
-        helper.reconstructPathV3(parents[start_x, start_y], guide_blocks[start_block], established_local_goal[start_x, start_y], subpath)
-        # print('start: ', start_index, 'subpath: ', subpath)
-        subpaths = subpaths + subpath
-    print('full path: (w/ duplicates) ', subpaths)
+    # # print('----- Reconstructing Subpaths -----')
+    # subpaths = []
+    # for start_index in path:
+    #     start_x = int((start_index-(start_index%width))/width)
+    #     start_y = start_index%width
+    #     start_block = block[start_x, start_y]
+    #     subpath = []
+    #     # print()
+    #     # print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
+    #     helper.reconstructPathV3(parents[start_x, start_y], guide_blocks[start_block], established_local_goal[start_x, start_y], subpath)
+    #     # print('start: ', start_index, 'subpath: ', subpath)
+    #     subpaths = subpaths + subpath
+    # print('full path: (w/ duplicates) ', subpaths)
     # print('full path: (w/o duplicates) ', set(subpaths))

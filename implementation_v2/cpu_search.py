@@ -1,3 +1,5 @@
+from numba import njit
+
 # functions for pathfinding
 @njit
 def passable(grid, tile):
@@ -12,32 +14,6 @@ def getNeighbors(grid, tile, neighbors):
     # TO DO: modify to use numpy array
     (x, y) = tile
     for i in range(neighbors.size):
-        # if (x+y)%2 == 0:
-        #     if i == 0:
-        #         neighbors[i,0] = x
-        #         neighbors[i,1] = y+1
-        #     elif i == 1:
-        #         neighbors[i,0] = x-1
-        #         neighbors[i,1] = y
-        #     elif i == 2:
-        #         neighbors[i,0] = x
-        #         neighbors[i,1] = y-1
-        #     elif i == 3:
-        #         neighbors[i,0] = x+1
-        #         neighbors[i,1] = y
-        # else:
-        #     if i == 0:
-        #         neighbors[i,0] = x+1
-        #         neighbors[i,1] = y
-        #     elif i == 1:
-        #         neighbors[i,0] = x
-        #         neighbors[i,1] = y-1
-        #     elif i == 2:
-        #         neighbors[i,0] = x-1
-        #         neighbors[i,1] = y
-        #     elif i == 3:
-        #         neighbors[i,0] = x
-        #         neighbors[i,1] = y+1
         if i == 0:
             neighbors[i,0] = x+1
             neighbors[i,1] = y
@@ -66,9 +42,8 @@ def getNeighbors(grid, tile, neighbors):
 def heuristic(a, b):
     (x1, y1) = a
     (x2, y2) = b
-    return abs(x1-x2) + abs(y1-y2)
-
-    # return int(math.sqrt(math.pow((x1-x2),2) + math.pow((y1-y2),2)))
+    # return abs(x1-x2) + abs(y1-y2)
+    return int(math.sqrt(math.pow((x1-x2),2) + math.pow((y1-y2),2)))
 @njit
 def getMinIndex(arr):
     width, height = arr.shape
@@ -137,3 +112,93 @@ def search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, nei
         open[current_x, current_y] = UNEXPLORED
         counter += 1
         open_min = np.amin(open)
+
+def test(grid, start, goal):
+    # search for path
+    print("----- Searching for Path -----")
+    s = timer()
+    width, height = grid.shape
+    # open = np.empty((width, height), dtype=np.int32) # open or closed
+    # open[:] = UNEXPLORED
+    # closed = np.empty((width, height), dtype=np.int32) # open or closed
+    # closed[:] = UNEXPLORED
+    # parents = np.empty((width, height), dtype=np.int32)
+    # # parents[:] = np.array([-1,-1])
+    # parents[:] = -1
+    # cost = np.zeros((width, height), dtype=np.int32)
+    # g = np.zeros((width, height), dtype=np.int32)
+    # h = np.zeros((width, height), dtype=np.int32)
+    # x,y = start
+    # # print(parents)
+    open = np.empty((width, height), dtype=np.int32)
+    closed = np.empty((width, height), dtype=np.int32)
+    parents = np.empty((width, height), dtype=np.int32)
+    cost = np.empty((width, height), dtype=np.int32)
+    g = np.empty((width, height), dtype=np.int32)
+    h = np.empty((width, height), dtype=np.int32)
+    neighbors = np.empty((8,2), dtype=np.int32)
+
+    for i in range(width):
+        for j in range(height):
+            open[i,j] = UNEXPLORED
+            closed[i,j] = UNEXPLORED
+            parents[i,j] = -1
+            cost[i,j] = 0
+            g[i,j] = 0
+            h[i,j] = 0
+    for i in range(8):
+        neighbors[i, 0] = 0
+        neighbors[i, 1] = 0
+        
+    search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    x,y = start
+    # path = []
+    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    e = timer()
+    print(h)
+    print(parents)
+    print('(Search + compilation) Path found in ', e-s, 's')
+    # s = timer()
+    # search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+    # x,y = start
+    # path = []
+    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    # e = timer()
+    # print('(Post-compilation) Path found in ', e-s, 's')
+    # print(path)
+
+    time_ave = 0
+    runs = 10
+    for run in range(runs):
+        s = timer()
+        open = np.empty((width, height), dtype=np.int32)
+        closed = np.empty((width, height), dtype=np.int32)
+        parents = np.empty((width, height), dtype=np.int32)
+        cost = np.empty((width, height), dtype=np.int32)
+        g = np.empty((width, height), dtype=np.int32)
+        h = np.empty((width, height), dtype=np.int32)
+        neighbors = np.empty((8,2), dtype=np.int32)
+
+        for i in range(width):
+            for j in range(height):
+                open[i,j] = UNEXPLORED
+                closed[i,j] = UNEXPLORED
+                parents[i,j] = -1
+                cost[i,j] = 0
+                g[i,j] = 0
+                h[i,j] = 0
+        for i in range(8):
+            neighbors[i, 0] = 0
+            neighbors[i, 1] = 0
+        search(grid, start, goal, open, closed, parents, cost, g, h, UNEXPLORED, neighbors)
+        e = timer()
+        time_ave += (e-s)
+        print('%dth search done in '%(run), e-s, 's')
+    time_ave = time_ave/runs
+    print('Average runtime in ', runs, ' runs: ', time_ave)
+
+    print(np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32))
+    print(parents)
+    # path = []
+    # reconstructPathV2(parents, tuple(start), tuple(goal), path)
+    # print(path)

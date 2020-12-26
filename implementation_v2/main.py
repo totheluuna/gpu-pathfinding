@@ -8,6 +8,8 @@ import helper
 import config
 import numpy as np
 
+import cpu_search as cpu
+
 def test_func():
     print('scale factor: ', config.scale_factor)
     print('TPB: ', config.TPB)
@@ -42,13 +44,15 @@ def main():
     start = np.array(start)
     goal = np.array(goal)
     
-    # debugging purposes: use guide for 1D mapping of indexes
-    guide = np.arange(config.dim[0]*config.dim[1]).reshape(config.dim).astype(np.int32)
-
     print(grid)
     print(start)
     print(goal)
-    print(guide)
+
+    # cpu implementation
+    cpu.test(grid, start, goal)
+
+    # gpu implementation
+    # test_gpu(grid, start, goal)
 
 
     

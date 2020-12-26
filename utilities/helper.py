@@ -7,6 +7,8 @@ import os
 import math
 import numpy as np
 
+import config
+
 # seed(420696969)
 seed(1)
 
@@ -145,8 +147,8 @@ def imageToGrid(image):
     scale_power = 4 # resize to a power of 2
     width = int(math.pow(2, scale_power))
     height = int(math.pow(2, scale_power))
-    dim = (width, height)
-    resized = cv.resize(img, dim, interpolation = cv.INTER_AREA)
+    config.dim = (width, height)
+    resized = cv.resize(img, config.dim, interpolation = cv.INTER_AREA)
     cv.imwrite("output/resized.png", resized) 
     print('Resized Dimensions : ',resized.shape) 
 

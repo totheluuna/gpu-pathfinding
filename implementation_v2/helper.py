@@ -4,6 +4,7 @@ import sys
 import os
 import math
 import numpy
+import config
 
 def getListOfFiles(dirName, allFiles):
     # create a list of file and sub directories 
@@ -91,7 +92,7 @@ def randomStartGoal(grid, start, goal):
 
 # function for reconstructing found path
 def reconstructPathV2(parents, start, goal, path):
-    width, height = dim
+    width, height = config.dim
     # currentX, currentY = goal
     # while (currentX, currentY) != start:
     #     path.append((currentX, currentY))

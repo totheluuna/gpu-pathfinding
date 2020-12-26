@@ -114,7 +114,7 @@ def reconstructPathV2(parents, start, goal, path):
         current_y = parent_1d_index%width 
         current_1d_index = current_x * width + current_y
     path.append(start_1d_index)
-    path.reverse
+    path.reverse()
 
 def reconstructPathV3(parents, guide, goal_1d_index, path):
     # convert 1D goal index -> 2D goal index

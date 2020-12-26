@@ -338,7 +338,7 @@ def test(grid, start, goal):
     # global dim, TPB, padded_TPB
 
     width, height = dim
-    print(dim)
+    print('HELLO', dim)
     print(config.dim)
     # debugging purposes: use guide for 1D mapping of indexes
     guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)

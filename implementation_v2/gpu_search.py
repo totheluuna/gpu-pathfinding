@@ -7,6 +7,8 @@ from skimage.util.shape import view_as_windows
 
 import helper, config
 
+dim = dim
+
 # functions for pathfinding
 @cuda.jit(device=True)
 def passable(grid, tile):
@@ -125,7 +127,7 @@ def searchV2(x, y, grid, start, goal, open, closed, parents, cost, g, h, neighbo
     width, height = grid.shape
     start_x, start_y = start
     goal_x, goal_y = goal
-    goal_1d_index = goal_x * config.dim[0] + goal_y
+    goal_1d_index = goal_x * dim[0] + goal_y
 
     open[start_x, start_y] = 0
     g[start_x, start_y] = 0
@@ -193,7 +195,7 @@ def computeHeuristics(grid, start, goal, h_start, h_goal):
 # def GridDecompSearch(grid, start, goal, h, block, parents, grid_blocks, guide_blocks, h_blocks, blocks):
 def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks, guide_blocks, blocks, counter, established_goal, established_local_goal):
     x, y = cuda.grid(2)
-    width, height = config.dim
+    width, height = dim
     bpg = cuda.gridDim.x    # blocks per grid
     tx = cuda.threadIdx.x
     ty = cuda.threadIdx.y
@@ -295,7 +297,7 @@ def MapBlocks2(guide, parents, h):
 @cuda.jit
 def padGrid(grid, padded_grid):
     x, y = cuda.grid(2)
-    width, height = config.dim
+    width, height = dim
 
     if x >= width and y >= height:
         return
@@ -331,16 +333,16 @@ def unblockshaped(arr, h, w):
                .reshape(h, w))
 
 def test(grid, start, goal):
-    width, height = config.dim
+    width, height = dim
     # debugging purposes: use guide for 1D mapping of indexes
-    guide = np.arange(config.dim[0]*config.dim[1]).reshape(config.dim).astype(np.int32)
+    guide = np.arange(dim[0]*dim[1]).reshape(dim).astype(np.int32)
 
     # initialize essential arrays for search algorithm
     print('----- Initializing Variables -----')
 
-    H_goal = np.empty(config.dim, dtype=np.int32)
+    H_goal = np.empty(dim, dtype=np.int32)
     H_goal[:] = config.UNEXPLORED
-    H_start = np.empty(config.dim, dtype=np.int32)
+    H_start = np.empty(dim, dtype=np.int32)
     H_start[:] = config.UNEXPLORED
     
 
@@ -356,7 +358,7 @@ def test(grid, start, goal):
     print(blockspergrid)
 
     # prepare grid blocking guide
-    block = np.zeros(config.dim, dtype=np.int32)
+    block = np.zeros(dim, dtype=np.int32)
     block = blockshaped(block, config.TPB, config.TPB)
     for i in range(block.shape[0]):
         block[i,:] = i
@@ -419,8 +421,8 @@ def test(grid, start, goal):
     parents = np.empty((width, height, config.TPB+2, config.TPB+2), np.int32)
     parents[:] = -1
 
-    established_goal = np.zeros(config.dim, np.int32)
-    established_local_goal = np.zeros(config.dim, np.int32)
+    established_goal = np.zeros(dim, np.int32)
+    established_local_goal = np.zeros(dim, np.int32)
 
     # print(parents)
 
@@ -429,7 +431,7 @@ def test(grid, start, goal):
     x,y = start
     # x, y = goal
     s = timer()
-    counter = np.zeros(config.dim, np.int32)
+    counter = np.zeros(dim, np.int32)
     # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
     GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter, established_goal, established_local_goal)
     # print(parents)

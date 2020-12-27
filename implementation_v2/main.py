@@ -51,9 +51,17 @@ def main():
     helper.drawGrid(grid, tuple(start), tuple(goal))
 
     # cpu implementation
-    cpu.test(grid, start, goal)
+    runs, time_ave_cpu, path_cpu = cpu.test(grid, start, goal)
     # gpu implementation
-    gpu.test(grid, start, goal)
+    runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
+
+    print('----- Summary -----')
+    print('Average runtime in ', runs_cpu, ' runs (CPU): ', time_ave_cpu)
+    print('full path (CPU): ', path_cpu)
+    print()
+    print('Average runtime in ', runs_gpu, ' runs (CPU): ', time_ave_gpu)
+    print('full path (CPU): ', path_gpu)
+
 
 if __name__ == "__main__":
     main()

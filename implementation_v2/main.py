@@ -8,8 +8,8 @@ import helper
 import config
 import numpy as np
 
-import cpu_search as cpu
-import gpu_search as gpu
+# import cpu_search as cpu
+# import gpu_search as gpu
 
 def test_func():
     print('scale factor: ', config.scale_factor)
@@ -32,16 +32,16 @@ def main():
 
     print('----- Preparing Grid -----')
     # create grid from image dataset
-    # grid = np.zeros(config.dim, dtype=np.int32)
-    # createGridFromDatasetImage('dataset/da2-png', grid, config.dim)
-    grid = np.ones(config.dim, dtype=np.int32)
+    grid = np.zeros(config.dim, dtype=np.int32)
+    helper.createGridFromDatasetImage('dataset/select-maps', grid, config.dim)
+    # grid = np.ones(config.dim, dtype=np.int32)
 
     # generate random start and goal
-    # start = [-1, -1]
-    # goal = [-1, -1]
-    # randomStartGoal(grid, start, goal)
-    start = [0, 0]
-    goal = [grid.shape[0]-1, grid.shape[1]-1]
+    start = [-1, -1]
+    goal = [-1, -1]
+    helper.randomStartGoal(grid, start, goal)
+    # start = [0, 0]
+    # goal = [grid.shape[0]-1, grid.shape[1]-1]
     start = np.array(start)
     goal = np.array(goal)
     
@@ -49,14 +49,12 @@ def main():
     print(start)
     print(goal)
 
-    # cpu implementation
-    cpu.test(grid, start, goal)
+    helper.drawGrid(grid, tuple(start), tuple(goal))
 
-    # gpu implementation
-    gpu.test(grid, start, goal)
-
-
-    
+    # # cpu implementation
+    # cpu.test(grid, start, goal)
+    # # gpu implementation
+    # gpu.test(grid, start, goal)
 
 if __name__ == "__main__":
     main()

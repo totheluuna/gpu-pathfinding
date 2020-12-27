@@ -3,7 +3,7 @@ import cv2 as cv
 import sys
 import os
 import math
-import numpy
+import numpy as np
 import config
 
 def getListOfFiles(dirName, allFiles):
@@ -145,3 +145,28 @@ def reconstructPathV3(parents, guide, goal_1d_index, path):
         ctr += 1
     # path.append(guide[current])
     path = path.reverse()
+
+def passable(grid, tile):
+    x,y = tile
+    return grid[x,y] == 1
+
+def drawGrid(grid, start, goal, cost=None, path=None):
+    width, height = grid.shape
+    print("----- Reconstructing Grid as Text File -----")
+    gridStr = ""
+    for x in range(width):
+        # print(y)
+        for y in range(height):
+            if passable(grid, (x,y)):
+                if (x, y) == start:
+                    gridStr += 'S'
+                elif (x,y) == goal:
+                    gridStr += 'G'
+                else:
+                    gridStr += '- '
+            elif not passable(grid, (x,y)):
+                gridStr += '# '
+        gridStr += '\n'
+    text_file = open("map.txt", "w")
+    n = text_file.write(gridStr)
+    text_file.close()

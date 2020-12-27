@@ -459,7 +459,7 @@ def test(grid, start, goal):
         counter[:] = 0
         s = timer()
         GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter, established_goal, established_local_goal)
-        print(counter)
+        # print(counter)
         e = timer()
         time_ave += (e-s)
         print('%dth kernel launch done in ' %(run), e-s, 's')

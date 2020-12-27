@@ -8,7 +8,7 @@ import helper
 import config
 import numpy as np
 
-# import cpu_search as cpu
+import cpu_search as cpu
 # import gpu_search as gpu
 
 def test_func():
@@ -50,8 +50,8 @@ def main():
 
     helper.drawGrid(grid, tuple(start), tuple(goal))
 
-    # # cpu implementation
-    # cpu.test(grid, start, goal)
+    # cpu implementation
+    cpu.test(grid, start, goal)
     # # gpu implementation
     # gpu.test(grid, start, goal)
 

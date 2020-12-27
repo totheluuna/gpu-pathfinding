@@ -51,7 +51,7 @@ def main():
     helper.drawGrid(grid, tuple(start), tuple(goal))
 
     # cpu implementation
-    runs, time_ave_cpu, path_cpu = cpu.test(grid, start, goal)
+    runs_cpu, time_ave_cpu, path_cpu = cpu.test(grid, start, goal)
     # gpu implementation
     runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
 

@@ -1,6 +1,6 @@
 import math
 
-seed = 42069
+seed = 4206969
 scale_factor = 4 # scales to a power of 2
 dim = int(math.pow(2, scale_factor)), int(math.pow(2, scale_factor))
 TPB = 4

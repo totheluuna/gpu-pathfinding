@@ -151,7 +151,7 @@ def test(grid, start, goal):
     e = timer()
     # print(h)
     # print(parents)
-    # print('(Search + compilation) Path found in ', e-s, 's')
+    print('(Search + compilation) Path found in ', e-s, 's')
 
     time_ave = 0
     runs = 10

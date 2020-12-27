@@ -151,7 +151,7 @@ def test(grid, start, goal):
     e = timer()
     # print(h)
     # print(parents)
-    print('(Search + compilation) Path found in ', e-s, 's')
+    # print('(Search + compilation) Path found in ', e-s, 's')
 
     time_ave = 0
     runs = 10
@@ -187,3 +187,5 @@ def test(grid, start, goal):
     path = []
     helper.reconstructPathV2(parents, tuple(start), tuple(goal), path)
     print(path)
+
+    return runs, time_ave, path

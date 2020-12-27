@@ -241,7 +241,7 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
         
         if passable(grid, (x,y)):
             searchV2(x, y, grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], counter, established_goal, established_local_goal)
-        cuda.syncthreads()
+    cuda.syncthreads()
 
 @cuda.jit
 def MapBlocks(guide, parents):
@@ -480,11 +480,8 @@ def test(grid, start, goal):
             print('Timeout!')
             break
         path.append(current_index)
-        # calculate 2D index from 1D
         current_x = int((current_index-(current_index%width))/width)
         current_y = current_index%width
-        # get the established goal using 2D index
-        # set current index to established goal (1D) index
         current_index = established_goal[current_x, current_y]
         ctr += 1
     current_x = int((current_index-(current_index%width))/width)
@@ -494,7 +491,7 @@ def test(grid, start, goal):
     print('paths connecting blocks: ', path)
 
     # print('----- Reconstructing Subpaths -----')
-    subpaths = []
+    full_path = []
     for start_index in path:
         start_x = int((start_index-(start_index%width))/width)
         start_y = start_index%width
@@ -504,6 +501,8 @@ def test(grid, start, goal):
         # print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
         helper.reconstructPathV3(parents[start_x, start_y], guide_blocks[start_block], established_local_goal[start_x, start_y], subpath)
         # print('start: ', start_index, 'subpath: ', subpath)
-        subpaths = subpaths + subpath
-    print('full path: (w/ duplicates) ', subpaths)
-    # print('full path: (w/o duplicates) ', set(subpaths))
+        full_path = full_path + subpath
+    full_path.append(path[-1])
+    print('full path: (w/ duplicates) ', full_path)
+
+    return runs, time_ave, full_path

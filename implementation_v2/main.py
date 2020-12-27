@@ -20,11 +20,9 @@ def main():
     parser = argparse.ArgumentParser(description='CPU vs GPU Pathfinding')
     parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')
     parser.add_argument('TPB', type=int, help='Block width')
-    parser.add_argument('seed', type=int, help='RNG Seed')
     args = parser.parse_args()
     config.scale_factor = args.scale_factor
     config.TPB = args.TPB
-    config.seed = args.seed
     config.dim = int(math.pow(2, config.scale_factor)), int(math.pow(2, config.scale_factor))
     config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
 

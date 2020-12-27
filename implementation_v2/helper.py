@@ -6,6 +6,8 @@ import math
 import numpy as np
 import config
 
+seed(config.seed)
+
 def getListOfFiles(dirName, allFiles):
     # create a list of file and sub directories 
     # names in the given directory 

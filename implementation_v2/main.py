@@ -56,11 +56,14 @@ def main():
     runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
 
     print('----- Summary -----')
-    print('Average runtime in ', runs_cpu, ' runs (CPU): ', time_ave_cpu)
-    print('full path (CPU): ', path_cpu)
+    print('Average runtime in', runs_cpu, 'runs (CPU):', time_ave_cpu)
+    print('path length (CPU):', len(path_cpu))
     print()
-    print('Average runtime in ', runs_gpu, ' runs (CPU): ', time_ave_gpu)
-    print('full path (CPU): ', path_gpu)
+    print('Average runtime in', runs_gpu, 'runs (GPU):', time_ave_gpu)
+    print('path length (GPU):', len(path_gpu))
+    print()
+    print('full path (CPU): ', path_cpu)
+    print('full path (GPU): ', path_gpu)
 
 
 if __name__ == "__main__":

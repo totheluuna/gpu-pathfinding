@@ -364,7 +364,6 @@ def test(grid, start, goal):
     print('BLOCKS PER GRID: ', blockspergrid)
     print('----- Computing Heuristics -----')
     computeHeuristics[blockspergrid, threadsperblock](grid, start, goal, H_start, H_goal)
-    print(blockspergrid)
 
     # prepare grid blocking guide
     block = np.zeros(dim, dtype=np.int32)
@@ -405,16 +404,16 @@ def test(grid, start, goal):
     # print(grid_blocks.shape)
     
 
-    print('Start: ', start)
-    print('Goal: ', goal)
-    print('Grid')
-    print(grid)
-    print('Grid Index Guide: ')
-    print(guide)
+    # print('Start: ', start)
+    # print('Goal: ', goal)
+    # print('Grid')
+    # print(grid)
+    # print('Grid Index Guide: ')
+    # print(guide)
     # print('Start H: ')
     # print(H_start)
-    print('Goal H: ')
-    print(H_goal)
+    # print('Goal H: ')
+    # print(H_goal)
     # print('Grid Blocking:')
     # print(block)
     # print('Padded Grid Blocks:')
@@ -433,8 +432,6 @@ def test(grid, start, goal):
     established_goal = np.zeros(dim, np.int32)
     established_local_goal = np.zeros(dim, np.int32)
 
-    # print(parents)
-
     # Simultaneous local search
     print('----- Simulataneously Searching for SubPaths -----')
     x,y = start
@@ -444,15 +441,15 @@ def test(grid, start, goal):
     # GridDecompSearch[blockspergrid, threadsperblock](grid, start, goal, H_goal, block, parents, grid_blocks, guide_blocks, H_goal_blocks, blocks)
     GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter, established_goal, established_local_goal)
     # print(parents)
-    # print(counter)
-    print(grid_blocks[block[x,y]])
-    print(guide_blocks[block[x,y]])
-    print(H_goal_blocks[block[x,y]])
-    print(parents[x,y])
-    print(guide)
-    print(H_goal)
-    print(established_goal)
-    print(established_local_goal)
+    print(counter)
+    # print(grid_blocks[block[x,y]])
+    # print(guide_blocks[block[x,y]])
+    # print(H_goal_blocks[block[x,y]])
+    # print(parents[x,y])
+    # print(guide)
+    # print(H_goal)
+    # print(established_goal)
+    # print(established_local_goal)
     e = timer()
     print('kernel launch (+ compilation) done in ', e-s, 's')
 

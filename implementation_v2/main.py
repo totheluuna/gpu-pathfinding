@@ -17,13 +17,14 @@ def test_func():
     print('max value: ', config.UNEXPLORED)
 
 def main():
-
-    parser = argparse.ArgumentParser(description='GPU Pathfinding')
+    parser = argparse.ArgumentParser(description='CPU vs GPU Pathfinding')
     parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')
     parser.add_argument('TPB', type=int, help='Block width')
+    parser.add_argument('seed', type=int, help='RNG Seed')
     args = parser.parse_args()
     config.scale_factor = args.scale_factor
     config.TPB = args.TPB
+    config.seed = args.seed
     config.dim = int(math.pow(2, config.scale_factor)), int(math.pow(2, config.scale_factor))
     config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
 
@@ -33,7 +34,7 @@ def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
     grid = np.zeros(config.dim, dtype=np.int32)
-    helper.createGridFromDatasetImage('dataset/select-maps', grid, config.dim)
+    helper.createGridFromDatasetImage('dataset/select-maps/simplest', grid, config.dim)
     # grid = np.ones(config.dim, dtype=np.int32)
 
     # generate random start and goal

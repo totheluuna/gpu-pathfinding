@@ -21,6 +21,7 @@ def main():
     parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')
     parser.add_argument('TPB', type=int, help='Block width')
     parser.add_argument('complexity', type=str, help='Map Complexity')
+    parser.add_argument('seed', type=str, help='RNG Seed')
     args = parser.parse_args()
     config.scale_factor = args.scale_factor
     config.TPB = args.TPB
@@ -28,6 +29,7 @@ def main():
     config.dim = int(math.pow(2, config.scale_factor)), int(math.pow(2, config.scale_factor))
     config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
     complexity = args.complexity
+    config.seed = args.seed
 
     width, height = config.dim
     test_func()

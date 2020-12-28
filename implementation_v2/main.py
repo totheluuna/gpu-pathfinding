@@ -23,7 +23,7 @@ def main():
     args = parser.parse_args()
     config.scale_factor = args.scale_factor
     config.TPB = args.TPB
-    config.padded_TPB = TPB + 2
+    config.padded_TPB = config.TPB + 2
     config.dim = int(math.pow(2, config.scale_factor)), int(math.pow(2, config.scale_factor))
     config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
 

@@ -31,6 +31,8 @@ def main():
     complexity = args.complexity
     config.seed = args.seed
 
+    print('RNG Seed: ', config.seed)
+
     width, height = config.dim
     test_func()
 

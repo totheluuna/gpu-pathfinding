@@ -20,12 +20,14 @@ def main():
     parser = argparse.ArgumentParser(description='CPU vs GPU Pathfinding')
     parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')
     parser.add_argument('TPB', type=int, help='Block width')
+    parser.add_argument('complexity', type=str, help='Map Complexity')
     args = parser.parse_args()
     config.scale_factor = args.scale_factor
     config.TPB = args.TPB
     config.padded_TPB = config.TPB + 2
     config.dim = int(math.pow(2, config.scale_factor)), int(math.pow(2, config.scale_factor))
     config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
+    complexity = args.complexity
 
     width, height = config.dim
     test_func()
@@ -33,7 +35,8 @@ def main():
     print('----- Preparing Grid -----')
     # create grid from image dataset
     grid = np.zeros(config.dim, dtype=np.int32)
-    helper.createGridFromDatasetImage('dataset/select-maps/simplest', grid, config.dim)
+    # helper.createGridFromDatasetImage('dataset/select-maps/simplest', grid, config.dim)
+    helper.createGridFromDatasetImage('dataset/select-maps/%s'%(complexity), grid, config.dim)
     # grid = np.ones(config.dim, dtype=np.int32)
 
     # generate random start and goal

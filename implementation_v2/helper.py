@@ -61,6 +61,7 @@ def createGridFromDatasetImage(dataset, grid, dim):
     # image = 'dataset/da2-png/ht_chantry.png'
     print('Random Image: ', image)
     imageToGrid(image, grid, dim)
+    return image
 
 def randomStartGoal(grid, start, goal):
     print('----- Generating Random Start and Goal -----')

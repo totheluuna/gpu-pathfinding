@@ -36,7 +36,7 @@ def main():
     # create grid from image dataset
     grid = np.zeros(config.dim, dtype=np.int32)
     # helper.createGridFromDatasetImage('dataset/select-maps/simplest', grid, config.dim)
-    helper.createGridFromDatasetImage('dataset/select-maps/%s'%(complexity), grid, config.dim)
+    image = helper.createGridFromDatasetImage('dataset/select-maps/%s'%(complexity), grid, config.dim)
     # grid = np.ones(config.dim, dtype=np.int32)
 
     # generate random start and goal
@@ -60,6 +60,10 @@ def main():
     runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
 
     print('----- Summary -----')
+    print('Image used:', image)
+    print('Start:', start)
+    print('Goal:', goal)
+    print()
     print('Average runtime in', runs_cpu, 'runs (CPU):', time_ave_cpu)
     print('path length (CPU):', len(path_cpu))
     print()
@@ -67,6 +71,7 @@ def main():
     print('path length (GPU):', len(path_gpu))
     print()
     print('full path (CPU): ', path_cpu)
+    print()
     print('full path (GPU): ', path_gpu)
 
 

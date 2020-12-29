@@ -240,7 +240,8 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
             _neighbors[i, 1] = 0
         
         if passable(grid, (x,y)):
-            searchV2(x, y, grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], counter, established_goal, established_local_goal)
+            # searchV2(x, y, grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], counter, established_goal, established_local_goal)
+            searchV2(x, y, local_grid, local_start, goal, _open, _closed, parents[x,y], _cost, _g, local_h, _neighbors, local_block, local_guide, counter, established_goal, established_local_goal)
     cuda.syncthreads()
 
 @cuda.jit
@@ -427,7 +428,7 @@ def test(grid, start, goal):
 
     # parents array contains info where tiles came from
     parents = np.empty((width, height, TPB+2, TPB+2), np.int32)
-    # parents = cp.empty((width, height, TPB+2, TPB+2), cp.int32) # use cupy for >=32x32 dims
+    # parents_gpu = cp.empty((width, height, TPB+2, TPB+2), cp.int32) # use cupy for >=32x32 dims
     parents[:] = -1
 
     established_goal = np.zeros(dim, np.int32)

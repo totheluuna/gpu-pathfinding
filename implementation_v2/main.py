@@ -99,7 +99,7 @@ def main():
     cpu_path_exists = path_cpu[0] == start_1d_index and path_cpu[-1] == goal_1d_index
     gpu_path_exists = len(path_gpu) > 0
     with open(os.path.join(os.getcwd(), 'implementation_v2/metrics/data/performance.csv'), "a") as log_file:
-        log_file.write("{},{},{},{},{},{},{},{}\n".format('image_here', 'width_here', 'start_tile', 'goal_tile', str(1.090903920392), 'gpu time here', cpu_path_exists, gpu_path_exists))
+        log_file.write("{},{},{},{},{},{},{},{}\n".format(image, width, start_1d_index, goal_1d_index, time_ave_cpu, time_ave_gpu, cpu_path_exists, gpu_path_exists))
 
 
 

@@ -137,7 +137,7 @@ def reconstructPathV3(parents, guide, goal_1d_index, path):
     ctr = 0
     while current_1d_index != parents[current]:
         # in case of infinite loop
-        if ctr > 10:
+        if ctr > config.dim[0]:
             print('Timeout!')
             break
         # path.append(current_1d_index)

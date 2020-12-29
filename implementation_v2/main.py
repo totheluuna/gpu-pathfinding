@@ -29,6 +29,7 @@ def main():
     line = "image_filename,width,start,goal,cpu_runtime,gpu_runtime,cpu_path_exists,gpu_path_exists\n"
     to_file = open(filename,mode="w")
     to_file.write(line)
+    to_file.close()
 
     parser = argparse.ArgumentParser(description='CPU vs GPU Pathfinding')
     parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')

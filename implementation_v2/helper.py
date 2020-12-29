@@ -53,7 +53,7 @@ def imageToGrid(image, grid, dim):
                 grid[i,j] = 1
 
 def createGridFromDatasetImage(dataset, grid, dim):
-    seed(config.seed)
+    # seed(config.seed)
     print('----- Creating Grid Object from Dataset Image-----')
     listOfImages = []
     getListOfFiles(dataset, listOfImages)
@@ -65,7 +65,7 @@ def createGridFromDatasetImage(dataset, grid, dim):
     return image
 
 def randomStartGoal(grid, start, goal):
-    seed(config.seed)
+    # seed(config.seed)
     print('----- Generating Random Start and Goal -----')
     dist = 0
     width, height = grid.shape

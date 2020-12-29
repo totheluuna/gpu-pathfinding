@@ -248,8 +248,6 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
                 shared_guide[i,j] = local_guide[i,j]
                 shared_h[i,j] = local_h[i,j]
 
-
-    
         for i in range(8):
             _neighbors[i, 0] = 0
             _neighbors[i, 1] = 0

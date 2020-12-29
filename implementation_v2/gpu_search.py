@@ -401,7 +401,7 @@ def test(grid, start, goal):
 
     blocks = view_as_windows(padded_block, (TPB+2, TPB+2), step=TPB)
     blocks = blocks.reshape(blocks.shape[0]*blocks.shape[1], blocks.shape[2], blocks.shape[3])
-    # print(grid_blocks.shape)
+    print('Checking blocks shape: ', grid_blocks.shape)
     
 
     # print('Start: ', start)

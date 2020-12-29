@@ -19,7 +19,7 @@ def test_func():
 
 def main():
     # check files, create and write headers if neccessary
-    filename = os.path.join(os.getcwd(), 'metrics/performance.csv')
+    filename = os.path.join(os.getcwd(), 'implementation_v2/metrics/performance.csv')
     if os.path.isfile(filename) is False:
         with open(filename, "a") as file:
             file.write("image_filename,width,start,goal,cpu_runtime,gpu_runtime,cpu_path_exists,gpu_path_exists\n")
@@ -97,7 +97,7 @@ def main():
 
     cpu_path_exists = path_cpu[0] == start_1d_index and path_cpu[-1] == goal_1d_index
     gpu_path_exists = len(path_gpu) > 0
-    with open(os.path.join(os.getcwd(), 'metrics/performance.csv'), "a") as log_file:
+    with open(os.path.join(os.getcwd(), 'implementation_v2/metrics/performance.csv'), "a") as log_file:
         log_file.write("{},{},{},{},{},{},{},{}\n".format(image, width, start, goal, time_ave_cpu, time_ave_gpu, cpu_path_exists, gpu_path_exists))
 
 

@@ -213,19 +213,28 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
     if local_bound_check or start_tile_check or goal_tile_check:
         # print(thread_block)
         # counter[x,y] = 1
-        # initialize essential local arrays
+
+        local_start = (tx+1, ty+1)
+        local_ctr = 0
+
+        # initialize essential 'local' (uses global memory) arrays
         local_grid = grid_blocks[thread_block]
         local_block = blocks[thread_block]
         local_guide = guide_blocks[thread_block]
-        local_start = (tx+1, ty+1)
         local_h = h_blocks[thread_block]
-        local_ctr = 0
 
+        # local arrays (local memory)
         _open = cuda.local.array((padded_TPB, padded_TPB), int32)
         _closed = cuda.local.array((padded_TPB, padded_TPB), int32)
         _cost = cuda.local.array((padded_TPB, padded_TPB), int32)
         _g = cuda.local.array((padded_TPB, padded_TPB), int32)
         _neighbors = cuda.local.array((8,2), int32)
+
+        # shared arrays (shared memory)
+        shared_grid = cuda.shared.array((padded_TPB, padded_TPB), int32)
+        shared_block = cuda.shared.array((padded_TPB, padded_TPB), int32)
+        shared_guide = cuda.shared.array((padded_TPB, padded_TPB), int32)
+        shared_h = cuda.shared.array((padded_TPB, padded_TPB), int32)
         
 
         for i in range(padded_TPB):
@@ -234,6 +243,12 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
                 _closed[i,j] = config.UNEXPLORED
                 _cost[i,j] = 0
                 _g[i,j] = 0
+                shared_grid[i,j] = local_grid[i,j]
+                shared_block[i,j] = local_block[i,j]
+                shared_guide[i,j] = local_guide[i,j]
+                shared_h[i,j] = local_h[i,j]
+
+
     
         for i in range(8):
             _neighbors[i, 0] = 0
@@ -241,7 +256,8 @@ def GridDecompSearch(grid, h, block, grid_blocks, start, goal, parents, h_blocks
         
         if passable(grid, (x,y)):
             # searchV2(x, y, grid_blocks[thread_block], (tx+1, ty+1), goal, _open, _closed, parents[x,y], _cost, _g, h_blocks[thread_block], _neighbors, blocks[thread_block], guide_blocks[thread_block], counter, established_goal, established_local_goal)
-            searchV2(x, y, local_grid, local_start, goal, _open, _closed, parents[x,y], _cost, _g, local_h, _neighbors, local_block, local_guide, counter, established_goal, established_local_goal)
+            # searchV2(x, y, local_grid, local_start, goal, _open, _closed, parents[x,y], _cost, _g, local_h, _neighbors, local_block, local_guide, counter, established_goal, established_local_goal)
+            searchV2(x, y, shared_grid, local_start, goal, _open, _closed, parents[x,y], _cost, _g, shared_h, _neighbors, shared_block, shared_guide, counter, established_goal, established_local_goal)
     cuda.syncthreads()
 
 @cuda.jit

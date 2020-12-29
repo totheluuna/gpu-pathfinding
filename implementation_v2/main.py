@@ -21,15 +21,15 @@ def main():
     # check files, create and write headers if neccessary
     filename = os.path.join(os.getcwd(), 'implementation_v2/metrics/data/performance.csv')
     if os.path.isfile(filename) is False:
-        with open(filename, "a") as file:
+        with open(filename, "w") as file:
             file.write("image_filename,width,start,goal,cpu_runtime,gpu_runtime,cpu_path_exists,gpu_path_exists\n")
 
-    from_file = open(filename)
-    line = from_file.readline()
-    line = "image_filename,width,start,goal,cpu_runtime,gpu_runtime,cpu_path_exists,gpu_path_exists\n"
-    to_file = open(filename,mode="w")
-    to_file.write(line)
-    shutil.copyfileobj(from_file, to_file)
+    # from_file = open(filename)
+    # line = from_file.readline()
+    # line = "image_filename,width,start,goal,cpu_runtime,gpu_runtime,cpu_path_exists,gpu_path_exists\n"
+    # to_file = open(filename,mode="w")
+    # to_file.write(line)
+    # shutil.copyfileobj(from_file, to_file)
 
     parser = argparse.ArgumentParser(description='CPU vs GPU Pathfinding')
     parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')

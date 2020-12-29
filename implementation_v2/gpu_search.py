@@ -426,8 +426,8 @@ def test(grid, start, goal):
     # print(blocks)
 
     # parents array contains info where tiles came from
-    # parents = np.empty((width, height, TPB+2, TPB+2), np.int32)
-    parents = cp.empty((width, height, TPB+2, TPB+2), cp.int32) # use cupy for >=32x32 dims
+    parents = np.empty((width, height, TPB+2, TPB+2), np.int32)
+    # parents = cp.empty((width, height, TPB+2, TPB+2), cp.int32) # use cupy for >=32x32 dims
     parents[:] = -1
 
     established_goal = np.zeros(dim, np.int32)

@@ -491,19 +491,20 @@ def test(grid, start, goal):
     path.append(current_index)
     print('paths connecting blocks: ', path)
 
-    # print('----- Reconstructing Subpaths -----')
     full_path = []
-    for start_index in path:
-        start_x = int((start_index-(start_index%width))/width)
-        start_y = start_index%width
-        start_block = block[start_x, start_y]
-        subpath = []
-        # print()
-        # print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
-        helper.reconstructPathV3(parents[start_x, start_y], guide_blocks[start_block], established_local_goal[start_x, start_y], subpath)
-        # print('start: ', start_index, 'subpath: ', subpath)
-        full_path = full_path + subpath
-    full_path.append(path[-1])
-    print('full path: (w/ duplicates) ', full_path)
+    if path[0] == start_1d_index and path[-1] == goal_1d_index:
+        # print('----- Reconstructing Subpaths -----')
+        for start_index in path:
+            start_x = int((start_index-(start_index%width))/width)
+            start_y = start_index%width
+            start_block = block[start_x, start_y]
+            subpath = []
+            # print()
+            # print('BLOCK: ', start_block, 'LOCAL GOAL: ', established_local_goal[start_x, start_y])
+            helper.reconstructPathV3(parents[start_x, start_y], guide_blocks[start_block], established_local_goal[start_x, start_y], subpath)
+            # print('start: ', start_index, 'subpath: ', subpath)
+            full_path = full_path + subpath
+        full_path.append(path[-1])
+        print('full path: (w/ duplicates) ', full_path)
 
     return runs, time_ave, full_path

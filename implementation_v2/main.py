@@ -48,11 +48,10 @@ def main():
     runs = args.runs
     # config.seed = args.seed
 
-
+    print('Testing CPU v GPU Pathfinding Approach for %d runs' %(runs))
 
     for i in range(runs):
-        print('RNG Seed: ', config.seed)
-
+        print('===== %dth Test =====' %(i))
         width, height = config.dim
         # test_func()
 

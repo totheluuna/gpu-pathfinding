@@ -62,62 +62,61 @@ def main():
             print('===== Experiment Setup =====')
             print('Grid dimensions:', config.dim, 'Kernel Block Width:', (config.TPB, config.TPB), 'Padded Block Width:', (config.padded_TPB,config.padded_TPB), 'Max Value:', config.UNEXPLORED)
             print('===== Testing CPU vs GPU Pathfinding Approach for %d runs =====' %(runs))
-            print('Map complexity:', complexity)
 
-    # for i in range(runs):
-    #     print('===== %dth Test =====' %(i))
-    #     width, height = config.dim
-    #     # test_func()
+            for i in range(runs):
+                print('===== %dth Test =====' %(i))
+                width, height = config.dim
+                # test_func()
 
-    #     print('----- Preparing Grid -----')
-    #     # create grid from image dataset
-    #     grid = np.zeros(config.dim, dtype=np.int32)
-    #     # helper.createGridFromDatasetImage('dataset/select-maps/simplest', grid, config.dim)
-    #     image = helper.createGridFromDatasetImage('dataset/select-maps/%s'%(complexity), grid, config.dim)
-    #     # grid = np.ones(config.dim, dtype=np.int32)
+                print('----- Preparing Grid -----')
+                # create grid from image dataset
+                grid = np.zeros(config.dim, dtype=np.int32)
+                # helper.createGridFromDatasetImage('dataset/select-maps/simplest', grid, config.dim)
+                image = helper.createGridFromDatasetImage('dataset/select-maps/%s'%(complexity), grid, config.dim)
+                # grid = np.ones(config.dim, dtype=np.int32)
 
-    #     # generate random start and goal
-    #     start = [-1, -1]
-    #     goal = [-1, -1]
-    #     helper.randomStartGoal(grid, start, goal)
-    #     # start = [0, 0]
-    #     # goal = [grid.shape[0]-1, grid.shape[1]-1]
-    #     start = np.array(start)
-    #     goal = np.array(goal)
+                # generate random start and goal
+                start = [-1, -1]
+                goal = [-1, -1]
+                helper.randomStartGoal(grid, start, goal)
+                # start = [0, 0]
+                # goal = [grid.shape[0]-1, grid.shape[1]-1]
+                start = np.array(start)
+                goal = np.array(goal)
 
-    #     print(grid)
-    #     print(start)
-    #     print(goal)
+                print(grid)
+                print(start)
+                print(goal)
 
-    #     helper.drawGrid(grid, tuple(start), tuple(goal))
+                helper.drawGrid(grid, tuple(start), tuple(goal))
 
-    #     # cpu implementation
-    #     runs_cpu, time_ave_cpu, path_cpu = cpu.test(grid, start, goal)
-    #     # gpu implementation
-    #     runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
+                # cpu implementation
+                runs_cpu, time_ave_cpu, path_cpu = cpu.test(grid, start, goal)
+                # gpu implementation
+                runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
 
-    #     start_1d_index = start[0]*width+start[1]
-    #     goal_1d_index = goal[0]*width+goal[1]
+                start_1d_index = start[0]*width+start[1]
+                goal_1d_index = goal[0]*width+goal[1]
 
-    #     print('----- Summary -----')
-    #     print('Image used:', image)
-    #     print('Start:', start)
-    #     print('Goal:', goal)
-    #     print()
-    #     print('Average runtime in', runs_cpu, 'runs (CPU):', time_ave_cpu)
-    #     print('path length (CPU):', len(path_cpu))
-    #     print()
-    #     print('Average runtime in', runs_gpu, 'runs (GPU):', time_ave_gpu)
-    #     print('path length (GPU):', len(path_gpu))
-    #     print()
-    #     print('full path (CPU): ', path_cpu)
-    #     print()
-    #     print('full path (GPU): ', path_gpu)
+                print('----- Summary -----')
+                print('Image used:', image)
+                print('Start:', start)
+                print('Goal:', goal)
+                print()
+                print('Average runtime in', runs_cpu, 'runs (CPU):', time_ave_cpu)
+                print('path length (CPU):', len(path_cpu))
+                print()
+                print('Average runtime in', runs_gpu, 'runs (GPU):', time_ave_gpu)
+                print('path length (GPU):', len(path_gpu))
+                print()
+                print('full path (CPU): ', path_cpu)
+                print()
+                print('full path (GPU): ', path_gpu)
 
-    #     cpu_path_exists = path_cpu[0] == start_1d_index and path_cpu[-1] == goal_1d_index
-    #     gpu_path_exists = len(path_gpu) > 0
-    #     with open(os.path.join(os.getcwd(), 'implementation_v2/metrics/data/performance.csv'), "a") as log_file:
-    #         log_file.write("{},{},{},{},{},{},{},{}\n".format(image, width, start_1d_index, goal_1d_index, time_ave_cpu, time_ave_gpu, cpu_path_exists, gpu_path_exists))
+                cpu_path_exists = path_cpu[0] == start_1d_index and path_cpu[-1] == goal_1d_index
+                gpu_path_exists = len(path_gpu) > 0
+                with open(os.path.join(os.getcwd(), 'implementation_v2/metrics/data/performance.csv'), "a") as log_file:
+                    log_file.write("{},{},{},{},{},{},{},{}\n".format(image, width, start_1d_index, goal_1d_index, time_ave_cpu, time_ave_gpu, cpu_path_exists, gpu_path_exists))
 
 
 

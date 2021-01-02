@@ -475,25 +475,25 @@ def test(grid, start, goal):
         counter[:] = 0
         s = timer()
         GridDecompSearch[blockspergrid, threadsperblock](grid, H_goal, block, grid_blocks, start, goal, parents, H_goal_blocks, guide_blocks, blocks, counter, established_goal, established_local_goal)
-        # print(counter)
+        print(counter)
         e = timer()
         time_ave += (e-s)
-        print('%dth kernel launch done in ' %(run), e-s, 's')
+        # print('%dth kernel launch done in ' %(run), e-s, 's')
     time_ave = time_ave/runs
-    print('Average runtime in ', runs, ' runs: ', time_ave)
+    # print('Average runtime in ', runs, ' runs: ', time_ave)
 
     # trying to recreate path
     print('----- Reconstructing Path -----')
     start_1d_index = start[0]*width+start[1]
     goal_1d_index = goal[0]*width+goal[1]
     current_index = start_1d_index
-    print('START IN 1D: ', start_1d_index)
-    print('GOAL IN 1D: ', goal_1d_index)
+    # print('START IN 1D: ', start_1d_index)
+    # print('GOAL IN 1D: ', goal_1d_index)
     path = []
     ctr = 0
     while current_index != goal_1d_index:
         if ctr > width*2: # just in case there is infinite loop
-            print('Timeout!')
+            # print('Timeout!')
             break
         path.append(current_index)
         current_x = int((current_index-(current_index%width))/width)
@@ -504,7 +504,7 @@ def test(grid, start, goal):
     current_y = current_index%width
     current_index = established_goal[current_x, current_y]
     path.append(current_index)
-    print('paths connecting blocks: ', path)
+    # print('paths connecting blocks: ', path)
 
     full_path = []
     if path[0] == start_1d_index and path[-1] == goal_1d_index:
@@ -520,6 +520,6 @@ def test(grid, start, goal):
             # print('start: ', start_index, 'subpath: ', subpath)
             full_path = full_path + subpath
         full_path.append(path[-1])
-        print('full path: (w/ duplicates) ', full_path)
+        # print('full path: (w/ duplicates) ', full_path)
 
     return runs, time_ave, full_path

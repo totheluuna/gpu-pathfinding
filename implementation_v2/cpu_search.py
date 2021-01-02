@@ -151,7 +151,7 @@ def test(grid, start, goal):
     e = timer()
     # print(h)
     # print(parents)
-    print('(Search + compilation) Path found in ', e-s, 's')
+    # print('(Search + compilation) Path found in ', e-s, 's')
 
     time_ave = 0
     runs = 1
@@ -179,13 +179,13 @@ def test(grid, start, goal):
         search(grid, start, goal, open, closed, parents, cost, g, h, config.UNEXPLORED, neighbors)
         e = timer()
         time_ave += (e-s)
-        print('%dth search done in '%(run), e-s, 's')
+        # print('%dth search done in '%(run), e-s, 's')
     time_ave = time_ave/runs
-    print('Average runtime in ', runs, ' runs: ', time_ave)
+    # print('Average runtime in ', runs, ' runs: ', time_ave)
     # print(np.arange(config.dim[0]*config.dim[1]).reshape(config.dim).astype(np.int32))
     # print(parents)
     path = []
     helper.reconstructPathV2(parents, tuple(start), tuple(goal), path)
-    print(path)
+    # print(path)
 
     return runs, time_ave, path

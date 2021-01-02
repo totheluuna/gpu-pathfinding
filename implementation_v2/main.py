@@ -61,7 +61,7 @@ def main():
             config.padded_TPB = config.TPB + 2
             config.dim = int(math.pow(2, config.scale_factor)), int(math.pow(2, config.scale_factor))
             config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
-            print('Grid dimensions:', config.dim, 'Kernel Block Width:', config.TPB, 'Padded Block Width:', config.padded_TPB, 'Max Value:', config.UNEXPLORED)
+            print('Grid dimensions:', config.dim, 'Kernel Block Width:', (config.TPB, config.TPB), 'Padded Block Width:', (config.padded_TPB,config.padded_TPB), 'Max Value:', config.UNEXPLORED)
 
 
     # for i in range(runs):

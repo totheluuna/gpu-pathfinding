@@ -478,9 +478,9 @@ def test(grid, start, goal):
         print(counter)
         e = timer()
         time_ave += (e-s)
-        # print('%dth kernel launch done in ' %(run), e-s, 's')
+        print('%dth kernel launch done in ' %(run), e-s, 's')
     time_ave = time_ave/runs
-    # print('Average runtime in ', runs, ' runs: ', time_ave)
+    print('Average runtime in ', runs, ' runs: ', time_ave)
 
     # trying to recreate path
     print('----- Reconstructing Path -----')
@@ -493,7 +493,7 @@ def test(grid, start, goal):
     ctr = 0
     while current_index != goal_1d_index:
         if ctr > width*2: # just in case there is infinite loop
-            # print('Timeout!')
+            print('Timeout!')
             break
         path.append(current_index)
         current_x = int((current_index-(current_index%width))/width)

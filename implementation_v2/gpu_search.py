@@ -470,7 +470,7 @@ def test(grid, start, goal):
     print('kernel launch (+ compilation) done in ', e-s, 's')
 
     time_ave = 0
-    runs = 10
+    runs = 1
     for run in range(runs):
         counter[:] = 0
         s = timer()

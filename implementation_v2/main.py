@@ -50,7 +50,7 @@ def main():
     # config.seed = args.seed
 
     possible_scale_factors = list(range(4,11))
-    possible_TPBs = [4]
+    possible_TPBs = [8]
 
     for _scale_factor in possible_scale_factors:
         for _TPB in possible_TPBs:

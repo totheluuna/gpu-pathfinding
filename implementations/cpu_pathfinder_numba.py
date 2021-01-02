@@ -13,7 +13,7 @@ from numba.typed import List
 
 from timeit import default_timer as timer
 
-seed(1)
+# seed(1)
 # functions for converting images to grids
 def getListOfFiles(dirName, allFiles):
     # create a list of file and sub directories 

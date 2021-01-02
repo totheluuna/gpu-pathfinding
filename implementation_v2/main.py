@@ -49,8 +49,6 @@ def main():
     runs = args.runs
     # config.seed = args.seed
 
-    print('Testing CPU v GPU Pathfinding Approach for %d runs' %(runs))
-
     possible_scale_factors = list(range(4,11))
     possible_TPBs = [4,8,16]
 

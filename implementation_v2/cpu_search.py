@@ -154,7 +154,7 @@ def test(grid, start, goal):
     print('(Search + compilation) Path found in ', e-s, 's')
 
     time_ave = 0
-    runs = 10
+    runs = 1
     for run in range(runs):
         s = timer()
         open = np.empty((width, height), dtype=np.int32)

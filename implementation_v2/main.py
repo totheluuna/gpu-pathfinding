@@ -63,7 +63,6 @@ def main():
             config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
             print('===== Experiment Setup =====')
             print('Grid dimensions:', config.dim, 'Kernel Block Width:', (config.TPB, config.TPB), 'Padded Block Width:', (config.padded_TPB,config.padded_TPB), 'Max Value:', config.UNEXPLORED)
-            print()
             print('===== Testing CPU vs GPU Pathfinding Approach for %d runs =====' %(runs))
 
     # for i in range(runs):

@@ -22,11 +22,11 @@ def main():
     filename = os.path.join(os.getcwd(), 'implementation_v2/metrics/data/performance.csv')
     if os.path.isfile(filename) is False:
         with open(filename, "w") as file:
-            file.write("image_filename,width,start,goal,cpu_runtime,gpu_runtime,cpu_path_exists,gpu_path_exists\n")
+            file.write("image,grid_width,block_width,start,goal,cpu_runtime,gpu_runtime,cpu_path_length,gpu_path_length,cpu_path_exists,gpu_path_exists\n")
 
     from_file = open(filename)
     line = from_file.readline()
-    line = "image_filename,grid_width,block_width,start,goal,cpu_runtime,gpu_runtime,cpu_path_length,gpu_path_length,cpu_path_exists,gpu_path_exists\n"
+    line = "image,grid_width,block_width,start,goal,cpu_runtime,gpu_runtime,cpu_path_length,gpu_path_length,cpu_path_exists,gpu_path_exists\n"
     to_file = open(filename,mode="w")
     to_file.write(line)
     from_file.close()
@@ -34,17 +34,17 @@ def main():
     
 
     parser = argparse.ArgumentParser(description='CPU vs GPU Pathfinding')
-    parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')
-    parser.add_argument('TPB', type=int, help='Block width')
+    # parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')
+    # parser.add_argument('TPB', type=int, help='Block width')
     parser.add_argument('complexity', type=str, help='Map Complexity')
     # parser.add_argument('seed', type=int, help='RNG Seed', default=config.seed)
     parser.add_argument('runs', type=int, help='Test run count', default=100)
     args = parser.parse_args()
-    config.scale_factor = args.scale_factor
-    config.TPB = args.TPB
-    config.padded_TPB = config.TPB + 2
-    config.dim = int(math.pow(2, config.scale_factor)), int(math.pow(2, config.scale_factor))
-    config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
+    # config.scale_factor = args.scale_factor
+    # config.TPB = args.TPB
+    # config.padded_TPB = config.TPB + 2
+    # config.dim = int(math.pow(2, config.scale_factor)), int(math.pow(2, config.scale_factor))
+    # config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
     complexity = args.complexity
     runs = args.runs
     # config.seed = args.seed
@@ -61,8 +61,10 @@ def main():
             config.padded_TPB = config.TPB + 2
             config.dim = int(math.pow(2, config.scale_factor)), int(math.pow(2, config.scale_factor))
             config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
+            print('===== Experiment Setup =====')
             print('Grid dimensions:', config.dim, 'Kernel Block Width:', (config.TPB, config.TPB), 'Padded Block Width:', (config.padded_TPB,config.padded_TPB), 'Max Value:', config.UNEXPLORED)
-
+            print()
+            print('===== Testing CPU vs GPU Pathfinding Approach for %d runs =====' %(runs))
 
     # for i in range(runs):
     #     print('===== %dth Test =====' %(i))

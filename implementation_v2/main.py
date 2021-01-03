@@ -128,17 +128,12 @@ def main():
         print('search runtime (CPU):', time_ave_cpu )
         print('path length (CPU):', len(path_cpu))
         print()
-        # gpu info
-        # for i in range(len(possible_TPBs)):
-        #     print('TPB:', possible_TPBs[i])
         print('search runtime (GPU):', time_ave_gpu)
         print('path length (GPU):', path_length_gpu)
         print()
 
-        
-        
-        # with open(os.path.join(os.getcwd(), 'implementation_v2/metrics/data/performance.csv'), "a") as log_file:
-        #     log_file.write("{},{},{},{},{},{},{},{},{},{},{}\n".format(image, width, config.TPB, start_1d_index, goal_1d_index, time_ave_cpu, time_ave_gpu, len(path_cpu), len(path_gpu), cpu_path_exists, gpu_path_exists))
+        with open(os.path.join(os.getcwd(), 'implementation_v2/metrics/data/performance.csv'), "a") as log_file:
+            log_file.write("{},{},{},{},{},{},{},{},{},{},{}\n".format(image, width, config.TPB, start_1d_index, goal_1d_index, time_ave_cpu, time_ave_gpu, path_length_cpu, path_length_gpu, path_exists_cpu, path_exists_gpu))
 
 
 

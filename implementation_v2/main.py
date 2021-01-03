@@ -50,7 +50,7 @@ def main():
     # config.seed = args.seed
 
     possible_scale_factors = list(range(4,11))
-    possible_TPBs = [16]
+    possible_TPBs = [4,8,16]
 
     # for _scale_factor in possible_scale_factors:
     #     for _TPB in possible_TPBs:
@@ -92,33 +92,52 @@ def main():
 
         # cpu implementation
         runs_cpu, time_ave_cpu, path_cpu = cpu.test(grid, start, goal)
+        path_length_cpu = len(path_cpu)
+        path_exists_cpu = path_cpu[0] == start_1d_index and path_cpu[-1] == goal_1d_index
         # gpu implementation
-        config.TPB = 16
-        config.padded_TPB = config.TPB + 2
-        runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
+        # store all relevant info about gpu implementation for 3 different TPB configs (4, 8, 16)
+        time_ave_gpu_list = []
+        path_length_gpu_list = []
+        path_exists_gpu_list = []
 
+
+        for _TPB in possible_TPBs:
+            config.TPB = _TPB
+            config.padded_TPB = config.TPB + 2
+            runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
+            path_length_gpu = len(path_gpu)
+            path_exists_gpu = path_length_gpu > 0
+
+            time_ave_gpu_list.append(time_ave_gpu)
+            path_length_gpu_list.append(path_length_gpu)
+            path_exists_gpu_list.append(path_exists_gpu)
+
+
+        # summarize info
         start_1d_index = start[0]*width+start[1]
         goal_1d_index = goal[0]*width+goal[1]
 
         print('----- Summary -----')
+        # general info
         print('Image used:', image)
         print('Start:', start)
         print('Goal:', goal)
         print()
-        print('Average runtime in', runs_cpu, 'runs (CPU):', time_ave_cpu)
+        # cpu info
+        print('search runtime (CPU):', time_ave_cpu )
         print('path length (CPU):', len(path_cpu))
         print()
-        print('Average runtime in', runs_gpu, 'runs (GPU):', time_ave_gpu)
-        print('path length (GPU):', len(path_gpu))
-        print()
-        print('full path (CPU): ', path_cpu)
-        print()
-        print('full path (GPU): ', path_gpu)
+        # gpu info
+        for i in range(len(possible_TPBs)):
+            print('TPB:', possible_TPBs[i])
+            print('search runtime (GPU):', time_ave_gpu_list[i])
+            print('path length (GPU):', path_length_gpu_list[i])
+            print()
 
-        cpu_path_exists = path_cpu[0] == start_1d_index and path_cpu[-1] == goal_1d_index
-        gpu_path_exists = len(path_gpu) > 0
-        with open(os.path.join(os.getcwd(), 'implementation_v2/metrics/data/performance.csv'), "a") as log_file:
-            log_file.write("{},{},{},{},{},{},{},{},{},{},{}\n".format(image, width, config.TPB, start_1d_index, goal_1d_index, time_ave_cpu, time_ave_gpu, len(path_cpu), len(path_gpu), cpu_path_exists, gpu_path_exists))
+        
+        
+        # with open(os.path.join(os.getcwd(), 'implementation_v2/metrics/data/performance.csv'), "a") as log_file:
+        #     log_file.write("{},{},{},{},{},{},{},{},{},{},{}\n".format(image, width, config.TPB, start_1d_index, goal_1d_index, time_ave_cpu, time_ave_gpu, len(path_cpu), len(path_gpu), cpu_path_exists, gpu_path_exists))
 
 
 

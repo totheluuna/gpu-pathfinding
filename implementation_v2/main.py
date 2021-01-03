@@ -98,21 +98,21 @@ def main():
         path_exists_cpu = path_cpu[0] == start_1d_index and path_cpu[-1] == goal_1d_index
         # gpu implementation
         # store all relevant info about gpu implementation for 3 different TPB configs (4, 8, 16)
-        time_ave_gpu_list = []
-        path_length_gpu_list = []
-        path_exists_gpu_list = []
+        # time_ave_gpu_list = []
+        # path_length_gpu_list = []
+        # path_exists_gpu_list = []
 
+        # for _TPB in possible_TPBs:
+        #     config.TPB = _TPB
+        #     config.padded_TPB = config.TPB + 2
 
-        for _TPB in possible_TPBs:
-            config.TPB = _TPB
-            config.padded_TPB = config.TPB + 2
-            runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
-            path_length_gpu = len(path_gpu)
-            path_exists_gpu = path_length_gpu > 0
+        runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
+        path_length_gpu = len(path_gpu)
+        path_exists_gpu = path_length_gpu > 0
 
-            time_ave_gpu_list.append(time_ave_gpu)
-            path_length_gpu_list.append(path_length_gpu)
-            path_exists_gpu_list.append(path_exists_gpu)
+        # time_ave_gpu_list.append(time_ave_gpu)
+        # path_length_gpu_list.append(path_length_gpu)
+        # path_exists_gpu_list.append(path_exists_gpu)
 
 
         # summarize info
@@ -129,11 +129,11 @@ def main():
         print('path length (CPU):', len(path_cpu))
         print()
         # gpu info
-        for i in range(len(possible_TPBs)):
-            print('TPB:', possible_TPBs[i])
-            print('search runtime (GPU):', time_ave_gpu_list[i])
-            print('path length (GPU):', path_length_gpu_list[i])
-            print()
+        # for i in range(len(possible_TPBs)):
+        #     print('TPB:', possible_TPBs[i])
+        print('search runtime (GPU):', time_ave_gpu)
+        print('path length (GPU):', path_length_gpu)
+        print()
 
         
         

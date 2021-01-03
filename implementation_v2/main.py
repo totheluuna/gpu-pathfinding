@@ -83,6 +83,8 @@ def main():
         # goal = [grid.shape[0]-1, grid.shape[1]-1]
         start = np.array(start)
         goal = np.array(goal)
+        start_1d_index = start[0]*width+start[1]
+        goal_1d_index = goal[0]*width+goal[1]
 
         print(grid)
         print(start)
@@ -114,8 +116,7 @@ def main():
 
 
         # summarize info
-        start_1d_index = start[0]*width+start[1]
-        goal_1d_index = goal[0]*width+goal[1]
+        
 
         print('----- Summary -----')
         # general info

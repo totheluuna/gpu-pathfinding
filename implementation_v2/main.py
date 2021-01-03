@@ -93,6 +93,8 @@ def main():
         # cpu implementation
         runs_cpu, time_ave_cpu, path_cpu = cpu.test(grid, start, goal)
         # gpu implementation
+        config.TPB = 16
+        config.padded_TPB = config.TPB + 2
         runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
 
         start_1d_index = start[0]*width+start[1]

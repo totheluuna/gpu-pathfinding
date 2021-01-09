@@ -47,14 +47,15 @@ def main():
     config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
     complexity = args.complexity
     heuristics = args.heuristics
+    heuristics_choices = {'euclidean':0, 'diagonal':1, 'manhattan':2}
+    config.heuristics = heuristics_choices[heuristic]
+    print(config.heuristics)
     runs = args.runs
     # config.seed = args.seed
 
     possible_scale_factors = list(range(4,11))
     possible_TPBs = [4,8,16]
-    heuristics_choices = {'euclidean':0, 'diagonal':1, 'manhattan':2}
 
-    print(heuristics_choices[heuristics])
     # for i in range(runs):
     #     print('===== %dth Test =====' %(i))
     #     width, height = config.dim

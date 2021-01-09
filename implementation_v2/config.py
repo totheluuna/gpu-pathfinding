@@ -9,3 +9,4 @@ UNEXPLORED = int(math.pow(2, (scale_factor*2)))
 # UNEXPLORED = 9999999
 OPEN = 1
 CLOSED = 0
+heuristics = 0 # 0:euclidean, 1:diagonal, 2:manhattan 

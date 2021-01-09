@@ -48,7 +48,7 @@ def main():
     complexity = args.complexity
     heuristics = args.heuristics
     heuristics_choices = {'euclidean':0, 'diagonal':1, 'manhattan':2}
-    config.heuristics = heuristics_choices[heuristic]
+    config.heuristics = heuristics_choices[heuristics]
     print(config.heuristics)
     runs = args.runs
     # config.seed = args.seed

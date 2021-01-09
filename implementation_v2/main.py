@@ -37,7 +37,6 @@ def main():
     parser.add_argument('TPB', type=int, help='Block width')
     parser.add_argument('complexity', type=str, help='Map Complexity')
     parser.add_argument('heuristics', type=str, help='Heuristic')
-    
     # parser.add_argument('seed', type=int, help='RNG Seed', default=config.seed)
     parser.add_argument('runs', type=int, help='Test run count', default=100)
     args = parser.parse_args()
@@ -53,8 +52,9 @@ def main():
 
     possible_scale_factors = list(range(4,11))
     possible_TPBs = [4,8,16]
+    heuristics_choices = {'euclidean':0, 'diagonal':1, 'manhattan':2}
 
-    print(heuristics)
+    print(heuristics_choices[heuristics])
     # for i in range(runs):
     #     print('===== %dth Test =====' %(i))
     #     width, height = config.dim

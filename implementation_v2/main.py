@@ -56,60 +56,60 @@ def main():
     possible_scale_factors = list(range(4,11))
     possible_TPBs = [4,8,16]
 
-    # for i in range(runs):
-    #     print('===== %dth Test =====' %(i))
-    #     width, height = config.dim
-    #     # test_func()
+    for i in range(runs):
+        print('===== %dth Test =====' %(i))
+        width, height = config.dim
+        # test_func()
 
-    #     print('----- Preparing Grid -----')
-    #     # create grid from image dataset
-    #     grid = np.zeros(config.dim, dtype=np.int32)
-    #     # helper.createGridFromDatasetImage('dataset/select-maps/simplest', grid, config.dim)
-    #     image = helper.createGridFromDatasetImage('dataset/select-maps/%s'%(complexity), grid, config.dim)
-    #     # grid = np.ones(config.dim, dtype=np.int32)
+        print('----- Preparing Grid -----')
+        # create grid from image dataset
+        grid = np.zeros(config.dim, dtype=np.int32)
+        # helper.createGridFromDatasetImage('dataset/select-maps/simplest', grid, config.dim)
+        image = helper.createGridFromDatasetImage('dataset/select-maps/%s'%(complexity), grid, config.dim)
+        # grid = np.ones(config.dim, dtype=np.int32)
 
-    #     # generate random start and goal
-    #     start = [-1, -1]
-    #     goal = [-1, -1]
-    #     helper.randomStartGoal(grid, start, goal)
-    #     # start = [0, 0]
-    #     # goal = [grid.shape[0]-1, grid.shape[1]-1]
-    #     start = np.array(start)
-    #     goal = np.array(goal)
-    #     start_1d_index = start[0]*width+start[1]
-    #     goal_1d_index = goal[0]*width+goal[1]
+        # generate random start and goal
+        start = [-1, -1]
+        goal = [-1, -1]
+        helper.randomStartGoal(grid, start, goal)
+        # start = [0, 0]
+        # goal = [grid.shape[0]-1, grid.shape[1]-1]
+        start = np.array(start)
+        goal = np.array(goal)
+        start_1d_index = start[0]*width+start[1]
+        goal_1d_index = goal[0]*width+goal[1]
 
-    #     print(grid)
-    #     print(start)
-    #     print(goal)
+        print(grid)
+        print(start)
+        print(goal)
 
-    #     helper.drawGrid(grid, tuple(start), tuple(goal))
+        helper.drawGrid(grid, tuple(start), tuple(goal))
 
-    #     # cpu implementation
-    #     runs_cpu, time_ave_cpu, path_cpu = cpu.test(grid, start, goal)
-    #     path_length_cpu = len(path_cpu)
-    #     path_exists_cpu = path_cpu[0] == start_1d_index and path_cpu[-1] == goal_1d_index
-    #     # gpu implementation
-    #     runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
-    #     path_length_gpu = len(path_gpu)
-    #     path_exists_gpu = path_length_gpu > 0
-    #     # summarize info
-    #     print('----- Summary -----')
-    #     # general info
-    #     print('Image used:', image)
-    #     print('Start:', start)
-    #     print('Goal:', goal)
-    #     print()
-    #     # cpu info
-    #     print('search runtime (CPU):', time_ave_cpu )
-    #     print('path length (CPU):', len(path_cpu))
-    #     print()
-    #     print('search runtime (GPU):', time_ave_gpu)
-    #     print('path length (GPU):', path_length_gpu)
-    #     print()
+        # cpu implementation
+        runs_cpu, time_ave_cpu, path_cpu = cpu.test(grid, start, goal)
+        path_length_cpu = len(path_cpu)
+        path_exists_cpu = path_cpu[0] == start_1d_index and path_cpu[-1] == goal_1d_index
+        # gpu implementation
+        runs_gpu, time_ave_gpu, path_gpu = gpu.test(grid, start, goal)
+        path_length_gpu = len(path_gpu)
+        path_exists_gpu = path_length_gpu > 0
+        # summarize info
+        print('----- Summary -----')
+        # general info
+        print('Image used:', image)
+        print('Start:', start)
+        print('Goal:', goal)
+        print()
+        # cpu info
+        print('search runtime (CPU):', time_ave_cpu )
+        print('path length (CPU):', len(path_cpu))
+        print()
+        print('search runtime (GPU):', time_ave_gpu)
+        print('path length (GPU):', path_length_gpu)
+        print()
 
-    #     with open(os.path.join(os.getcwd(), 'implementation_v2/metrics/data/performance.csv'), "a") as log_file:
-    #         log_file.write("{},{},{},{},{},{},{},{},{},{},{}\n".format(image, width, config.TPB, start_1d_index, goal_1d_index, time_ave_cpu, time_ave_gpu, path_length_cpu, path_length_gpu, path_exists_cpu, path_exists_gpu))
+        with open(os.path.join(os.getcwd(), 'implementation_v2/metrics/data/performance.csv'), "a") as log_file:
+            log_file.write("{},{},{},{},{},{},{},{},{},{},{}\n".format(image, width, config.TPB, start_1d_index, goal_1d_index, time_ave_cpu, time_ave_gpu, path_length_cpu, path_length_gpu, path_exists_cpu, path_exists_gpu))
 
 
 

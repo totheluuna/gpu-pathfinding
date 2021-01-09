@@ -36,7 +36,7 @@ def main():
     parser.add_argument('scale_factor', type=int, help='Scale factor (power of 2)')
     parser.add_argument('TPB', type=int, help='Block width')
     parser.add_argument('complexity', type=str, help='Map Complexity')
-    parser.add_argument('heuristics', type=str, help='Heuristic')
+    # parser.add_argument('heuristics', type=str, help='Heuristic')
     # parser.add_argument('seed', type=int, help='RNG Seed', default=config.seed)
     parser.add_argument('runs', type=int, help='Test run count', default=100)
     args = parser.parse_args()
@@ -46,9 +46,9 @@ def main():
     config.dim = int(math.pow(2, config.scale_factor)), int(math.pow(2, config.scale_factor))
     config.UNEXPLORED = int(math.pow(2, (config.scale_factor*2)))
     complexity = args.complexity
-    heuristics = args.heuristics
-    heuristics_choices = {'euclidean':0, 'diagonal':1, 'manhattan':2}
-    config.heuristics = heuristics_choices[heuristics]
+    # heuristics = args.heuristics
+    # heuristics_choices = {'euclidean':0, 'diagonal':1, 'manhattan':2}
+    # config.heuristics = heuristics_choices[heuristics]
     print(config.heuristics)
     runs = args.runs
     # config.seed = args.seed
